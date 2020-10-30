@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">SmartPi</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="yuk_masuk_ke_aplikasi_smartpi_ndan_mulai_belajar_bersama_kami">Yuk, Masuk ke aplikasi SmartPi dan mulai belajar bersama kami</string>
+    <string name="masuk">Masuk</string>
+    <string name="belum_punya_akun">Belum punya akun?</string>
+    <string name="daftar">Daftar</string>
+    <string name="sudah_pernah_mendaftar">Sudah Pernah Mendaftar?</string>
+    <string name="aktivitasi_akun">Aktivitasi Akun</string>
+    <string name="daftar_akun_sekarang">Daftar Akun Sekarang</string>
+    <string name="selamat_datang">Selamat Datang</string>
+    <string name="yuk_daftar_ke_aplkasi_smartpi_dan_coba_belajar_bersama_kami">Yuk, daftar ke aplkasi SmartPi dan coba belajar bersama kami</string>
+    <string name="nama">Nama</string>
+    <string name="phone">Phone</string>
+    <string name="yuk_masuk_ke_aplikasi_smartpi_dan_mulai_belajar_bersama_kami">Yuk, masuk ke aplikasi SmartPi dan mulai belajar bersama kami</string>
+    <string name="_62">+62</string>
+    <string name="selanjutnya">Selanjutnya</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_telepon_anda">No. Telepon anda</string>
+    <string name="kata_kunci">Kata Kunci</string>
+    <string name="lupa_kata_kunci">Lupa Kata Kunci?</string>
+    <string name="negara">Negara</string>
+    <string name="kode_aktivasi">Kode Aktivasi</string>
+    <string name="masukan_kode_aktivasi">Masukan Kode Aktivasi</string>
+    <string name="subtitle_kode_aktivasi">Kode aktivasi Anda dikirimkan melalui WhatsApp. Periksa WhatsApp Anda!</string>
+    <string name="kirim_ulang_kode_registrasi"><u>Kirim ulang kode registrasi</u></string>
+    <string name="beranda">Beranda</string>
+    <string name="kelas">Kelas</string>
+    <string name="pembelian">Pembelian</string>
+    <string name="bantuan">Bantuan</string>
+    <string name="lain">Lain</string>
+    <string name="hi_nama">Hi,Nama</string>
+    <string name="tidak_ada_paket_yang_aktif">Tidak ada paket yang aktif</string>
+    <string name="program_kami">Program kami</string>
+    <string name="kamu_belum_berlangganan">Kamu Belum Berlangganan</string>
+    <string name="promo_untuk_kamu">Promo untuk kamu</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/home"
+        android:enabled="true"
+        android:icon="@drawable/ic_ikon_home_blue"
+        android:title="@string/beranda" />
+
+    <item
+        android:id="@+id/kelas"
+        android:enabled="true"
+        android:icon="@drawable/ic_ikon_kelas_grey"
+        android:title="@string/kelas" />
+    <item
+        android:id="@+id/pembelian"
+        android:enabled="true"
+        android:icon="@drawable/ic_ikon_belanja_grey"
+        android:title="@string/pembelian" />
+    <item
+        android:id="@+id/bantuan"
+        android:enabled="true"
+        android:icon="@drawable/ic_ikon_bantuan_grey"
+        android:title="@string/bantuan" />
+
+    <item
+        android:id="@+id/lain"
+        android:enabled="true"
+        android:icon="@drawable/ic_ikon_lain_grey"
+        android:title="@string/lain" />
+
+
+
+</menu>
