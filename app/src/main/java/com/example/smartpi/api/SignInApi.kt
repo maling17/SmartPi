@@ -1,8 +1,6 @@
 package com.example.smartpi.api
 
-import com.example.smartpi.model.InputActivationModel
 import com.example.smartpi.model.SignInModel
-import com.example.smartpi.model.UserModel
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

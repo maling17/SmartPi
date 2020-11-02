@@ -1,4 +1,4 @@
-package com.example.smartpi.activity.sign
+package com.example.smartpi.activity.sign.lupa_password
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -7,31 +7,26 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
-import com.example.smartpi.activity.KodeAktivasiActivity
 import com.example.smartpi.adapter.PhoneCodeAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.model.DataItem
-import com.example.smartpi.model.JadwalItem
+import kotlinx.android.synthetic.main.activity_lupa_password.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
-class SignInActivity : AppCompatActivity() {
+class LupaPasswordActivity : AppCompatActivity() {
 
     lateinit var phone_number: String
     lateinit var country_code: String
@@ -40,10 +35,9 @@ class SignInActivity : AppCompatActivity() {
     var kodeNegara = "62"
     private val countryCodeList = ArrayList<DataItem>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        setContentView(R.layout.activity_lupa_password)
 
         //ganti button background jika field sudah diisi
         changeBackgroundButton()
@@ -51,15 +45,13 @@ class SignInActivity : AppCompatActivity() {
         //tombol clear inputan
         changeIconEditText()
 
-        btn_sign_in.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { inputNumber() }
+        btn_ubah_password.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) { resetPassword() }
         }
 
-        tv_awal_nmr_tlp.setOnClickListener {
+        tv_awal_nmr_tlp_lupa.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) { showPopupDialog() }
         }
-
-
     }
 
     private suspend fun getCountryCode() {
@@ -96,7 +88,7 @@ class SignInActivity : AppCompatActivity() {
         rvKodeNegara.adapter = PhoneCodeAdapter(countryCodeList)
         {
             kodeNegara = it.phonecode.toString()
-            tv_awal_nmr_tlp.text = "+$kodeNegara"
+            tv_awal_nmr_tlp_lupa.text = "+$kodeNegara"
 
             dialog.dismiss()
         }
@@ -105,59 +97,50 @@ class SignInActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    suspend fun inputNumber() {
+    suspend fun resetPassword() {
 
-        pb_sign_in.visibility = View.VISIBLE
-        btn_sign_in.visibility = View.GONE
+        pb_lupa_password.visibility = View.VISIBLE
+        btn_ubah_password.visibility = View.GONE
+        tv_kembali_lupa_password.visibility = View.GONE
 
-        phone_number = et_phone.text.toString()
+        phone_number = et_phone_lupa_password.text.toString()
         country_code = kodeNegara
         val nmrTelp = "$country_code$phone_number"
 
         //memulai Api
-        val network = NetworkConfig().inputNumber().inputNumber(phone_number, country_code)
+        val network = NetworkConfig().resetPassword().resetPassword(country_code, phone_number)
 
         if (network!!.isSuccessful) {
-            if (network.body()!!.status == "activation") {
-                pb_sign_in.visibility = View.INVISIBLE
-                btn_sign_in.visibility = View.VISIBLE
-                val intent = Intent(this, KodeAktivasiActivity::class.java)
-                    .putExtra("nmr_telp", nmrTelp)
-                startActivity(intent)
-            } else {
-                pb_sign_in.visibility = View.INVISIBLE
-                btn_sign_in.visibility = View.VISIBLE
-                val intent = Intent(this, SignInPasswordActivity::class.java)
-                    .putExtra("nmr_telp", nmrTelp)
-                startActivity(intent)
-            }
+            btn_ubah_password.visibility = View.VISIBLE
+            pb_lupa_password.visibility = View.INVISIBLE
+            tv_kembali_lupa_password.visibility = View.VISIBLE
+
+           val message= network.body()!!.message
+            val intent = Intent(this, LupaPasswordAktivasiActivity::class.java)
+                .putExtra("nmr_telp", nmrTelp)
+            startActivity(intent)
         } else {
-            btn_sign_in.visibility = View.VISIBLE
+            btn_ubah_password.visibility = View.VISIBLE
             pb_sign_in.visibility = View.INVISIBLE
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this@SignInActivity,
-                    "Check your connection",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            tv_kembali_lupa_password.visibility = View.VISIBLE
+            Log.d(TAG, network.errorBody().toString())
         }
     }
 
     private fun changeBackgroundButton() {
 
-        et_phone.addTextChangedListener(object : TextWatcher {
+        et_phone_lupa_password.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (et_phone.length() <= 4) {
-                    btn_sign_in.setBackgroundResource(R.drawable.button_grey)
-                    btn_sign_in.setTextColor(resources.getColor(R.color.dark_grey))
-                    btn_sign_in.isClickable = false
+                if (et_phone_lupa_password.length() <= 4) {
+                    btn_ubah_password.setBackgroundResource(R.drawable.button_grey)
+                    btn_ubah_password.setTextColor(resources.getColor(R.color.dark_grey))
+                    btn_ubah_password.isClickable = false
                 } else {
-                    btn_sign_in.setBackgroundResource(R.drawable.button_yellow)
-                    btn_sign_in.setTextColor(resources.getColor(R.color.white))
-                    btn_sign_in.isClickable = true
+                    btn_ubah_password.setBackgroundResource(R.drawable.button_yellow)
+                    btn_ubah_password.setTextColor(resources.getColor(R.color.white))
+                    btn_ubah_password.isClickable = true
                 }
             }
 
@@ -168,20 +151,25 @@ class SignInActivity : AppCompatActivity() {
 
     fun changeIconEditText() {
 
-        et_phone.addTextChangedListener(object : TextWatcher {
+        et_phone_lupa_password.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             @SuppressLint("UseCompatLoadingForDrawables")
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (et_phone.length() >= 0) {
+                if (et_phone_lupa_password.length() >= 0) {
 
                     //memunculkan icon X untuk clear input
                     val drawable: Drawable =
-                        et_phone.context.resources.getDrawable(R.drawable.ic_icon_clear)
-                    et_phone.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+                        et_phone_lupa_password.context.resources.getDrawable(R.drawable.ic_icon_clear)
+                    et_phone_lupa_password.setCompoundDrawablesWithIntrinsicBounds(
+                        null,
+                        null,
+                        drawable,
+                        null
+                    )
                     clearEditText()
                 } else {
-                    et_phone.setCompoundDrawables(null, null, null, null)
+                    et_phone_lupa_password.setCompoundDrawables(null, null, null, null)
                 }
             }
 
@@ -192,17 +180,18 @@ class SignInActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     fun clearEditText() {
-        et_phone.setOnTouchListener(View.OnTouchListener { v, event ->
+        et_phone_lupa_password.setOnTouchListener(View.OnTouchListener { v, event ->
 
             val DRAWABLE_RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= et_phone.right - et_phone.compoundDrawables[DRAWABLE_RIGHT].bounds.width()
+                if (event.rawX >= et_phone_lupa_password.right - et_phone_lupa_password.compoundDrawables[DRAWABLE_RIGHT].bounds.width()
                 ) {
-                    et_phone.text.clear()
+                    et_phone_lupa_password.text.clear()
                     return@OnTouchListener true
                 }
             }
             false
         })
     }
+
 }

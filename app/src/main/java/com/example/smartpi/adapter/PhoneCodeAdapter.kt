@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
 import com.example.smartpi.model.DataItem
+import com.example.smartpi.model.JadwalItem
 
 class PhoneCodeAdapter(
     private var data: List<DataItem>,

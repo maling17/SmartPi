@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".activity.sign.SignUpActivity"></activity>
+        <activity android:name=".activity.sign.lupa_password.GantiLupaPasswordActivity"></activity>
+        <activity android:name=".activity.sign.lupa_password.LupaPasswordAktivasiActivity" />
+        <activity android:name=".activity.sign.lupa_password.LupaPasswordActivity" />
+        <activity android:name=".activity.sign.SignUpActivity" />
         <activity android:name=".activity.sign.SignInPasswordActivity" />
         <activity android:name=".activity.KodeAktivasiActivity" />
         <activity android:name=".activity.sign.SignInActivity">
@@ -22,9 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

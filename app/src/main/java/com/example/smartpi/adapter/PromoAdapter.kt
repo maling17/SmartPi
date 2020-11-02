@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
-import com.example.smartpi.model.DataItem
+import com.example.smartpi.model.JadwalItem
 
 class PromoAdapter(
     /*private var data: List<DataItem>,
@@ -20,8 +19,8 @@ class PromoAdapter(
 
 
         fun bidnItem(
-            data: DataItem,
-            listener: (DataItem) -> Unit,
+            data: JadwalItem,
+            listener: (JadwalItem) -> Unit,
             context: Context,
             position: Int
         ) {

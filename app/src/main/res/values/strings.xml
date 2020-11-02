@@ -31,9 +31,23 @@
     <string name="pembelian">Pembelian</string>
     <string name="bantuan">Bantuan</string>
     <string name="lain">Lain</string>
-    <string name="hi_nama">Hi,Nama</string>
+    <string name="hi_nama">Hi,</string>
     <string name="tidak_ada_paket_yang_aktif">Tidak ada paket yang aktif</string>
     <string name="program_kami">Program kami</string>
     <string name="kamu_belum_berlangganan">Kamu Belum Berlangganan</string>
     <string name="promo_untuk_kamu">Promo untuk kamu</string>
+    <string name="lihat_semua">Lihat Semua</string>
+    <string name="jadwal_kamu">Jadwal Kamu</string>
+    <string name="anda_belum_memiliki_jadwal">Anda belum memiliki jadwal</string>
+    <string name="coba_1x_pertemuan">Coba 1x Pertemuan</string>
+    <string name="ubah_kata_kunci">Ubah kata kunci</string>
+    <string name="kembali"><u>Kembali</u></string>
+    <string name="jam">Jam</string>
+    <string name="guru">Guru</string>
+    <string name="hari_dd_mm_yyyy">hari,dd MM yyyy</string>
+    <string name="masukan_nomor_lupa_password">Masukan nomor handphone yang anda gunakan untuk mendaftar. Kode verifikasi akan dikirimkan ke nomor Anda</string>
+    <string name="masukan_kode_verifikasi_yang_dikirim_ke_hp_anda_untuk_mengubah_kata_kunci">Masukan kode Verifikasi yang dikirim ke HP anda untuk mengubah kata kunci</string>
+    <string name="verifikasi_token">Verifikasi Token</string>
+    <string name="silahkan_masukan_kata_kunci_yang_baru">Silahkan masukan kata kunci yang baru</string>
+    <string name="konfirmasi_password">Konfirmasi Password</string>
 </resources>

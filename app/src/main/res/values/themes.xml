@@ -38,6 +38,18 @@
         <item name="fontFamily">@font/open_sans_bold</item>
     </style>
 
+    <style name="Text14BoldBlue">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="fontFamily">@font/open_sans_bold</item>
+    </style>
+
+    <style name="Text12BoldBlack">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/open_sans_bold</item>
+    </style>
+
     <style name="Text14RegulerBlue">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/blue</item>
@@ -71,6 +83,12 @@
     <style name="Text12RegulerBlack">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Text12RegulerOrange">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/orange</item>
         <item name="fontFamily">@font/open_sans</item>
     </style>
     

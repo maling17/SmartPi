@@ -2,13 +2,16 @@ package com.example.smartpi.model
 
 import com.google.gson.annotations.SerializedName
 
-data class UserModel(
+data class UbahPasswordModel(
 
 	@field:SerializedName("data")
-	val data: UserData? = null
+	val data: ubahPasswordData? = null,
+
+	@field:SerializedName("success")
+	val success: String? = null
 )
 
-data class UserData(
+data class ubahPasswordData(
 
 	@field:SerializedName("role")
 	val role: String? = null,

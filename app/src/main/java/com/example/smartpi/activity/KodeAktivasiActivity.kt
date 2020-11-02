@@ -24,7 +24,7 @@ class KodeAktivasiActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kode_aktivasi)
 
-        phoneNumber = intent.getStringExtra("nmr_telp").toString()
+        phoneNumber = intent.getStringExtra("nmr_telp")!!.toString()
         val textNmrTlp = "No. Telepon anda ($phoneNumber detik)"
         tv_nmr_telp_sign_up.text = textNmrTlp
 
