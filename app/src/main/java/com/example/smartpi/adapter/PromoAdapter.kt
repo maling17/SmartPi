@@ -4,26 +4,31 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
 import com.example.smartpi.model.JadwalItem
+import com.example.smartpi.model.PromoItem
+import com.squareup.picasso.Picasso
 
 class PromoAdapter(
-    /*private var data: List<DataItem>,
-    private val listener: (DataItem) -> Unit*/
+    private var data: List<PromoItem>,
+    private val listener: (PromoItem) -> Unit
 ) : RecyclerView.Adapter<PromoAdapter.LeagueViewHolder>() {
 
     private lateinit var ContextAdapter: Context
 
     class LeagueViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+        val ivPromo=view.findViewById<ImageView>(R.id.iv_promo)
 
         fun bidnItem(
-            data: JadwalItem,
-            listener: (JadwalItem) -> Unit,
+            data: PromoItem,
+            listener: (PromoItem) -> Unit,
             context: Context,
             position: Int
         ) {
+
+            Picasso.get().load(data.gambar).into(ivPromo)
             itemView.setOnClickListener {
                 listener(data)
             }
@@ -46,9 +51,9 @@ class PromoAdapter(
     }
 
     override fun onBindViewHolder(holder: PromoAdapter.LeagueViewHolder, position: Int) {
-        /*holder.bidnItem(data[position], listener, ContextAdapter, position)*/
+        holder.bidnItem(data[position], listener, ContextAdapter, position)
     }
 
-    override fun getItemCount(): Int = 7
+    override fun getItemCount(): Int = data.size
 
 }

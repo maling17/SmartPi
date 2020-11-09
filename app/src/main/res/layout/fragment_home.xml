@@ -10,6 +10,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="55dp"
                 android:background="@drawable/top_rounded"
-                android:paddingTop="80dp"
+                android:paddingTop="130dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
@@ -74,6 +75,17 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="ContentDescription" />
 
+                    <TextView
+                        android:id="@+id/textView22"
+                        style="@style/Text12RegulerBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/akademik"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_akademik"
+                        app:layout_constraintStart_toStartOf="@+id/iv_akademik"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_akademik" />
+
                     <ImageView
                         android:id="@+id/iv_inggris"
                         android:layout_width="wrap_content"
@@ -88,6 +100,18 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="ContentDescription" />
 
+                    <TextView
+                        style="@style/Text12RegulerBlack"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textAlignment="center"
+                        android:text="@string/bahasa_inggris"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_inggris"
+                        app:layout_constraintStart_toStartOf="@+id/iv_inggris"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_inggris" />
+
+
                     <ImageView
                         android:id="@+id/iv_mengaji"
                         android:layout_width="wrap_content"
@@ -100,53 +124,18 @@
                         app:layout_constraintStart_toEndOf="@+id/iv_inggris"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="ContentDescription" />
+
+                    <TextView
+                        style="@style/Text12RegulerBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/mengaji"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_mengaji"
+                        app:layout_constraintStart_toStartOf="@+id/iv_mengaji"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_mengaji" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_trial"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
-
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/light_grey" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cl_trial"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:visibility="visible"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/view">
-
-                        <TextView
-                            style="@style/Text12RegulerBlack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/kamu_belum_berlangganan"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btn_coba_pertemuan"
-                            style="@style/Text14RegulerWhite"
-                            android:layout_width="180dp"
-                            android:layout_height="45dp"
-                            android:background="@drawable/button_round_yellow"
-                            android:text="@string/coba_1x_pertemuan"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View
                         android:id="@+id/view2"
@@ -158,7 +147,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/cl_jadwal" />
 
-                </LinearLayout>
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_jadwal"
@@ -167,7 +156,7 @@
                     android:padding="15dp"
                     android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_trial">
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout2">
 
                     <ProgressBar
                         android:id="@+id/pb_jadwal"
@@ -210,12 +199,13 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_jadwal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -232,6 +222,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cl_jadwal" />
 
+                <ProgressBar
+                    android:id="@+id/pb_promo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/rv_promo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rv_promo" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_promo"
                     android:layout_width="match_parent"
@@ -241,8 +241,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
-                    tools:listitem="@layout/recycler_view_item" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -290,7 +289,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/btn_lihat_paket"
                     android:layout_width="match_parent"
-                    android:layout_height="103dp"
+                    android:layout_height="wrap_content"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="2dp"
                     app:cardUseCompatPadding="true"
@@ -328,7 +327,7 @@
                         <TextView
                             android:id="@+id/tv_paket_home"
                             style="@style/Text12Regulergrey"
-                            android:layout_width="wrap_content"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="10dp"
@@ -345,6 +344,19 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tv_nama_home"
                             tools:ignore="ContentDescription" />
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginTop="10dp"
+                            android:visibility="visible"
+                            android:id="@+id/btn_bikin_jadwal"
+                            android:text="@string/buat_jadwal"
+                            android:textAllCaps="false"
+                            android:backgroundTint="@color/yellow"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

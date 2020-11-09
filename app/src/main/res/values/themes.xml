@@ -80,6 +80,12 @@
         <item name="fontFamily">@font/open_sans</item>
     </style>
 
+    <style name="Text14RegulerGrey">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
     <style name="Text12RegulerBlack">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black</item>

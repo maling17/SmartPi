@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.KodeAktivasiActivity">
+    tools:context=".activity.sign.KodeAktivasiActivity">
 
 
     <ImageView
@@ -93,7 +93,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_masuk_sign_up"
+            android:id="@+id/btn_masuk_kode_aktivasi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -107,16 +107,16 @@
 
         <TextView
             android:id="@+id/tv_kirim_ulang_kode"
-            android:textStyle="bold"
-            android:textColor="@color/blue"
-            android:textSize="18sp"
             android:layout_width="match_parent"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/kirim_ulang_kode_registrasi"
+            android:textAlignment="center"
+            android:textColor="@color/blue"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_masuk_sign_up" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_masuk_kode_aktivasi" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

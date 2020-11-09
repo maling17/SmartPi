@@ -17,13 +17,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -55,4 +59,14 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.glassfish:javax.annotation:10.0-b28'
+
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+    implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
+
+    //gambar
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //calendar 
+    implementation 'com.applandeo:material-calendar-view:1.7.0'
 }

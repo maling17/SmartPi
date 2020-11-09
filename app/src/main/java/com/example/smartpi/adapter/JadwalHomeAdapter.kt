@@ -46,6 +46,7 @@ class JadwalHomeAdapter(
 
             itemView.setOnClickListener {
                 listener(data)
+
             }
 
         }

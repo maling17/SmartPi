@@ -17,13 +17,16 @@ import com.example.smartpi.activity.sign.SignInActivity
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.utils.Preferences
 import kotlinx.android.synthetic.main.activity_ganti_lupa_password.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class GantiLupaPasswordActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
     var TAG = "MyActivity"
+
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
+
     lateinit var preferences: Preferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,23 +35,27 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
         phoneNumber = intent.getStringExtra("nmr_telp").toString()
         et_phone_ganti_password.text = Editable.Factory.getInstance().newEditable(phoneNumber)
 
-        GlobalScope.launch(Dispatchers.Main) {
+        scope.launch(Dispatchers.Main) {
             changeBackgroundButton()
-            val jobPassword = launch { changeStatePassword(et_password_lupa_password) }
-            val jobKonfirmasiPassword = launch { changeStatePassword(et_konfirmasi_lupa_password) }
+            val jobPassword = async { changeStatePassword(et_password_lupa_password) }
+            val jobKonfirmasiPassword = async { changeStatePassword(et_konfirmasi_lupa_password) }
 
-            jobPassword.join()
-            jobKonfirmasiPassword.join()
+            jobPassword.await()
+            jobKonfirmasiPassword.await()
 
         }
 
         btn_ubah_kata_kunci.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { gantiPassword() }
+            scope.launch(Dispatchers.Main) { gantiPassword() }
+        }
+
+        tv_kembali_ubah_password.setOnClickListener {
+            finish()
         }
 
     }
 
-    suspend fun gantiPassword() {
+    private suspend fun gantiPassword() {
 
         pb_ubah_password.visibility = View.VISIBLE
         btn_ubah_kata_kunci.visibility = View.GONE
@@ -57,7 +64,10 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
         val etPassword = et_password_lupa_password.text.toString()
         val etKonfirmasiPassword = et_konfirmasi_lupa_password.text.toString()
 
-        Log.d(TAG, "no Telepon = ${phoneNumber} password = $etPassword Konfirmasi Password = $etKonfirmasiPassword")
+        Log.d(
+            TAG,
+            "no Telepon = ${phoneNumber} password = $etPassword Konfirmasi Password = $etKonfirmasiPassword"
+        )
 
         //memulai Api
         val network =
@@ -149,6 +159,11 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
             false
         })
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
 }

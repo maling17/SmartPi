@@ -20,26 +20,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
-import com.example.smartpi.activity.KodeAktivasiActivity
 import com.example.smartpi.adapter.PhoneCodeAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.model.DataItem
-import com.example.smartpi.model.JadwalItem
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
 class SignInActivity : AppCompatActivity() {
 
-    lateinit var phone_number: String
-    lateinit var country_code: String
+    private lateinit var phoneNumber: String
+    private lateinit var country_code: String
     var TAG = "myactivity"
-    lateinit var getPhoneCode: String
     var kodeNegara = "62"
     private val countryCodeList = ArrayList<DataItem>()
 
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +52,15 @@ class SignInActivity : AppCompatActivity() {
         changeIconEditText()
 
         btn_sign_in.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { inputNumber() }
+            scope.launch(Dispatchers.Main) { inputNumber() }
         }
 
         tv_awal_nmr_tlp.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { showPopupDialog() }
+            scope.launch(Dispatchers.Main) {
+
+                pb_code_phone.visibility=View.VISIBLE
+                tv_awal_nmr_tlp.visibility=View.GONE
+                showPopupDialog() }
         }
 
 
@@ -78,6 +82,8 @@ class SignInActivity : AppCompatActivity() {
 
         //Menampilkan kode negara
         getCountryCode()
+        pb_code_phone.visibility=View.GONE
+        tv_awal_nmr_tlp.visibility=View.VISIBLE
 
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.pop_phone_code)
@@ -105,31 +111,33 @@ class SignInActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    suspend fun inputNumber() {
+    private suspend fun inputNumber() {
 
         pb_sign_in.visibility = View.VISIBLE
         btn_sign_in.visibility = View.GONE
 
-        phone_number = et_phone.text.toString()
+        phoneNumber = et_phone.text.toString()
         country_code = kodeNegara
-        val nmrTelp = "$country_code$phone_number"
+        val nmrTelp = "$country_code$phoneNumber"
 
         //memulai Api
-        val network = NetworkConfig().inputNumber().inputNumber(phone_number, country_code)
+        val network = NetworkConfig().inputNumber().inputNumber(phoneNumber, country_code)
 
         if (network!!.isSuccessful) {
-            if (network.body()!!.status == "activation") {
-                pb_sign_in.visibility = View.INVISIBLE
-                btn_sign_in.visibility = View.VISIBLE
+            if (network.body()!!.status == "activation" || network.body()!!.status == "new") {
                 val intent = Intent(this, KodeAktivasiActivity::class.java)
                     .putExtra("nmr_telp", nmrTelp)
                 startActivity(intent)
-            } else {
                 pb_sign_in.visibility = View.INVISIBLE
                 btn_sign_in.visibility = View.VISIBLE
+                finish()
+            } else {
                 val intent = Intent(this, SignInPasswordActivity::class.java)
                     .putExtra("nmr_telp", nmrTelp)
                 startActivity(intent)
+                pb_sign_in.visibility = View.INVISIBLE
+                btn_sign_in.visibility = View.VISIBLE
+                finish()
             }
         } else {
             btn_sign_in.visibility = View.VISIBLE
@@ -166,7 +174,7 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
-    fun changeIconEditText() {
+    private fun changeIconEditText() {
 
         et_phone.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}

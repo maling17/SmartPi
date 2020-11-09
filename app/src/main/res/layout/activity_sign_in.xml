@@ -78,6 +78,14 @@
                 android:padding="15dp"
                 android:text="@string/_62" />
 
+            <ProgressBar
+                android:id="@+id/pb_code_phone"
+                android:padding="5dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_textview_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <EditText
                 android:id="@+id/et_phone"
                 android:layout_width="match_parent"

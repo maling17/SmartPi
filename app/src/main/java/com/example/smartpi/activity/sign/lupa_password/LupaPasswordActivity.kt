@@ -22,18 +22,21 @@ import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.model.DataItem
 import kotlinx.android.synthetic.main.activity_lupa_password.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class LupaPasswordActivity : AppCompatActivity() {
 
-    lateinit var phone_number: String
-    lateinit var country_code: String
+    private lateinit var phone_number: String
+    private lateinit var country_code: String
     var TAG = "myactivity"
-    lateinit var getPhoneCode: String
     var kodeNegara = "62"
     private val countryCodeList = ArrayList<DataItem>()
+
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +49,13 @@ class LupaPasswordActivity : AppCompatActivity() {
         changeIconEditText()
 
         btn_ubah_password.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { resetPassword() }
+            scope.launch(Dispatchers.Main) { resetPassword() }
         }
 
         tv_awal_nmr_tlp_lupa.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { showPopupDialog() }
+            scope.launch(Dispatchers.Main) { showPopupDialog() }
         }
+        tv_kembali_lupa_password.setOnClickListener { finish() }
     }
 
     private suspend fun getCountryCode() {
@@ -97,7 +101,7 @@ class LupaPasswordActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    suspend fun resetPassword() {
+    private suspend fun resetPassword() {
 
         pb_lupa_password.visibility = View.VISIBLE
         btn_ubah_password.visibility = View.GONE
@@ -115,7 +119,7 @@ class LupaPasswordActivity : AppCompatActivity() {
             pb_lupa_password.visibility = View.INVISIBLE
             tv_kembali_lupa_password.visibility = View.VISIBLE
 
-           val message= network.body()!!.message
+            val message = network.body()!!.message
             val intent = Intent(this, LupaPasswordAktivasiActivity::class.java)
                 .putExtra("nmr_telp", nmrTelp)
             startActivity(intent)
@@ -149,7 +153,7 @@ class LupaPasswordActivity : AppCompatActivity() {
 
     }
 
-    fun changeIconEditText() {
+    private fun changeIconEditText() {
 
         et_phone_lupa_password.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -194,4 +198,8 @@ class LupaPasswordActivity : AppCompatActivity() {
         })
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }

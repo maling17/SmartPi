@@ -14,14 +14,16 @@ import com.example.smartpi.R
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.utils.Preferences
 import kotlinx.android.synthetic.main.activity_lupa_password_aktivasi.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class LupaPasswordAktivasiActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
     var TAG = "MyActivity"
     lateinit var preferences: Preferences
+
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lupa_password_aktivasi)
@@ -33,7 +35,7 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
         et_phone_lupa_aktivasi.text = Editable.Factory.getInstance().newEditable(phoneNumber)
 
         btn_verifikasi_token.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            scope.launch(Dispatchers.Main) {
                 verfikasiPassword()
             }
         }
@@ -43,7 +45,7 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
 
     }
 
-    suspend fun verfikasiPassword() {
+    private suspend fun verfikasiPassword() {
 
         pb_lupa_aktivasi.visibility = View.VISIBLE
         btn_verifikasi_token.visibility = View.GONE
@@ -92,7 +94,7 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
 
     }
 
-    fun changeIconEditText() {
+    private fun changeIconEditText() {
 
         et_kode_aktivasi_lupa_aktivasi.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -135,5 +137,10 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
             }
             false
         })
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

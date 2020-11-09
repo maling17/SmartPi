@@ -20,14 +20,15 @@ import com.example.smartpi.activity.sign.lupa_password.LupaPasswordActivity
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.utils.Preferences
 import kotlinx.android.synthetic.main.activity_sign_in_password.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class SignInPasswordActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
     var TAG = "MyActivity"
     lateinit var preferences: Preferences
+
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class SignInPasswordActivity : AppCompatActivity() {
         tv_nmr_telp_sign_in.text = textNmrTlp
 
         btn_masuk_sign_in.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) { prosesSignIn() }
+            scope.launch(Dispatchers.Main) { prosesSignIn() }
         }
         tv_lupa_password.setOnClickListener {
             startActivity(Intent(this, LupaPasswordActivity::class.java))
@@ -75,6 +76,7 @@ class SignInPasswordActivity : AppCompatActivity() {
 
             val intent = Intent(this, MainActivity::class.java)
             preferences.setValues("token", finalToken)
+            preferences.setValues("status","1")
             startActivity(intent)
             finish()
         } else {
@@ -166,5 +168,10 @@ class SignInPasswordActivity : AppCompatActivity() {
             false
         })
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, SignInActivity::class.java))
     }
 }

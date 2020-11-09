@@ -8,5 +8,10 @@ data class CheckTrialModel(
 	val used: Boolean? = null,
 
 	@field:SerializedName("status")
-	val status: String? = null
+	val status: String? = null,
+
+	@field:SerializedName("isFirstTimeTrialUsed")
+	val isFirstTimeTrialUsed: String? = null
+
+
 )
