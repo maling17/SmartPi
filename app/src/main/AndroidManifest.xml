@@ -12,26 +12,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".activity.kelas.PilihJadwalActivity">
-
-        </activity>
-        <activity android:name=".activity.kelas.PilihPaketActivity" />
-        <activity android:name=".activity.kelas.PilihTrialActivity" />
-        <activity android:name=".activity.SplashScreenActivity">
+        <activity android:name=".view.pembelian.LanggananPaketActivity"></activity>
+        <activity android:name=".view.kelas.PilihJadwalActivity"></activity>
+        <activity android:name=".view.kelas.PilihPaketActivity" />
+        <activity android:name=".view.kelas.PilihTrialActivity" />
+        <activity android:name=".view.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.kelas.DetailKelasActivity" />
-        <activity android:name=".activity.sign.lupa_password.GantiLupaPasswordActivity" />
-        <activity android:name=".activity.sign.lupa_password.LupaPasswordAktivasiActivity" />
-        <activity android:name=".activity.sign.lupa_password.LupaPasswordActivity" />
-        <activity android:name=".activity.sign.SignUpActivity" />
-        <activity android:name=".activity.sign.SignInPasswordActivity" />
-        <activity android:name=".activity.sign.KodeAktivasiActivity" />
-        <activity android:name=".activity.sign.SignInActivity" />
+        <activity android:name=".view.kelas.DetailKelasActivity" />
+        <activity android:name=".view.sign.lupa_password.GantiLupaPasswordActivity" />
+        <activity android:name=".view.sign.lupa_password.LupaPasswordAktivasiActivity" />
+        <activity android:name=".view.sign.lupa_password.LupaPasswordActivity" />
+        <activity android:name=".view.sign.SignUpActivity" />
+        <activity android:name=".view.sign.SignInPasswordActivity" />
+        <activity android:name=".view.sign.KodeAktivasiActivity" />
+        <activity android:name=".view.sign.SignInActivity" />
         <activity android:name=".MainActivity" />
 
         <meta-data

@@ -31,6 +31,9 @@ class NetworkConfig {
     fun packageTrial(): TrialApi = getNetwork.create(TrialApi::class.java)
     fun getPackageActive(): PackageApi = getNetwork.create(PackageApi::class.java)
     fun getTeacher(): TeacherApi = getNetwork.create(TeacherApi::class.java)
+    fun checkSession(): CheckSessionApi = getNetwork.create(CheckSessionApi::class.java)
+    fun createSchedule(): CreateScheduleApi = getNetwork.create(CreateScheduleApi::class.java)
+    fun getPrograms(): ProgramApi = getNetwork.create(ProgramApi::class.java)
 
 
 }

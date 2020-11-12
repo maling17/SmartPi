@@ -69,4 +69,7 @@ dependencies {
 
     //calendar 
     implementation 'com.applandeo:material-calendar-view:1.7.0'
+    implementation 'com.jonaswanke.calendar:calendar:0.1.1'
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+    implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
 }

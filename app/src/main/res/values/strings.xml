@@ -81,4 +81,21 @@
     <string name="guru_yang_dipilih">Guru yang dipilih :</string>
     <string name="_1_sesi">1 Sesi</string>
     <string name="_2_sesi">2 Sesi</string>
+    <string name="lainnya">Lainnya</string>
+    <string name="ubah_profil">Ubah Profil</string>
+    <string name="hubungi_kami">Hubungi Kami</string>
+    <string name="tentang_kami">Tentang Kami</string>
+    <string name="syarat_amp_ketentuan"><![CDATA[Syarat & Ketentuan]]></string>
+    <string name="keluar">Keluar</string>
+    <string name="kebijakan_privasi">Kebijakan Privasi</string>
+    <string name="pilih_slot">Pilih Slot</string>
+    <string name="lihat_paket">Lihat Paket</string>
+    <string name="ayo_segera_berlangganan_untuk_meraih_masa_depan_cemerlang">Ayo segera berlangganan untuk meraih masa depan cemerlang</string>
+    <string name="pra_kerja">Pra Kerja</string>
+    <string name="kursus_prakerja_untuk_meningkatkan_skill_kerja_anda">Kursus prakerja untuk meningkatkan skill kerja anda</string>
+    <string name="langganan_smartpi">Langganan Smartpi</string>
+    <string name="satu_kali_pertemuan_untuk_satu_program">Satu kali pertemuan untuk satu program</string>
+    <string name="coba_gratis">Coba Gratis</string>
+    <string name="konfirmasi">Konfirmasi</string>
+    <string name="konfirmasi_kata_kunci">Konfirmasi Kata Kunci</string>
 </resources>

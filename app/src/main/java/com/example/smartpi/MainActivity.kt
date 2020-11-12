@@ -1,40 +1,57 @@
 package com.example.smartpi
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.smartpi.fragment.HomeFragment
-import com.example.smartpi.fragment.KelasFragment
+import com.example.smartpi.databinding.ActivityMainBinding
 import com.example.smartpi.utils.Preferences
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.smartpi.view.fragment.HomeFragment
+import com.example.smartpi.view.fragment.KelasFragment
+import com.example.smartpi.view.fragment.LainnyaFragment
+import com.example.smartpi.view.fragment.PembelianFragment
 
 class MainActivity : AppCompatActivity() {
-    val homeFragment = HomeFragment()
-    val kelasFragment = KelasFragment()
+    private val homeFragment = HomeFragment()
+    private val kelasFragment = KelasFragment()
+    private val pembelianFragment = PembelianFragment()
+    private val lainnyaFragment = LainnyaFragment()
     lateinit var preferences: Preferences
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         preferences = Preferences(this)
-
-
         setFragment(homeFragment)
 
-        btv_home.setOnNavigationItemSelectedListener {
+        binding.btvHome.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_navigation -> {
                     setFragment(homeFragment)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.kelas_navigation->{
+                R.id.kelas_navigation -> {
                     setFragment(kelasFragment)
-                    return@setOnNavigationItemSelectedListener  true
+                    return@setOnNavigationItemSelectedListener true
                 }
-                R.id.lain_navigation ->{
-                    preferences.setValues("status","0")
-                    finish()
-                    return@setOnNavigationItemSelectedListener  true
+
+                R.id.bantuan_navigation -> {
+                    sendToWhatsapp()
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.pembelian_navigation -> {
+                    setFragment(pembelianFragment)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.lain_navigation -> {
+                    setFragment(lainnyaFragment)
+                    return@setOnNavigationItemSelectedListener true
 
                 }
 
@@ -51,5 +68,22 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fl_main, fragment)
         fragmentTransaction.commit()
+    }
+
+    private fun sendToWhatsapp() {
+        val contact = "+62 81211718296"
+        val message = "Hallo Smartpi. Saya butuh bantuan"
+        val url = "https://api.whatsapp.com/send?phone=$contact&text=$message"
+
+        try {
+            val packageManager = applicationContext.packageManager
+            packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
+            val intent = Intent(Intent.ACTION_VIEW)
+
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Toast.makeText(this, "Check Your Connection", Toast.LENGTH_LONG).show()
+        }
     }
 }

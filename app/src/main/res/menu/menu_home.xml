@@ -3,29 +3,29 @@
 
 
     <item
-        android:id="@+id/home"
+        android:id="@+id/home_navigation"
         android:enabled="true"
         android:icon="@drawable/ic_ikon_home_blue"
         android:title="@string/beranda" />
 
     <item
-        android:id="@+id/kelas"
+        android:id="@+id/kelas_navigation"
         android:enabled="true"
         android:icon="@drawable/ic_ikon_kelas_grey"
         android:title="@string/kelas" />
     <item
-        android:id="@+id/pembelian"
+        android:id="@+id/pembelian_navigation"
         android:enabled="true"
         android:icon="@drawable/ic_ikon_belanja_grey"
         android:title="@string/pembelian" />
     <item
-        android:id="@+id/bantuan"
+        android:id="@+id/bantuan_navigation"
         android:enabled="true"
         android:icon="@drawable/ic_ikon_bantuan_grey"
         android:title="@string/bantuan" />
 
     <item
-        android:id="@+id/lain"
+        android:id="@+id/lain_navigation"
         android:enabled="true"
         android:icon="@drawable/ic_ikon_lain_grey"
         android:title="@string/lain" />

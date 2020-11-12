@@ -1,0 +1,25 @@
+package com.example.smartpi.view.kelas
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.smartpi.databinding.FragmentWaitingConfirmationBinding
+
+
+class WaitingConfirmationFragment : Fragment() {
+
+
+    private var _binding: FragmentWaitingConfirmationBinding? = null
+    private val binding get() = _binding!!
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        _binding = FragmentWaitingConfirmationBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+}
