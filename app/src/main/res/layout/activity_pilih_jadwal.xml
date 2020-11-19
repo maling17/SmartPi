@@ -150,9 +150,10 @@
                         android:id="@+id/btn_sesi_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/light_blue"
+                        android:backgroundTint="@color/grey"
                         android:fontFamily="@font/open_sans"
-                        android:text="@string/_2_sesi" />
+                        android:text="@string/_2_sesi"
+                        android:textColor="@color/dark_grey" />
                 </LinearLayout>
 
 
@@ -183,14 +184,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:eventsEnabled="true"
-                    app:type="classic" />
-
-                <com.applandeo.materialcalendarview.CalendarView
-                    android:id="@+id/calendar_view_sesi_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:type="many_days_picker" />
+                    app:highlightedDaysLabelsColor="@color/red"
+                    app:type="one_day_picker" />
 
             </RelativeLayout>
 

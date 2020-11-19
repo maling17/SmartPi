@@ -1,11 +1,17 @@
 package com.example.smartpi.api
 
 import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 class NetworkConfig {
+
+    val okHttpClient = OkHttpClient().newBuilder()
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .build()
 
     val baseurl = "https://wiztalk.co/api/"
     var gson = GsonBuilder()
@@ -14,6 +20,7 @@ class NetworkConfig {
     val getNetwork = Retrofit.Builder()
         .baseUrl(baseurl)
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .client(okHttpClient)
         .build()
 
     fun inputNumber(): InputNumberApi = getNetwork.create(InputNumberApi::class.java)
@@ -34,6 +41,8 @@ class NetworkConfig {
     fun checkSession(): CheckSessionApi = getNetwork.create(CheckSessionApi::class.java)
     fun createSchedule(): CreateScheduleApi = getNetwork.create(CreateScheduleApi::class.java)
     fun getPrograms(): ProgramApi = getNetwork.create(ProgramApi::class.java)
+    fun getAfterClass(): AfterClassApi =
+        getNetwork.create(AfterClassApi::class.java)
 
 
 }

@@ -72,4 +72,7 @@ dependencies {
     implementation 'com.jonaswanke.calendar:calendar:0.1.1'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
     implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+
+    //slide up panel
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
 }

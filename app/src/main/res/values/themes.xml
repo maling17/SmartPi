@@ -109,7 +109,25 @@
         <item name="android:textColor">@color/orange</item>
         <item name="fontFamily">@font/open_sans</item>
     </style>
-    
+
+    <style name="Text14RegulerOrange">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Text14RegulerGreen">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/green</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Text14BoldrOrange">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="fontFamily">@font/open_sans_bold</item>
+    </style>
+
     <style name="button_disable">
         <item name="background">@drawable/button_grey</item>
         <item name="android:textColor">@color/dark_grey</item>
@@ -120,6 +138,11 @@
         <item name="background">@drawable/button_yellow</item>
         <item name="android:textColor">@color/grey</item>
         <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/yellow</item>
+        <item name="colorControlActivated">@color/light_grey</item>
     </style>
 
 

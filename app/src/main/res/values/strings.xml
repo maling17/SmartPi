@@ -98,4 +98,15 @@
     <string name="coba_gratis">Coba Gratis</string>
     <string name="konfirmasi">Konfirmasi</string>
     <string name="konfirmasi_kata_kunci">Konfirmasi Kata Kunci</string>
+    <string name="tidak_ada_riwayat_jadwal">Tidak Ada Riwayat Jadwal</string>
+    <string name="ada_dapat_membuat_jadwal_pada_layar_jadwal">Ada dapat membuat jadwal pada layar Jadwal</string>
+    <string name="bagaimana_gurunya">Bagaimana gurunya?</string>
+    <string name="asal">Asal</string>
+    <string name="tulis_alasan">Tulis Alasan</string>
+    <string name="tulis_pesan_kamu">Tulis Pesan Kamu</string>
+    <string name="feedback_dari_guru">Feedback dari guru</string>
+    <string name="lihat_feedback">Lihat Feedback</string>
+    <string name="simpan">Simpan</string>
+    <string name="status">status</string>
+    <string name="kelas_bermasalah">Kelas Bermasalah</string>
 </resources>

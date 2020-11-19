@@ -1,6 +1,7 @@
 package com.example.smartpi.api
 
 import com.example.smartpi.model.CreateScheduleModel
+import com.example.smartpi.model.ScheduleModel
 import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.*
@@ -20,4 +21,12 @@ interface CreateScheduleApi {
         @Field("schedule_time") schedule_time: String?,
         @Field("status") status: String?
     ): Response<CreateScheduleModel>
+
+    @POST("schedule/create-2")
+    @Headers("Accept: application/json")
+    @SerializedName("data")
+    suspend fun createScheduleSesi2(
+        @Header("Authorization") token: String?,
+        @Body createSchedule: ScheduleModel
+    ): Response<ScheduleModel>
 }

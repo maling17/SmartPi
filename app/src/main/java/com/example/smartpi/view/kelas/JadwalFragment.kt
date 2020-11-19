@@ -2,6 +2,8 @@ package com.example.smartpi.view.kelas
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +15,8 @@ import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentJadwalBinding
 import com.example.smartpi.model.JadwalItem
 import com.example.smartpi.utils.Preferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.net.SocketException
 
 class JadwalFragment : Fragment() {
 
@@ -40,13 +40,6 @@ class JadwalFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        jadwalList.clear()
-        preferences = Preferences(activity!!.applicationContext)
-        token = "Bearer ${preferences.getValues("token")}"
-        //setting Recylerview jadwal
-        binding.rvListJadwal.layoutManager =
-            LinearLayoutManager(context)
-        binding.rvListJadwal.isNestedScrollingEnabled = false
 
         binding.btnLangganan.setOnClickListener {
             Toast.makeText(context, "Berhasil Langganan", Toast.LENGTH_SHORT).show()
@@ -55,10 +48,33 @@ class JadwalFragment : Fragment() {
             startActivity(Intent(context, PilihPaketActivity::class.java))
         }
 
-        scope.launch(Dispatchers.Main) {
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            throwable.printStackTrace()
+            binding.pbListJadwal.visibility = View.GONE
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "Checkout Connection",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+        jadwalList.clear()
+        preferences = Preferences(activity!!.applicationContext)
+        token = "Bearer ${preferences.getValues("token")}"
+        //setting Recylerview jadwal
+        binding.rvListJadwal.layoutManager =
+            LinearLayoutManager(context)
+        binding.rvListJadwal.isNestedScrollingEnabled = false
+
+        scope.launch(exceptionHandler) {
             checkPackageActive()
         }
-
     }
 
     suspend fun getJadwalUser() {
@@ -68,40 +84,54 @@ class JadwalFragment : Fragment() {
         binding.pbListJadwal.visibility = View.VISIBLE
 
         val networkConfig = NetworkConfig().getJadwalUser().getJadwalUser(token)
-        if (networkConfig.isSuccessful) {
-            binding.llBelumBerlangganan.visibility = View.GONE
-            for (jadwal in networkConfig.body()!!.data!!) {
 
-                jadwalList.add(jadwal!!)
+        try {
+            if (networkConfig.isSuccessful) {
+                binding.llBelumBerlangganan.visibility = View.GONE
+                for (jadwal in networkConfig.body()!!.data!!) {
+
+                    jadwalList.add(jadwal!!)
+                }
+
+                binding.svJadwal.visibility = View.VISIBLE
+                binding.fabJadwal.visibility = View.VISIBLE
+                binding.pbListJadwal.visibility = View.GONE
+                binding.llBelumBuatJadwal.visibility = View.GONE
+
+                binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                    val intent =
+                        Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
+                    startActivity(intent)
+
+                }
+
+            } else {
+
+                binding.svJadwal.visibility = View.GONE
+                binding.fabJadwal.visibility = View.VISIBLE
+                binding.pbListJadwal.visibility = View.GONE
+                binding.llBelumBuatJadwal.visibility = View.VISIBLE
+
             }
-
-            binding.svJadwal.visibility = View.VISIBLE
-            binding.fabJadwal.visibility = View.VISIBLE
-            binding.pbListJadwal.visibility = View.GONE
-            binding.llBelumBuatJadwal.visibility = View.GONE
-
-            binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
-                val intent = Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
-                startActivity(intent)
-
-            }
-
-        } else {
-
-            binding.svJadwal.visibility = View.GONE
-            binding.fabJadwal.visibility = View.VISIBLE
-            binding.pbListJadwal.visibility = View.GONE
-            binding.llBelumBuatJadwal.visibility = View.VISIBLE
-
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     suspend fun checkPackageActive() {
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
-        if (network.isSuccessful) {
-            getJadwalUser()
-        } else {
-            binding.llBelumBerlangganan.visibility = View.VISIBLE
+
+        try {
+            if (network.isSuccessful) {
+                getJadwalUser()
+            } else {
+                binding.llBelumBerlangganan.visibility = View.VISIBLE
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
     }
+
+
 }
