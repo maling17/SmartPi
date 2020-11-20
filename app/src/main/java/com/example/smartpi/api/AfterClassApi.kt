@@ -27,8 +27,19 @@ interface AfterClassApi {
     suspend fun rateClass(
         @Header("Authorization") token: String?,
         @Field("scheduleId") scheduleId: String?,
-        @Field("rateTeacher") rateTeacher: String?,
+        @Field("rateTeacher") rateTeacher: Float?,
         @Field("feedback") feedback: String?,
+
+        ): Response<RateModel>
+
+    @FormUrlEncoded
+    @POST("schedule/rate-failed")
+    @Headers("Accept: application/json")
+    @SerializedName("data")
+    suspend fun inputKelasBermasalah(
+        @Header("Authorization") token: String?,
+        @Field("scheduleId") scheduleId: String?,
+        @Field("alasan") alasan: String?,
 
         ): Response<RateModel>
 

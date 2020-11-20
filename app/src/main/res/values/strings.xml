@@ -109,4 +109,13 @@
     <string name="simpan">Simpan</string>
     <string name="status">status</string>
     <string name="kelas_bermasalah">Kelas Bermasalah</string>
+    <string name="guru_tidak_hadir">Guru tidak hadir</string>
+    <string name="jaringan_bermasalah">Jaringan bermasalah</string>
+    <string name="kenapa_kelas_belum_selesai">Kenapa kelas belum selesai?</string>
+
+    <string-array name="alasan_kelas">
+        <item>Jaringan bermasalah</item>
+        <item>Guru tidak hadir </item>
+        <item>Lainnya</item>
+    </string-array>
 </resources>

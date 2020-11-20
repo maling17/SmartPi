@@ -104,6 +104,7 @@ class PilihJadwalActivity : AppCompatActivity() {
             changeBackgroundButtonSesi2()
             scope.launch(Dispatchers.Main) { calendarSesi2() }
         }
+        binding.ivBackPilihJadwal.setOnClickListener { finish() }
 
 
     }
