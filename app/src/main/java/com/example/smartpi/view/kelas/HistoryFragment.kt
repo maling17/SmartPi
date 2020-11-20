@@ -58,12 +58,9 @@ class HistoryFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         preferences = Preferences(context!!)
         token = "Bearer ${preferences.getValues("token")}"
-        isLoading = false
-        listViewType = ArrayList()
-        countLoadMore = 0
-
 
         hideBottomSheet()
+        binding.pbHistory.visibility = View.VISIBLE
 
         scope.launch(Dispatchers.Main) {
             getHistory()
@@ -73,12 +70,17 @@ class HistoryFragment : Fragment() {
 
     private suspend fun getHistory() {
         historyList.clear()
+
+        //untuk inisialiasi sliding up layout
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.clFeedback)
         val bottomSheetBehaviorAlasan = BottomSheetBehavior.from(binding.llBermasalah)
+
         val networkConfig = NetworkConfig().getAfterClass().getHistory(token)
-        binding.rbGuru.isEnabled = true
+
         try {
             if (networkConfig.isSuccessful) {
+                binding.pbHistory.visibility = View.VISIBLE
+
                 for (history in networkConfig.body()!!.data!!) {
                     historyList.add(history!!)
                 }
@@ -90,13 +92,16 @@ class HistoryFragment : Fragment() {
                     binding.tvNamaPaketHistory.text = it.packageName
                     binding.tvTanggalHistory.text =
                         it.scheduleTime!!.toDate().formatTo("dd MMMM yyyy")
+
+                    //cek status kalau 3 = sudah selesai , 6 = bermasalah
                     when (it.status) {
                         3 -> {
-                            if (it.teacherRate.toString() == "null") {
+
+                            if (it.teacherRate.toString() == "null") { //cek sudah ada rating belum?
                                 val alertDialogBuilder: AlertDialog.Builder =
                                     AlertDialog.Builder(context)
-                                alertDialogBuilder.setTitle("Kelas Selesai?")
 
+                                alertDialogBuilder.setTitle("Kelas Selesai?")
                                 alertDialogBuilder
                                     .setMessage("Apakah kelas sudah selesai?")
                                     .setCancelable(false)
@@ -105,31 +110,35 @@ class HistoryFragment : Fragment() {
                                         DialogInterface.OnClickListener { dialog, _ ->
                                             bottomSheetBehavior.state =
                                                 BottomSheetBehavior.STATE_EXPANDED
+
                                             binding.tvKelasBermasalah.visibility = View.GONE
                                             binding.clKesan.visibility = View.VISIBLE
                                             binding.btnSimpanHistory.visibility = View.VISIBLE
                                             binding.btnLihatFeedback.visibility = View.VISIBLE
+
                                             binding.rbGuru.isEnabled = true
                                             binding.rbGuru.isClickable = true
                                             binding.rbGuru.rating = 0f
                                             getScheduleId = it.id.toString()
+                                            Picasso.get().load(it.teacherAvatar)
+                                                .into(binding.ivTeacherHistory)
 
                                             binding.btnSimpanHistory.setOnClickListener {
                                                 val etKesan = binding.etKesan.text
                                                 val getRating = binding.rbGuru.rating
 
-                                                scope.launch {
+                                                scope.launch {      //api untuk rate kelas
                                                     rateKelas(
                                                         getScheduleId,
                                                         getRating,
                                                         etKesan.toString()
                                                     )
+                                                    getHistory()
                                                 }
                                             }
 
-                                            Picasso.get().load(it.teacherAvatar)
-                                                .into(binding.ivTeacherHistory)
-                                            scope.launch { getHistory() }
+
+
                                             dialog.dismiss()
                                         })
                                     .setNegativeButton("Belum",
@@ -137,6 +146,8 @@ class HistoryFragment : Fragment() {
                                             ->
                                             bottomSheetBehaviorAlasan.state =
                                                 BottomSheetBehavior.STATE_EXPANDED
+
+                                            // untuk munculkan dan menghilangkan edit text alasan
                                             binding.rbLainnya.setOnClickListener {
                                                 binding.etAlasan.visibility = View.VISIBLE
                                             }
@@ -146,13 +157,14 @@ class HistoryFragment : Fragment() {
                                             binding.rbGuruTidakHadir.setOnClickListener {
                                                 binding.etAlasan.visibility = View.GONE
                                             }
+
                                             getScheduleId = it.id.toString()
+
                                             binding.btnSimpanHistoryBermasasalah.setOnClickListener {
 
                                                 val intSelectButton =
                                                     binding.rgAlasan.checkedRadioButtonId
-                                                val radioButton: RadioButton
-                                                radioButton =
+                                                val radioButton: RadioButton =
                                                     binding.root.findViewById(intSelectButton)
 
                                                 when (radioButton.text.toString()) {
@@ -179,6 +191,8 @@ class HistoryFragment : Fragment() {
                                 alertDialog.show()
 
                             } else {
+
+                                // untuk kelas yang sudah dirate
                                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                                 binding.tvKelasBermasalah.visibility = View.GONE
                                 binding.clKesan.visibility = View.GONE
@@ -216,6 +230,7 @@ class HistoryFragment : Fragment() {
 
                 }
             } else {
+                binding.clHistoryEmpty.visibility = View.VISIBLE
                 Log.d(TAG, "getHistory: History Gagal diambil")
             }
         } catch (e: Exception) {
