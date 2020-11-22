@@ -75,7 +75,7 @@ class PilihJadwalActivity : AppCompatActivity() {
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
 
-        Log.d(TAG, "onCreate: $id  $token ")
+        Log.d(TAG, "onCreate: $id  $token , $user_avalaible_id ")
         binding.rvSlot.layoutManager = GridLayoutManager(this, 4)
 
         scope.async {
@@ -190,7 +190,6 @@ class PilihJadwalActivity : AppCompatActivity() {
         min.add(Calendar.DAY_OF_MONTH, -1)
 
         binding.calendarViewSesi1.setMinimumDate(min)
-
 
         binding.calendarViewSesi1.setOnDayClickListener { eventDay ->
             binding.rvSlot.visibility = View.VISIBLE

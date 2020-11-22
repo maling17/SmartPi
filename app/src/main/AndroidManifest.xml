@@ -12,8 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".view.pembelian.LanggananPaketActivity"></activity>
-        <activity android:name=".view.kelas.PilihJadwalActivity"></activity>
+        <activity android:name=".view.kelas.filter.FilterWaktuActivity"></activity>
+        <activity android:name=".view.pembelian.LanggananPaketActivity" />
+        <activity android:name=".view.kelas.PilihJadwalActivity" />
         <activity android:name=".view.kelas.PilihPaketActivity" />
         <activity android:name=".view.kelas.PilihTrialActivity" />
         <activity android:name=".view.SplashScreenActivity">

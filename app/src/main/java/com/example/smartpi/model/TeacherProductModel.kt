@@ -8,24 +8,24 @@ import kotlinx.android.parcel.Parcelize
 data class TeacherProductModel(
 
     @field:SerializedName("teacher")
-    val teacher: List<TeacherItem?>? = null
+    var teacher: List<TeacherItem?>? = null
 ) : Parcelable
 
 @Parcelize
 data class TeacherItem(
 
     @field:SerializedName("name")
-    val name: String? = null,
+    var name: String? = null,
 
     @field:SerializedName("rating")
-    val rating: String? = null,
+    var rating: String? = null,
 
     @field:SerializedName("id")
-    val id: Int? = null,
+    var id: Int? = null,
 
     @field:SerializedName("avatar")
-    val avatar: String? = null,
+    var avatar: String? = null,
 
     @field:SerializedName("recommended")
-    val recommended: Int? = null
+    var recommended: Int? = null
 ) : Parcelable
