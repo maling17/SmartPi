@@ -219,18 +219,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_asal_guru" />
 
-    <ImageView
-        android:id="@+id/iv_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/round_grey_blue"
-        android:padding="10dp"
-        android:src="@drawable/ic_icon_chat"
-        app:layout_constraintBottom_toTopOf="@+id/view8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view7" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

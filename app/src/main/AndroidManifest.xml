@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".view.kelas.filter.FilterWaktuActivity"></activity>
+        <activity android:name=".CreditCardActivity"></activity>
+        <activity android:name=".view.pembelian.virtulaccount.VirtualAccountActivity" />
+        <activity android:name=".view.pembelian.DetailPembelianActivity" />
+        <activity android:name=".view.pembelian.DetailPaketActivity" />
+        <activity android:name=".view.pembelian.PilihPaketLanggananActivity" />
+        <activity android:name=".view.kelas.filter.FilterWaktuActivity" />
         <activity android:name=".view.pembelian.LanggananPaketActivity" />
         <activity android:name=".view.kelas.PilihJadwalActivity" />
         <activity android:name=".view.kelas.PilihPaketActivity" />

@@ -1,5 +1,6 @@
 package com.example.smartpi.view.pembelian
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +58,10 @@ class MengajiFragment : Fragment() {
             binding.pbMengaji.visibility = View.GONE
             binding.rvMengaji.visibility = View.VISIBLE
             binding.rvMengaji.adapter = ListProgramsAdapter(programsList) {
+                val intent =
+                    Intent(activity, PilihPaketLanggananActivity::class.java)
+                intent.putExtra("id_program", it.id.toString())
+                startActivity(intent)
 
             }
         }

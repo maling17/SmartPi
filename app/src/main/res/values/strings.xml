@@ -117,10 +117,58 @@
     <string name="rentang_waktu">Rentang Waktu</string>
     <string name="tampilkan">Tampilkan</string>
     <string name="pilih_tanggal">Pilih Tanggal</string>
+    <string name="harga">Harga</string>
+    <string name="deskripsi">Deskripsi</string>
+    <string name="detail_paket">Detail Paket</string>
+    <string name="_0x">0X</string>
+    <string name="_0_bulan">0 Bulan</string>
+    <string name="_0_menit">0 Menit</string>
+    <string name="x_sesi">1x Sesi</string>
+    <string name="keunggulan_kami">Keunggulan Kami</string>
+    <string name="keunggulan_1">Jadwal dan Tempat Fleksibel</string>
+    <string name="deskripsi_keunggulan_1">Putra-putri Anda akan belajar dengan mudah kapanpun dan dimanapun dan bisa membatalkan jadwal tanpa khawatir harus kehilangan sesi.</string>
+    <string name="keunggulan_2">Guru Yang Berkualitas</string>
+    <string name="deskripsi_keunggulan_2">Menjamin guru yang mengajar putra-putri anda berkualifikasi dan berpengalaman. Kami menyeleksi guru dengan ketat melalui rekrutmen yang ketat. Pengajar kami adalah lulusan universitas ternama.</string>
+    <string name="keunggulan_3">Mutu Yang Terbukti</string>
+    <string name="deskripsi_keunggulan_3">Sudah lebih dari 10 ribu kelas kami menyelenggarakan bagi klien besar kami seperti : BTPN, BPJS KETENAGAKERJAAN, GMF, dan Sebagainya. Kami juga menggunakan teknologi video conference sendiri yang memudahkan peserta untuk belajar karena didesign untuk kelas online.</string>
+    <string name="lanjut">Lanjut</string>
+    <string name="nama_produk">Nama Produk</string>
+    <string name="masa_aktif">Masa Aktif</string>
+    <string name="tanggal_pemesanan">Tanggal Pemesanan</string>
+    <string name="total_pembayaran">Total Pembayaran</string>
+    <string name="masukan_kode_voucher_anda">Masukan Kode Voucher Anda</string>
+    <string name="detail_pembayaran">Detail Pembayaran</string>
+    <string name="bayar">Bayar</string>
+    <string name="wallet">Wallet</string>
+    <string name="bank_transfer_and_others">Bank Transfer &amp; others</string>
+    <string name="masukan_nomor_handphone_yang_terhubung_dengan_akun_wallet_anda">Masukan nomor handphone yang terhubung dengan akun Wallet Anda.</string>
+    <string name="perhatian">Perhatian: <br />Hanya menerima nomor Indonesia yang sudah terhubung dengan akun e-wallet yang sudah di pilih</string>
+    <string name="nomor_handphone">Nomor Handphone</string>
+    <string name="conteh_81234567890">Contoh: 81234567890</string>
+    <string name="lanjutkan_pembayaran">Lanjutkan Pembayaran</string>
+    <string name="metode_pembayaran_dengan_wallet">Metode Pembayaran dengan wallet</string>
+    <string name="pembayaran">Pembayaran</string>
+    <string name="transfer_ke_nbank_mandiri">Transfer ke: <br />Bank Mandiri</string>
+    <string name="jumlah_yang_harus_dibayar">Jumlah yang harus dibayar</string>
 
     <string-array name="alasan_kelas">
         <item>Jaringan bermasalah</item>
         <item>Guru tidak hadir </item>
         <item>Lainnya</item>
+    </string-array>
+
+    <!--MANDIRI-->
+    <string-array name="atm_bank_mandiri">
+        <item>1. Masukan kartu ATM dan pilih "Bahasa Indonesia"</item>
+        <item>2. Ketik Nomor PIN dan tekan BENAR </item>
+        <item>3. Pilih menu "BAYAR/BELI</item>
+        <item>4. Pilih menu "MULTI PAYMENT"</item>
+        <item>5. Ketik kode perusahaan, yaitu "88608"(Xendit 88608), tekan benar</item>
+        <item>6. Masukan nomor Virtual Account</item>
+        <item>7. Isi NOMINAL, kemudian tekan "BENAR"</item>
+        <item>8. Muncul konfirmasi data customer. Pilih Nomor 1 sesuai tagihan yang akan dibayar, kemudian tekan "YA"</item>
+        <item>9. Muncul konfirmasi pembayaran. Tekan "YA" untuk melakukan pembayaran</item>
+        <item>10. Bukti Pembayaran dalam bentuk struk agar disimpan sebagai bukti pembayaran yang sah dari Bank Mandiri</item>
+        <item>11. Transaksi Anda sudah selesai</item>
     </string-array>
 </resources>

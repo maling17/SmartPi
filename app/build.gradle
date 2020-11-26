@@ -75,4 +75,6 @@ dependencies {
 
     //slide up panel
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+    implementation 'it.sysdata.mobile:fancyaccordionview:1.0.1'
 }

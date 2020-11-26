@@ -41,8 +41,9 @@ class NetworkConfig {
     fun checkSession(): CheckSessionApi = getNetwork.create(CheckSessionApi::class.java)
     fun createSchedule(): CreateScheduleApi = getNetwork.create(CreateScheduleApi::class.java)
     fun getPrograms(): ProgramApi = getNetwork.create(ProgramApi::class.java)
-    fun getAfterClass(): AfterClassApi =
-        getNetwork.create(AfterClassApi::class.java)
+    fun getAfterClass(): AfterClassApi = getNetwork.create(AfterClassApi::class.java)
+    fun getPaketLangganan(): PaketLanggananApi = getNetwork.create(PaketLanggananApi::class.java)
+    fun getWallet(): PembayaranApi = getNetwork.create(PembayaranApi::class.java)
 
 
 }
