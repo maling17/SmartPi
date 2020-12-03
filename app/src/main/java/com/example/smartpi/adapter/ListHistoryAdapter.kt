@@ -91,5 +91,14 @@ class ListHistoryAdapter(
 
     override fun getItemCount(): Int = data.size
 
+    fun addList(items: ArrayList<HistoryItem>) {
+        data.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    fun clear() {
+        data.clear()
+        notifyDataSetChanged()
+    }
 
 }

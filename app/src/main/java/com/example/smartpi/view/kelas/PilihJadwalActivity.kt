@@ -24,6 +24,7 @@ import com.example.smartpi.model.*
 import com.example.smartpi.utils.Preferences
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
+import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,6 +55,7 @@ class PilihJadwalActivity : AppCompatActivity() {
     private var event_id = ""
     private var schedule_time = ""
     private var status = ""
+    private var timeZone = ""
     var itemClicked = false
     var timeInMilliseconds: Long = 0
     var statusItem: Boolean = true
@@ -194,6 +196,14 @@ class PilihJadwalActivity : AppCompatActivity() {
         binding.calendarViewSesi1.setOnDayClickListener { eventDay ->
             binding.rvSlot.visibility = View.VISIBLE
             val clickedDayCalendar = eventDay.calendar.time
+            val calendar = Calendar.getInstance(
+                TimeZone.getTimeZone("GMT"),
+                Locale.getDefault()
+            )
+            val currentLocalTime = calendar.time
+            val date: DateFormat = SimpleDateFormat("z", Locale.getDefault())
+            val localTime: String = date.format(currentLocalTime)
+            timeZone = localTime.drop(3)
             eventDay.isEnabled
 
             val myFormat = "yyyy-MM-dd" // format tanggal
@@ -202,7 +212,7 @@ class PilihJadwalActivity : AppCompatActivity() {
 
             itemClicked = false
             changeBackgroundButtonSesi1()
-            scope.launch(Dispatchers.Main) { getSlotJadwal(id, curdate) }
+            scope.launch(Dispatchers.Main) { getSlotJadwal(id, curdate, timeZone) }
         }
     }
 
@@ -221,6 +231,15 @@ class PilihJadwalActivity : AppCompatActivity() {
 
             binding.rvSlot.visibility = View.VISIBLE
             val clickedDayCalendar = eventDay.calendar.time
+            val calendar = Calendar.getInstance(
+                TimeZone.getTimeZone("GMT"),
+                Locale.getDefault()
+            )
+            val currentLocalTime = calendar.time
+            val date: DateFormat = SimpleDateFormat("z", Locale.getDefault())
+            val localTime: String = date.format(currentLocalTime)
+            timeZone = localTime.drop(3)
+
             eventDay.isEnabled
 
             val myFormat = "yyyy-MM-dd"
@@ -229,15 +248,15 @@ class PilihJadwalActivity : AppCompatActivity() {
 
             itemClicked = false
             changeBackgroundButtonSesi2()
-            scope.launch(Dispatchers.Main) { getMultiSlotJadwal(id, curdate) }
+            scope.launch(Dispatchers.Main) { getMultiSlotJadwal(id, curdate, timeZone) }
         }
     }
 
-    private suspend fun getSlotJadwal(id: String, date: String) {
+    private suspend fun getSlotJadwal(id: String, date: String, timeZone: String) {
 
         jamList.clear()
         val networkConfig =
-            NetworkConfig().getTeacher().getTeacherScheduleAvailability(token, id, date)
+            NetworkConfig().getTeacher().getTeacherScheduleAvailability(token, id, date, timeZone)
 
         if (networkConfig.isSuccessful) {
 
@@ -304,10 +323,10 @@ class PilihJadwalActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun getMultiSlotJadwal(id: String, date: String) {
+    private suspend fun getMultiSlotJadwal(id: String, date: String, timeZone: String) {
         jamList.clear()
         val networkConfig =
-            NetworkConfig().getTeacher().getTeacherScheduleAvailability(token, id, date)
+            NetworkConfig().getTeacher().getTeacherScheduleAvailability(token, id, date, timeZone)
 
         if (networkConfig.isSuccessful) {
 
@@ -457,7 +476,6 @@ class PilihJadwalActivity : AppCompatActivity() {
             token,
             scheduleModel
         )
-
         try {
             if (networkConfig.isSuccessful) {
 

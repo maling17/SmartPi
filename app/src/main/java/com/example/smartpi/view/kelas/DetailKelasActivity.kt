@@ -104,14 +104,30 @@ class DetailKelasActivity : AppCompatActivity() {
         } else {
             binding.tvLevelKelas.text = level
         }
+        if (dataKelas.sessionComplete.toString() == "null" && dataKelas.sessionAvailable.toString() == "null") {
+            binding.tvSesiNow.text = "1/1"
+        } else {
+            binding.tvSesiNow.text = "${dataKelas.sessionComplete}/${dataKelas.sessionAvailable}"
+        }
 
         binding.tvDetailKelas.text = dataKelas.packageName.toString()
-        binding.tvSesiNow.text = "${dataKelas.sessionComplete}/${dataKelas.sessionAvailable}"
         binding.tvJamKelas.text = "$jamStart-$jamEnd"
         binding.tvTanggalKelas.text = tanggalKelas
         binding.tvNamaGuru.text = dataKelas.teacherName.toString()
-        binding.tvAsalGuru.text = dataKelas.teacherOrigin.toString()
-        Picasso.get().load(urlPhoto).into(binding.ivPhotoGuru)
+
+        if (dataKelas.teacherOrigin.toString() == "null") {
+            binding.tvAsalGuru.visibility = View.INVISIBLE
+        } else {
+            binding.tvAsalGuru.text = dataKelas.teacherOrigin.toString()
+
+        }
+
+        if (urlPhoto == "null") {
+            Picasso.get().load(R.drawable.ic_icon_person).into(binding.ivPhotoGuru)
+        } else {
+            Picasso.get().load(urlPhoto).into(binding.ivPhotoGuru)
+        }
+
 
     }
 

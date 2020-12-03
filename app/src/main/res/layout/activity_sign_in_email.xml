@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.sign.SignInActivity">
+    tools:context=".view.sign.SignInEmailActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -21,7 +21,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="ContentDescription" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -54,93 +53,123 @@
         <TextView
             android:id="@+id/textView5"
             style="@style/Text14RegulerBlack"
-            android:layout_width="214dp"
+            android:layout_width="234dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/yuk_masuk_ke_aplikasi_smartpi_dan_mulai_belajar_bersama_kami"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+
+        <TextView
+            android:id="@+id/tv_nama_sign_email"
+            style="@style/Text14BoldBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/masuk_sebagai_nama"
+            android:visibility="invisible"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/tv_email_sign_email"
+            style="@style/Text14RegulerBlack"
+            android:layout_width="234dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/email"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nama_sign_email" />
+
+        <EditText
+            android:id="@+id/et_email_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
+            android:background="@drawable/edit_text_gray_round"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:padding="15dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5">
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            tools:ignore="TextFields" />
 
-            <TextView
-                android:id="@+id/tv_awal_nmr_tlp"
-                style="@style/Text14RegulerBlack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_textview_phone"
-                android:padding="15dp"
-                android:text="@string/_62" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:boxBackgroundMode="none"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_email_sign_in"
+            app:passwordToggleEnabled="true">
 
-            <ProgressBar
-                android:id="@+id/pb_code_phone"
-                android:padding="5dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_textview_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                android:id="@+id/et_phone"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password_sign_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:background="@drawable/edit_text_gray_round"
-                android:hint="@string/phone"
-                android:inputType="number"
-                android:padding="15dp" />
-        </LinearLayout>
+                android:hint="@string/kata_kunci"
+                android:inputType="textPassword"
+                android:padding="15dp"
+                tools:ignore="Autofill,TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_sign_in"
+            android:id="@+id/btn_masuk_sign_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="@drawable/button_grey"
-            android:text="@string/selanjutnya"
+            android:text="@string/masuk"
             android:textColor="@color/dark_grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
         <TextView
-            android:id="@+id/tv_atau"
-            style="@style/Text14RegulerBlack"
+            android:id="@+id/tv_masuk_nomor_hp"
+            style="@style/Text14RegulerBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/atau"
+            android:layout_marginTop="25dp"
+            android:text="@string/masuk_dengan_nomor_handphone"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_sign_in" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_masuk_sign_email" />
 
         <TextView
-            android:id="@+id/tv_sign_email"
-            style="@style/Text14BoldBlue"
+            android:id="@+id/tv_lupa_password_sign_email"
+            style="@style/Text14RegulerBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/masuk_dengan_email"
+            android:text="@string/lupa_kata_kunci"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_atau" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_masuk_nomor_hp" />
 
         <ProgressBar
-            android:id="@+id/pb_sign_in"
+            android:id="@+id/pb_sign_email"
             android:layout_width="wrap_content"
-            android:visibility="invisible"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_sign_in" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_masuk_sign_email" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

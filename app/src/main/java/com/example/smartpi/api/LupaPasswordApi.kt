@@ -1,6 +1,5 @@
 package com.example.smartpi.api
 
-import com.example.smartpi.model.InputNumberModel
 import com.example.smartpi.model.ResetPasswordModel
 import com.example.smartpi.model.UbahPasswordModel
 import com.example.smartpi.model.VerifikasiLupaPasswordModel

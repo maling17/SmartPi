@@ -68,7 +68,7 @@ class SlotJamSingleAdapter(
 
     private fun String.toDate(
         dateFormat: String = "yyyy-MM-dd HH:mm:ss",
-        timeZone: TimeZone = TimeZone.getTimeZone("UTC")
+        timeZone: TimeZone = TimeZone.getTimeZone(Locale.getDefault().toString())
     ): Date {
         val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
         parser.timeZone = timeZone

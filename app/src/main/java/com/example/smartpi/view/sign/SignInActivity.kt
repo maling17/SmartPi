@@ -24,6 +24,7 @@ import com.example.smartpi.adapter.PhoneCodeAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivitySignInBinding
 import com.example.smartpi.model.DataItem
+import com.example.smartpi.model.UserInputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,6 +38,7 @@ class SignInActivity : AppCompatActivity() {
     var TAG = "myactivity"
     var kodeNegara = "62"
     private val countryCodeList = ArrayList<DataItem>()
+    private val userList = ArrayList<UserInputData>()
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -63,6 +65,11 @@ class SignInActivity : AppCompatActivity() {
                 binding.tvAwalNmrTlp.visibility = View.GONE
                 showPopupDialog()
             }
+        }
+        binding.tvSignEmail.setOnClickListener {
+            val intent = Intent(this, SignInEmailActivity::class.java)
+            intent.putExtra("status_email", "0")
+            startActivity(intent)
         }
 
 
@@ -117,6 +124,8 @@ class SignInActivity : AppCompatActivity() {
 
         binding.pbSignIn.visibility = View.VISIBLE
         binding.btnSignIn.visibility = View.GONE
+        binding.tvAtau.visibility = View.GONE
+        binding.tvSignEmail.visibility = View.GONE
 
         phoneNumber = binding.etPhone.text.toString()
         country_code = kodeNegara
@@ -129,21 +138,44 @@ class SignInActivity : AppCompatActivity() {
             if (network.body()!!.status == "activation" || network.body()!!.status == "new") {
                 val intent = Intent(this, KodeAktivasiActivity::class.java)
                     .putExtra("nmr_telp", nmrTelp)
-                startActivity(intent)
                 binding.pbSignIn.visibility = View.INVISIBLE
                 binding.btnSignIn.visibility = View.VISIBLE
+                binding.tvAtau.visibility = View.VISIBLE
+                binding.tvSignEmail.visibility = View.VISIBLE
+                startActivity(intent)
                 finish()
             } else {
-                val intent = Intent(this, SignInPasswordActivity::class.java)
-                    .putExtra("nmr_telp", nmrTelp)
-                startActivity(intent)
-                binding.pbSignIn.visibility = View.INVISIBLE
-                binding.btnSignIn.visibility = View.VISIBLE
-                finish()
+                if (network.body()!!.status == "choose") {
+
+                    for (user in network.body()!!.data!!) {
+                        userList.add(user!!)
+                    }
+                    val intent = Intent(this, ChooseEmailActivity::class.java)
+                    intent.putExtra("country_code", country_code)
+                    intent.putExtra("phone_number", phoneNumber)
+                    binding.pbSignIn.visibility = View.INVISIBLE
+                    binding.btnSignIn.visibility = View.VISIBLE
+                    binding.tvAtau.visibility = View.VISIBLE
+                    binding.tvSignEmail.visibility = View.VISIBLE
+                    startActivity(intent)
+
+                } else {
+                    val intent = Intent(this, SignInPasswordActivity::class.java)
+                        .putExtra("nmr_telp", nmrTelp)
+                    binding.pbSignIn.visibility = View.INVISIBLE
+                    binding.btnSignIn.visibility = View.VISIBLE
+                    binding.tvAtau.visibility = View.VISIBLE
+                    binding.tvSignEmail.visibility = View.VISIBLE
+                    startActivity(intent)
+                    finish()
+                }
+
             }
         } else {
             binding.btnSignIn.visibility = View.VISIBLE
             binding.btnSignIn.visibility = View.INVISIBLE
+            binding.tvAtau.visibility = View.VISIBLE
+            binding.tvSignEmail.visibility = View.VISIBLE
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
                     this@SignInActivity,

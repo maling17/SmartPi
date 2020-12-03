@@ -16,4 +16,12 @@ interface SignInApi {
         @Field("phone") phone: String?,
         @Field("password") password: String?,
     ): Response<SignInModel>?
+
+    @FormUrlEncoded
+    @Headers("Accept: application/json")
+    @POST("auth/login")
+    suspend fun checkSignInEmail(
+        @Field("email") email: String?,
+        @Field("password") password: String?,
+    ): Response<SignInModel>?
 }

@@ -1,7 +1,7 @@
 package com.example.smartpi.view.kelas
 
 import android.app.AlertDialog
-import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.adapter.ListHistoryAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentHistoryBinding
@@ -26,7 +28,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.properties.Delegates
 
 
 class HistoryFragment : Fragment() {
@@ -38,12 +39,13 @@ class HistoryFragment : Fragment() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
-    lateinit var listViewType: ArrayList<Int>
-    var countLoadMore by Delegates.notNull<Int>()
-    var isLoading by Delegates.notNull<Boolean>()
+    private lateinit var layoutManager: LinearLayoutManager
+    private var page = 2
+    private var totalPage: Int = 1
+    private var isLoading = false
     var isiRadioButton = ""
     var getScheduleId = ""
-
+    var feedback = ""
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -58,9 +60,27 @@ class HistoryFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         preferences = Preferences(context!!)
         token = "Bearer ${preferences.getValues("token")}"
-
         hideBottomSheet()
         binding.pbHistory.visibility = View.VISIBLE
+        layoutManager = LinearLayoutManager(context)
+
+        binding.rvHistory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                Log.d("MainActivity", "onScrollChange: ")
+                val visibleItemCount = layoutManager.childCount
+                val pastVisibleItem = layoutManager.findFirstVisibleItemPosition()
+                val total = ListHistoryAdapter(historyList) {}.itemCount
+                if (!isLoading && page < totalPage) {
+                    if (visibleItemCount + pastVisibleItem >= total) {
+                        page++
+                        scope.launch(Dispatchers.Main) {
+                            getHistoryNext()
+                        }
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
 
         scope.launch(Dispatchers.Main) {
             getHistory()
@@ -70,6 +90,11 @@ class HistoryFragment : Fragment() {
 
     private suspend fun getHistory() {
         historyList.clear()
+        isLoading = true
+
+        val parameters = HashMap<String, String>()
+        parameters["page"] = page.toString()
+        Log.d("PAGE", "$page")
 
         //untuk inisialiasi sliding up layout
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.clFeedback)
@@ -79,12 +104,14 @@ class HistoryFragment : Fragment() {
 
         try {
             if (networkConfig.isSuccessful) {
-                binding.pbHistory.visibility = View.VISIBLE
-
                 for (history in networkConfig.body()!!.data!!) {
                     historyList.add(history!!)
                 }
-
+                for (pages in 2..networkConfig.body()!!.pagination!!.totalPages!!) {
+                    page = +pages
+                    Log.d(TAG, "getHistory: $page")
+                    getHistoryNext()
+                }
                 binding.rvHistory.adapter = ListHistoryAdapter(historyList) {
 
                     binding.tvNamaTeacherHistory.text = it.teacherName
@@ -92,7 +119,7 @@ class HistoryFragment : Fragment() {
                     binding.tvNamaPaketHistory.text = it.packageName
                     binding.tvTanggalHistory.text =
                         it.scheduleTime!!.toDate().formatTo("dd MMMM yyyy")
-
+                    feedback = it.teacherFeedback.toString()
                     //cek status kalau 3 = sudah selesai , 6 = bermasalah
                     when (it.status) {
                         3 -> {
@@ -106,87 +133,85 @@ class HistoryFragment : Fragment() {
                                     .setMessage("Apakah kelas sudah selesai?")
                                     .setCancelable(false)
                                     .setPositiveButton(
-                                        "Sudah",
-                                        DialogInterface.OnClickListener { dialog, _ ->
-                                            bottomSheetBehavior.state =
-                                                BottomSheetBehavior.STATE_EXPANDED
+                                        "Sudah"
+                                    ) { dialog, _ ->
+                                        bottomSheetBehavior.state =
+                                            BottomSheetBehavior.STATE_EXPANDED
 
-                                            binding.tvKelasBermasalah.visibility = View.GONE
-                                            binding.clKesan.visibility = View.VISIBLE
-                                            binding.btnSimpanHistory.visibility = View.VISIBLE
-                                            binding.btnLihatFeedback.visibility = View.VISIBLE
+                                        binding.tvKelasBermasalah.visibility = View.GONE
+                                        binding.clKesan.visibility = View.VISIBLE
+                                        binding.btnSimpanHistory.visibility = View.VISIBLE
+                                        binding.btnLihatFeedback.visibility = View.VISIBLE
 
-                                            binding.rbGuru.isEnabled = true
-                                            binding.rbGuru.isClickable = true
-                                            binding.rbGuru.rating = 0f
-                                            getScheduleId = it.id.toString()
-                                            Picasso.get().load(it.teacherAvatar)
-                                                .into(binding.ivTeacherHistory)
+                                        binding.rbGuru.isEnabled = true
+                                        binding.rbGuru.isClickable = true
+                                        binding.rbGuru.rating = 0f
+                                        getScheduleId = it.id.toString()
+                                        Picasso.get().load(it.teacherAvatar)
+                                            .into(binding.ivTeacherHistory)
 
-                                            binding.btnSimpanHistory.setOnClickListener {
-                                                val etKesan = binding.etKesan.text
-                                                val getRating = binding.rbGuru.rating
+                                        binding.btnSimpanHistory.setOnClickListener {
+                                            val etKesan = binding.etKesan.text
+                                            val getRating = binding.rbGuru.rating
 
-                                                scope.launch {      //api untuk rate kelas
-                                                    rateKelas(
-                                                        getScheduleId,
-                                                        getRating,
-                                                        etKesan.toString()
-                                                    )
-                                                    getHistory()
-                                                }
+                                            scope.launch {      //api untuk rate kelas
+                                                rateKelas(
+                                                    getScheduleId,
+                                                    getRating,
+                                                    etKesan.toString()
+                                                )
+                                                getHistory()
+                                            }
+                                        }
+                                        dialog.dismiss()
+                                    }
+                                    .setNegativeButton(
+                                        "Belum"
+                                    ) { dialog, _
+                                        ->
+                                        bottomSheetBehaviorAlasan.state =
+                                            BottomSheetBehavior.STATE_EXPANDED
+
+                                        // untuk munculkan dan menghilangkan edit text alasan
+                                        binding.rbLainnya.setOnClickListener {
+                                            binding.etAlasan.visibility = View.VISIBLE
+                                        }
+                                        binding.rbJaringanBermasalah.setOnClickListener {
+                                            binding.etAlasan.visibility = View.GONE
+                                        }
+                                        binding.rbGuruTidakHadir.setOnClickListener {
+                                            binding.etAlasan.visibility = View.GONE
+                                        }
+
+                                        getScheduleId = it.id.toString()
+
+                                        binding.btnSimpanHistoryBermasasalah.setOnClickListener {
+
+                                            val intSelectButton =
+                                                binding.rgAlasan.checkedRadioButtonId
+                                            val radioButton: RadioButton =
+                                                binding.root.findViewById(intSelectButton)
+
+                                            when (radioButton.text.toString()) {
+                                                "Jaringan bermasalah" -> isiRadioButton =
+                                                    radioButton.text.toString()
+                                                "Guru tidak hadir" -> isiRadioButton =
+                                                    radioButton.text.toString()
+                                                "Lainnya" -> isiRadioButton =
+                                                    binding.etAlasan.text.toString()
                                             }
 
-
-
-                                            dialog.dismiss()
-                                        })
-                                    .setNegativeButton("Belum",
-                                        DialogInterface.OnClickListener { dialog, _
-                                            ->
-                                            bottomSheetBehaviorAlasan.state =
-                                                BottomSheetBehavior.STATE_EXPANDED
-
-                                            // untuk munculkan dan menghilangkan edit text alasan
-                                            binding.rbLainnya.setOnClickListener {
-                                                binding.etAlasan.visibility = View.VISIBLE
+                                            scope.launch {
+                                                inputKelasBermasalah(
+                                                    getScheduleId,
+                                                    isiRadioButton
+                                                )
+                                                getHistory()
                                             }
-                                            binding.rbJaringanBermasalah.setOnClickListener {
-                                                binding.etAlasan.visibility = View.GONE
-                                            }
-                                            binding.rbGuruTidakHadir.setOnClickListener {
-                                                binding.etAlasan.visibility = View.GONE
-                                            }
+                                        }
 
-                                            getScheduleId = it.id.toString()
-
-                                            binding.btnSimpanHistoryBermasasalah.setOnClickListener {
-
-                                                val intSelectButton =
-                                                    binding.rgAlasan.checkedRadioButtonId
-                                                val radioButton: RadioButton =
-                                                    binding.root.findViewById(intSelectButton)
-
-                                                when (radioButton.text.toString()) {
-                                                    "Jaringan bermasalah" -> isiRadioButton =
-                                                        radioButton.text.toString()
-                                                    "Guru tidak hadir" -> isiRadioButton =
-                                                        radioButton.text.toString()
-                                                    "Lainnya" -> isiRadioButton =
-                                                        binding.etAlasan.text.toString()
-                                                }
-
-                                                scope.launch {
-                                                    inputKelasBermasalah(
-                                                        getScheduleId,
-                                                        isiRadioButton
-                                                    )
-                                                    getHistory()
-                                                }
-                                            }
-
-                                            dialog.dismiss()
-                                        })
+                                        dialog.dismiss()
+                                    }
                                 val alertDialog: AlertDialog = alertDialogBuilder.create()
                                 alertDialog.show()
 
@@ -198,8 +223,18 @@ class HistoryFragment : Fragment() {
                                 binding.clKesan.visibility = View.GONE
                                 binding.btnSimpanHistory.visibility = View.GONE
                                 binding.btnLihatFeedback.visibility = View.VISIBLE
-                                Picasso.get().load(it.teacherAvatar).into(binding.ivTeacherHistory)
+                                Picasso.get().load(it.teacherAvatar)
+                                    .into(binding.ivTeacherHistory)
                                 binding.rbGuru.isEnabled = false
+
+
+                                binding.btnLihatFeedback.setOnClickListener {
+                                    val intent =
+                                        Intent(activity, LihatFeedbackActivity::class.java)
+                                    intent.putExtra("feedback", feedback)
+                                    Log.d(TAG, "getHistory: $feedback")
+                                    startActivity(intent)
+                                }
 
                                 if (it.teacherRate.toString() == "null") {
                                     binding.rbGuru.rating = 0f
@@ -217,7 +252,8 @@ class HistoryFragment : Fragment() {
                                 binding.clKesan.visibility = View.GONE
                                 binding.btnSimpanHistory.visibility = View.GONE
                                 binding.btnLihatFeedback.visibility = View.GONE
-                                Picasso.get().load(it.teacherAvatar).into(binding.ivTeacherHistory)
+                                Picasso.get().load(it.teacherAvatar)
+                                    .into(binding.ivTeacherHistory)
                                 binding.tvLabelFeedback.visibility = View.GONE
                                 binding.rbGuru.rating = 0f
                                 binding.rbGuru.isEnabled = false
@@ -229,8 +265,40 @@ class HistoryFragment : Fragment() {
                     }
 
                 }
+                binding.pbHistory.visibility = View.GONE
             } else {
                 binding.clHistoryEmpty.visibility = View.VISIBLE
+                binding.pbHistory.visibility = View.GONE
+                isLoading = false
+
+                Log.d(TAG, "getHistory: History Gagal diambil")
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "getHistory: ${e.message}")
+        }
+
+    }
+
+    private suspend fun getHistoryNext() {
+        isLoading = true
+
+        val parameters = HashMap<String, String>()
+        parameters["page"] = page.toString()
+        Log.d("PAGE", "$page")
+
+        val networkConfig = NetworkConfig().getAfterClass().getHistoryNextPage(token, parameters)
+        try {
+            if (networkConfig.isSuccessful) {
+                isLoading = false
+
+                for (history in networkConfig.body()!!.data!!) {
+                    historyList.add(history!!)
+                }
+            } else {
+                binding.clHistoryEmpty.visibility = View.VISIBLE
+                binding.pbHistory.visibility = View.GONE
+                isLoading = false
+
                 Log.d(TAG, "getHistory: History Gagal diambil")
             }
         } catch (e: Exception) {
@@ -243,9 +311,6 @@ class HistoryFragment : Fragment() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.clFeedback)
         val bottomSheetBehaviorAlasan = BottomSheetBehavior.from(binding.llBermasalah)
 
-        binding.btnLihatFeedback.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehaviorAlasan.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehavior.addBottomSheetCallback(object :

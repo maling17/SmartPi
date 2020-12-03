@@ -18,7 +18,18 @@ interface AfterClassApi {
     @GET("schedule/history/list")
     @Headers("Accept: application/json")
     @SerializedName("data")
-    suspend fun getHistory(@Header("Authorization") token: String?): Response<HistoryModel>
+    suspend fun getHistory(
+        @Header("Authorization") token: String?,
+    ): Response<HistoryModel>
+
+    @GET("schedule/history/list")
+    @Headers("Accept: application/json")
+    @SerializedName("data")
+    suspend fun getHistoryNextPage(
+        @Header("Authorization") token: String?,
+        @QueryMap parameters: HashMap<String, String>
+    ): Response<HistoryModel>
+
 
     @FormUrlEncoded
     @POST("teacher/rate")

@@ -1,13 +1,14 @@
 package com.example.smartpi.view.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.smartpi.MainActivity
 import com.example.smartpi.databinding.FragmentLainnyaBinding
 import com.example.smartpi.utils.Preferences
+import com.example.smartpi.view.sign.SignInActivity
 
 class LainnyaFragment : Fragment() {
 
@@ -30,7 +31,9 @@ class LainnyaFragment : Fragment() {
 
         binding.btnKeluar.setOnClickListener {
             preferences.setValues("status", "0")
-            MainActivity().finish()
+            val intent = Intent(context, SignInActivity::class.java)
+            startActivity(intent)
+            activity!!.finish()
         }
 
 

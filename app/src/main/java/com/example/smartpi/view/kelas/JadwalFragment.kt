@@ -2,8 +2,6 @@ package com.example.smartpi.view.kelas
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,11 +46,12 @@ class JadwalFragment : Fragment() {
             startActivity(Intent(context, PilihPaketActivity::class.java))
         }
 
+
     }
 
     override fun onStart() {
         super.onStart()
-        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        /*val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             throwable.printStackTrace()
             binding.pbListJadwal.visibility = View.GONE
             Handler(Looper.getMainLooper()).post {
@@ -63,25 +62,20 @@ class JadwalFragment : Fragment() {
                 ).show()
             }
 
-        }
+        }*/
         jadwalList.clear()
         preferences = Preferences(activity!!.applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
         //setting Recylerview jadwal
-        binding.rvListJadwal.layoutManager =
-            LinearLayoutManager(context)
+        binding.rvListJadwal.layoutManager = LinearLayoutManager(context)
         binding.rvListJadwal.isNestedScrollingEnabled = false
 
-        scope.launch(exceptionHandler) {
+        scope.launch {
             checkPackageActive()
         }
     }
 
     suspend fun getJadwalUser() {
-
-        binding.svJadwal.visibility = View.INVISIBLE
-        binding.fabJadwal.visibility = View.INVISIBLE
-        binding.pbListJadwal.visibility = View.VISIBLE
 
         val networkConfig = NetworkConfig().getJadwalUser().getJadwalUser(token)
 
@@ -92,25 +86,16 @@ class JadwalFragment : Fragment() {
 
                     jadwalList.add(jadwal!!)
                 }
-
-                binding.svJadwal.visibility = View.VISIBLE
-                binding.fabJadwal.visibility = View.VISIBLE
-                binding.pbListJadwal.visibility = View.GONE
-                binding.llBelumBuatJadwal.visibility = View.GONE
-
                 binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
                     val intent =
                         Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                     startActivity(intent)
 
                 }
-
-            } else {
-
-                binding.svJadwal.visibility = View.GONE
+                binding.svJadwal.visibility = View.VISIBLE
                 binding.fabJadwal.visibility = View.VISIBLE
                 binding.pbListJadwal.visibility = View.GONE
-                binding.llBelumBuatJadwal.visibility = View.VISIBLE
+                binding.llBelumBuatJadwal.visibility = View.GONE
 
             }
         } catch (e: SocketException) {
@@ -119,12 +104,69 @@ class JadwalFragment : Fragment() {
 
     }
 
+    private suspend fun getGroupClass() {
+
+        jadwalList.clear()
+        val network = NetworkConfig().getJadwalUser().getGroupClass(token)
+        if (network.isSuccessful) {
+            binding.llBelumBerlangganan.visibility = View.GONE
+
+            for (grup in network.body()!!.data!!) {
+                val jadwalItem = JadwalItem()
+                jadwalItem.packageName = grup!!.namaKelas
+                jadwalItem.duration = grup.duration.toString()
+                jadwalItem.teacherId = grup.teacherId
+                jadwalItem.teacherName = grup.teacher
+
+                for (schedule in grup.schedule!!) {
+                    jadwalItem.id = schedule!!.id.toString()
+                    jadwalItem.scheduleTime = schedule.scheduleTime.toString()
+                    jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
+                    jadwalItem.roomCode = schedule.roomCode.toString()
+                    jadwalItem.platform = schedule.platform.toString()
+                }
+                jadwalList.add(jadwalItem)
+            }
+
+            binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                val intent =
+                    Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
+                startActivity(intent)
+
+            }
+            binding.svJadwal.visibility = View.VISIBLE
+            binding.fabJadwal.visibility = View.VISIBLE
+            binding.pbListJadwal.visibility = View.GONE
+            binding.llBelumBuatJadwal.visibility = View.GONE
+
+        }
+
+
+    }
+
     suspend fun checkPackageActive() {
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
 
+        binding.svJadwal.visibility = View.INVISIBLE
+        binding.fabJadwal.visibility = View.INVISIBLE
+        binding.pbListJadwal.visibility = View.VISIBLE
+
         try {
             if (network.isSuccessful) {
-                getJadwalUser()
+                scope.launch {
+                    val job1 = async { getJadwalUser() }
+                    val job2 = async { getGroupClass() }
+                    job1.await()
+                    job2.await()
+                }
+
+                if (jadwalList.isEmpty()) {
+                    binding.svJadwal.visibility = View.GONE
+                    binding.fabJadwal.visibility = View.VISIBLE
+                    binding.pbListJadwal.visibility = View.GONE
+                    binding.llBelumBuatJadwal.visibility = View.VISIBLE
+                }
+
             } else {
                 binding.llBelumBerlangganan.visibility = View.VISIBLE
             }

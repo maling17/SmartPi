@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.smartpi">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".CreditCardActivity"></activity>
+        <activity android:name=".view.kelas.LihatFeedbackActivity"></activity>
+        <activity android:name=".view.sign.ChooseEmailActivity" />
+        <activity android:name=".view.sign.SignInEmailActivity" />
+        <activity android:name=".CreditCardActivity" />
         <activity android:name=".view.pembelian.virtulaccount.VirtualAccountActivity" />
         <activity android:name=".view.pembelian.DetailPembelianActivity" />
         <activity android:name=".view.pembelian.DetailPaketActivity" />

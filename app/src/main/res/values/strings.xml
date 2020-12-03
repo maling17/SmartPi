@@ -20,7 +20,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_telepon_anda">No. Telepon anda</string>
     <string name="kata_kunci">Kata Kunci</string>
-    <string name="lupa_kata_kunci">Lupa Kata Kunci?</string>
+    <string name="lupa_kata_kunci"><u>Lupa Kata Kunci?</u></string>
     <string name="negara">Negara</string>
     <string name="kode_aktivasi">Kode Aktivasi</string>
     <string name="masukan_kode_aktivasi">Masukan Kode Aktivasi</string>
@@ -150,6 +150,14 @@
     <string name="pembayaran">Pembayaran</string>
     <string name="transfer_ke_nbank_mandiri">Transfer ke: <br />Bank Mandiri</string>
     <string name="jumlah_yang_harus_dibayar">Jumlah yang harus dibayar</string>
+    <string name="atau">atau</string>
+    <string name="masuk_dengan_nomor_handphone"><u>Masuk dengan nomor handphone</u></string>
+    <string name="masuk_dengan_email"><u>Masuk dengan Email</u></string>
+    <string name="pilih_akun_anda">Pilih Akun Anda</string>
+    <string name="masuk_sebagai_nama">Masuk Sebagai Nama</string>
+    <string name="matematika">Matematika</string>
+    <string name="group_class">Group Class</string>
+    <string name="tidak_ada_jadwal">Tidak Ada Jadwal</string>
 
     <string-array name="alasan_kelas">
         <item>Jaringan bermasalah</item>

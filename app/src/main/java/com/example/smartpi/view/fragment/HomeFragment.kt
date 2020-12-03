@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -75,6 +76,10 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        val versionName = context!!.packageManager
+            .getPackageInfo(context!!.packageName, 0).versionName
+
+
         jadwalList.clear()
         preferences = Preferences(activity!!.applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
@@ -89,21 +94,8 @@ class HomeFragment : Fragment() {
         binding.rvPromo.layoutManager = LinearLayoutManager(context)
         binding.rvPromo.isNestedScrollingEnabled = false
 
-        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            throwable.printStackTrace()
-            binding.pbPromo.visibility = View.GONE
-            binding.pbJadwal.visibility = View.GONE
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Checkout Connection",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
 
-        }
-
-        scope.launch(exceptionHandler) {
+        scope.launch {
 
             val job1 = async { getUser() }
             val job2 = async { checkTrial() }
@@ -165,14 +157,19 @@ class HomeFragment : Fragment() {
                     jadwalList.add(jadwal!!)
 
                 }
-
-                binding.rvJadwal.visibility = View.VISIBLE
-                binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
-                    val intent =
-                        Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
-                    startActivity(intent)
+                jadwalList.clear()
+                if (jadwalList.isEmpty()) {
+                    binding.tvJadwalEmpty.visibility = View.VISIBLE
+                    binding.rvJadwal.visibility = View.GONE
+                } else {
+                    binding.rvJadwal.visibility = View.VISIBLE
+                    binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                        val intent =
+                            Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
+                        startActivity(intent)
+                    }
+                    binding.pbJadwal.visibility = View.GONE
                 }
-                binding.pbJadwal.visibility = View.GONE
             } else {
                 binding.pbJadwal.visibility = View.GONE
             }
@@ -328,6 +325,16 @@ class HomeFragment : Fragment() {
         val fragmentTransaction = fragmentManager!!.beginTransaction()
         fragmentTransaction.replace(R.id.fl_main, fragment)
         fragmentTransaction.commit()
+    }
+
+    fun toGooglePlay() {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(
+                "https://play.google.com/store/apps/details?id=co.smartpi.student"
+            )
+            setPackage("com.android.vending")
+        }
+        startActivity(intent)
     }
 
 

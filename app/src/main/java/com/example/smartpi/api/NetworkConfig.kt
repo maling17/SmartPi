@@ -12,7 +12,7 @@ class NetworkConfig {
     val okHttpClient = OkHttpClient().newBuilder()
         .connectTimeout(20, TimeUnit.SECONDS)
         .build()
-
+    val productionApi = "https://api.smartpi.id/api/"
     val baseurl = "https://wiztalk.co/api/"
     var gson = GsonBuilder()
         .setLenient()

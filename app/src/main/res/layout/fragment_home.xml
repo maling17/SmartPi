@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
+        android:paddingBottom="60dp"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/akademik"
+                        android:text="@string/matematika"
                         app:layout_constraintEnd_toEndOf="@+id/iv_akademik"
                         app:layout_constraintStart_toStartOf="@+id/iv_akademik"
                         app:layout_constraintTop_toBottomOf="@+id/iv_akademik" />
@@ -101,6 +102,7 @@
                         tools:ignore="ContentDescription" />
 
                     <TextView
+                        android:id="@+id/textView51"
                         style="@style/Text12RegulerBlack"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
@@ -126,6 +128,7 @@
                         tools:ignore="ContentDescription" />
 
                     <TextView
+                        android:id="@+id/textView53"
                         style="@style/Text12RegulerBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -134,8 +137,55 @@
                         app:layout_constraintEnd_toEndOf="@+id/iv_mengaji"
                         app:layout_constraintStart_toStartOf="@+id/iv_mengaji"
                         app:layout_constraintTop_toBottomOf="@+id/iv_mengaji" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <ImageView
+                        android:id="@+id/iv_group_class"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/round_button_gradient"
+                        android:padding="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/iv_pra_kerja"
+                        app:layout_constraintTop_toBottomOf="@+id/textView51"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/textView55"
+                        style="@style/Text12RegulerBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/group_class"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_group_class"
+                        app:layout_constraintStart_toStartOf="@+id/iv_group_class"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_group_class" />
+
+                    <ImageView
+                        android:id="@+id/iv_pra_kerja"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/round_button_gradient"
+                        android:padding="10dp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_group_class"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView51"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        style="@style/Text12RegulerBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:text="@string/pra_kerja"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_pra_kerja"
+                        app:layout_constraintStart_toStartOf="@+id/iv_pra_kerja"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_pra_kerja" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:id="@+id/view2"
@@ -195,6 +245,20 @@
                         android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                    <TextView
+                        android:id="@+id/tv_jadwal_empty"
+                        style="@style/Text14BoldBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:text="@string/tidak_ada_jadwal"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_jadwal"

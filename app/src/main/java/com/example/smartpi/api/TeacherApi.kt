@@ -59,6 +59,7 @@ interface TeacherApi {
     suspend fun getTeacherScheduleAvailability(
         @Header("Authorization") token: String?,
         @Field("teacher_id") teacher_id: String?,
-        @Field("date") date: String?
+        @Field("date") date: String?,
+        @Field("timezone") timezone: String?
     ): Response<TeacherScheduleSlotModel>
 }

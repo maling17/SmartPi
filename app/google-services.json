@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "546810233353",
+    "firebase_url": "https://smartpi-46c49.firebaseio.com",
+    "project_id": "smartpi-46c49",
+    "storage_bucket": "smartpi-46c49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546810233353:android:578dafc280cd4850cd6ed8",
+        "android_client_info": {
+          "package_name": "com.example.smartpi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546810233353-4souejq7fq9v5576kbd467tqfmf832st.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVBDsCNq3ESRW-v12azB2TgCmT_pN6R4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546810233353-4souejq7fq9v5576kbd467tqfmf832st.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
