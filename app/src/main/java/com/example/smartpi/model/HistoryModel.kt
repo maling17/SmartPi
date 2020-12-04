@@ -7,6 +7,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class HistoryModel(
 
+    @field:SerializedName("pagination")
+    val pagination: Pagination? = null,
+
     @field:SerializedName("data")
     val data: List<HistoryItem?>? = null
 ) : Parcelable
@@ -27,7 +30,7 @@ data class HistoryItem(
     val teacherId: Int? = null,
 
     @field:SerializedName("level_id")
-    val levelId: String? = null,
+    val levelId: Int? = null,
 
     @field:SerializedName("room_code")
     val roomCode: String? = null,
@@ -94,4 +97,33 @@ data class HistoryItem(
 
     @field:SerializedName("status")
     val status: Int? = null
+) : Parcelable
+
+@Parcelize
+data class Links(
+
+    @field:SerializedName("next")
+    val next: String? = null
+) : Parcelable
+
+@Parcelize
+data class Pagination(
+
+    @field:SerializedName("per_page")
+    val perPage: Int? = null,
+
+    @field:SerializedName("total")
+    val total: Int? = null,
+
+    @field:SerializedName("count")
+    val count: Int? = null,
+
+    @field:SerializedName("links")
+    val links: Links? = null,
+
+    @field:SerializedName("total_pages")
+    val totalPages: Int? = null,
+
+    @field:SerializedName("current_page")
+    val currentPage: Int? = null
 ) : Parcelable

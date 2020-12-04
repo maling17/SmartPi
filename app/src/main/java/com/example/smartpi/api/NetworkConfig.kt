@@ -44,6 +44,8 @@ class NetworkConfig {
     fun getAfterClass(): AfterClassApi = getNetwork.create(AfterClassApi::class.java)
     fun getPaketLangganan(): PaketLanggananApi = getNetwork.create(PaketLanggananApi::class.java)
     fun getWallet(): PembayaranApi = getNetwork.create(PembayaranApi::class.java)
+    fun profile(): ProfileApi = getNetwork.create(ProfileApi::class.java)
+    fun syarat(): SyaratDanLainApi = getNetwork.create(SyaratDanLainApi::class.java)
 
 
 }

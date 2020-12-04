@@ -30,6 +30,9 @@ import com.example.smartpi.utils.Preferences
 import com.example.smartpi.view.kelas.DetailKelasActivity
 import com.example.smartpi.view.kelas.PilihPaketActivity
 import com.example.smartpi.view.kelas.PilihTrialActivity
+import com.example.smartpi.view.program.ProgramInggrisActivity
+import com.example.smartpi.view.program.ProgramMatematikaActivity
+import com.example.smartpi.view.program.ProgramMengajiActivity
 import kotlinx.coroutines.*
 import java.net.SocketException
 
@@ -72,16 +75,30 @@ class HomeFragment : Fragment() {
                 )
             )
         }
+        binding.ivAkademik.setOnClickListener {
+            startActivity(
+                Intent(
+                    context,
+                    ProgramMatematikaActivity::class.java
+                )
+            )
+        }
+        binding.ivInggris.setOnClickListener {
+            startActivity(Intent(context, ProgramInggrisActivity::class.java))
+        }
+        binding.ivMengaji.setOnClickListener {
+            startActivity(Intent(context, ProgramMengajiActivity::class.java))
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        val versionName = context!!.packageManager
-            .getPackageInfo(context!!.packageName, 0).versionName
+        val versionName = requireContext().packageManager
+            .getPackageInfo(requireContext().packageName, 0).versionName
 
 
         jadwalList.clear()
-        preferences = Preferences(activity!!.applicationContext)
+        preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
         Log.d(TAG, "Token: $token")
 
@@ -237,7 +254,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showPopUpPilihTrial() {
-        val dialog = Dialog(activity!!)
+        val dialog = Dialog(requireActivity())
         dialog.setContentView(R.layout.pop_up_pilih_trial)
         dialog.setCancelable(false)
 
@@ -262,7 +279,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showPopUpPilihJadwalTrial() {
-        val dialog = Dialog(activity!!)
+        val dialog = Dialog(requireActivity())
         dialog.setContentView(R.layout.pop_up_pilih_jadwal_trial)
         dialog.setCancelable(false)
 

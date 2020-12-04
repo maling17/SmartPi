@@ -1,4 +1,4 @@
-package com.example.smartpi
+package com.example.smartpi.view.pembelian
 
 import android.os.Bundle
 import android.webkit.WebViewClient

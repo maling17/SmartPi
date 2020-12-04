@@ -13,10 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".view.kelas.LihatFeedbackActivity"></activity>
+        <activity android:name=".view.program.ProgramMengajiActivity"></activity>
+        <activity android:name=".view.program.ProgramInggrisActivity" />
+        <activity android:name=".view.program.ProgramMatematikaActivity" />
+        <activity
+            android:name=".view.lain.SyaratDanLainActivity"
+            android:label="@string/title_activity_syarat_dan_lain"
+            android:theme="@style/Theme.SmartPi.NoActionBar" />
+        <activity android:name=".view.lain.UbahKataSandiActivity" />
+        <activity android:name=".view.lain.UbahProfilActivity" />
+        <activity android:name=".view.kelas.LihatFeedbackActivity" />
         <activity android:name=".view.sign.ChooseEmailActivity" />
         <activity android:name=".view.sign.SignInEmailActivity" />
-        <activity android:name=".CreditCardActivity" />
+        <activity android:name=".view.pembelian.CreditCardActivity" />
         <activity android:name=".view.pembelian.virtulaccount.VirtualAccountActivity" />
         <activity android:name=".view.pembelian.DetailPembelianActivity" />
         <activity android:name=".view.pembelian.DetailPaketActivity" />

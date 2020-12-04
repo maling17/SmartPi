@@ -17,11 +17,16 @@ class LihatFeedbackActivity : AppCompatActivity() {
         setContentView(view)
 
         var str: String = intent.getStringExtra("feedback").toString()
-        str = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString()
+        str = if (str.isEmpty() || str == "null") {
+            "Guru tidak mengisi"
         } else {
-            Html.fromHtml(str).toString()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString()
+            } else {
+                Html.fromHtml(str).toString()
+            }
         }
+
         binding.tvFeedback.text = str
         binding.ivBackDetailFeedback.setOnClickListener { finish() }
     }

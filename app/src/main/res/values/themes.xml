@@ -151,5 +151,14 @@
         <item name="colorControlActivated">@color/light_grey</item>
     </style>
 
+    <style name="Theme.SmartPi.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SmartPi.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SmartPi.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
 </resources>

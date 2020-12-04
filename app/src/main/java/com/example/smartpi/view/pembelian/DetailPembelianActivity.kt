@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.CreditCardActivity
 import com.example.smartpi.MainActivity
 import com.example.smartpi.R
 import com.example.smartpi.adapter.WalletAdapter
