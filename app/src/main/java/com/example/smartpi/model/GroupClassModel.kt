@@ -15,22 +15,22 @@ data class GroupClassModel(
 data class GroupItem(
 
     @field:SerializedName("duration")
-    val duration: Int? = null,
+    var duration: Int? = null,
 
     @field:SerializedName("schedule")
-    val schedule: List<ScheduleItem?>? = null,
+    var schedule: List<ScheduleItem?>? = null,
 
     @field:SerializedName("img")
     val img: String? = null,
 
     @field:SerializedName("teacher")
-    val teacher: String? = null,
+    var teacher: String? = null,
 
     @field:SerializedName("nama_kelas")
-    val namaKelas: String? = null,
+    var namaKelas: String? = null,
 
     @field:SerializedName("teacher_id")
-    val teacherId: String? = null,
+    var teacherId: String? = null,
 
     @field:SerializedName("price")
     val price: String? = null,
@@ -52,20 +52,20 @@ data class GroupItem(
 data class ScheduleItem(
 
     @field:SerializedName("schedule_time")
-    val scheduleTime: String? = null,
+    var scheduleTime: String? = null,
 
     @field:SerializedName("class_id")
     val classId: Int? = null,
 
     @field:SerializedName("room_code")
-    val roomCode: String? = null,
+    var roomCode: String? = null,
 
     @field:SerializedName("schedule_end")
-    val scheduleEnd: String? = null,
+    var scheduleEnd: String? = null,
 
     @field:SerializedName("id")
     val id: Int? = null,
 
     @field:SerializedName("platform")
-    val platform: Int? = null
+    var platform: Int? = null
 ) : Parcelable

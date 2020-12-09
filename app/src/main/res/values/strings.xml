@@ -291,4 +291,11 @@
     <string name="beli_paket">Beli Paket</string>
     <string name="credit_card">Credit Card</string>
     <string name="program_inggris">Program Inggris</string>
+    <string name="load_more">Load More</string>
+    <string name="detail_kelas">Detail Kelas</string>
+    <string name="pic">PIC</string>
+    <string name="beli_group_class">Beli Group Class</string>
+    <string name="update_aplikasi">Update Aplikasi</string>
+    <string name="silahkan_update_aplikasi_anda_untuk_menggunakan_aplikasi">Silahkan Update Aplikasi Anda Untuk Menggunakan Aplikasi</string>
+    <string name="versi_aplikasi_anda_belum_versi_terbaru">Versi Aplikasi Anda Belum Versi Terbaru</string>
 </resources>

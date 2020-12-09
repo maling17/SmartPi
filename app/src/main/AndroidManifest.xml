@@ -13,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".view.program.ProgramMengajiActivity"></activity>
+        <activity android:name=".view.profile.ProfileGuruActivity"></activity>
+        <activity android:name=".view.program.DetailGroupClassActivity" />
+        <activity android:name=".view.program.GroupClassActivity" />
+        <activity android:name=".view.program.ProgramMengajiActivity" />
         <activity android:name=".view.program.ProgramInggrisActivity" />
         <activity android:name=".view.program.ProgramMatematikaActivity" />
         <activity

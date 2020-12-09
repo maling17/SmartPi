@@ -70,6 +70,7 @@ class SignInActivity : AppCompatActivity() {
             val intent = Intent(this, SignInEmailActivity::class.java)
             intent.putExtra("status_email", "0")
             startActivity(intent)
+            finish()
         }
 
 

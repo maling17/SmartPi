@@ -39,7 +39,7 @@ class WaktuKhususFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        preferences = Preferences(activity!!.applicationContext)
+        preferences = Preferences(requireActivity().applicationContext)
 
         val getUserAvailable = preferences.getValues("user_available_id")
         kode_teacher = preferences.getValues("kode_teacher")!!

@@ -18,7 +18,7 @@ class NetworkConfig {
         .setLenient()
         .create()
     val getNetwork = Retrofit.Builder()
-        .baseUrl(baseurl)
+        .baseUrl(productionApi)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .client(okHttpClient)
         .build()
@@ -46,6 +46,8 @@ class NetworkConfig {
     fun getWallet(): PembayaranApi = getNetwork.create(PembayaranApi::class.java)
     fun profile(): ProfileApi = getNetwork.create(ProfileApi::class.java)
     fun syarat(): SyaratDanLainApi = getNetwork.create(SyaratDanLainApi::class.java)
+    fun getGroupClass(): GroupClassApi = getNetwork.create(GroupClassApi::class.java)
+    fun getVersion(): CheckVersiApi = getNetwork.create(CheckVersiApi::class.java)
 
 
 }

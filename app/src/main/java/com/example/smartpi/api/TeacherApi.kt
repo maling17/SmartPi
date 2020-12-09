@@ -16,6 +16,14 @@ interface TeacherApi {
         @Path("kode_teacher") kode_teacher: String?
     ): Response<TeacherProductModel>
 
+    @GET("teacher/detail/{kode_teacher}")
+    @Headers("Accept: application/json")
+    @SerializedName("data")
+    suspend fun getDetailTeacher(
+        @Header("Authorization") token: String?,
+        @Path("kode_teacher") kode_teacher: Int?
+    ): Response<DetailTeacherModel>
+
     @FormUrlEncoded
     @POST("teacher/filterumum")
     @Headers("Accept: application/json")

@@ -125,6 +125,7 @@ class PilihJadwalActivity : AppCompatActivity() {
         jamList.clear()
         val network = NetworkConfig().getTeacher().getTeacherSchedule(token, id)
         if (network.isSuccessful) {
+            binding.pbLoading.visibility = View.GONE
             for (schedule in network.body()!!.availability!!) {
                 val justTanggal = schedule!!.start!!.toDate().formatTo("yyyy-MM-dd")
                 //convert tanggal start ke millis

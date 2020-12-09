@@ -1,6 +1,7 @@
 package com.example.smartpi.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
 import com.example.smartpi.model.TeacherItem
+import com.example.smartpi.view.profile.ProfileGuruActivity
 import com.squareup.picasso.Picasso
 
 class ListTeacherProductAdapter(
@@ -37,6 +39,13 @@ class ListTeacherProductAdapter(
             tvRating.text = data.rating
             Picasso.get().load(data.avatar).into(ivPhoto)
 
+            btnLihatProfile.setOnClickListener {
+                val intent = Intent(context, ProfileGuruActivity::class.java)
+                intent.putExtra("id_guru", data.id.toString())
+                intent.putExtra("nama_guru", data.name)
+                intent.putExtra("rating", data.rating.toString())
+                context.startActivity(intent)
+            }
 
             itemView.setOnClickListener {
                 listener(data)

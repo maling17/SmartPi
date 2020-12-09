@@ -30,6 +30,7 @@ import com.example.smartpi.utils.Preferences
 import com.example.smartpi.view.kelas.DetailKelasActivity
 import com.example.smartpi.view.kelas.PilihPaketActivity
 import com.example.smartpi.view.kelas.PilihTrialActivity
+import com.example.smartpi.view.program.GroupClassActivity
 import com.example.smartpi.view.program.ProgramInggrisActivity
 import com.example.smartpi.view.program.ProgramMatematikaActivity
 import com.example.smartpi.view.program.ProgramMengajiActivity
@@ -89,13 +90,13 @@ class HomeFragment : Fragment() {
         binding.ivMengaji.setOnClickListener {
             startActivity(Intent(context, ProgramMengajiActivity::class.java))
         }
+        binding.ivGroupClass.setOnClickListener {
+            startActivity(Intent(context, GroupClassActivity::class.java))
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        val versionName = requireContext().packageManager
-            .getPackageInfo(requireContext().packageName, 0).versionName
-
 
         jadwalList.clear()
         preferences = Preferences(requireActivity().applicationContext)
@@ -118,11 +119,13 @@ class HomeFragment : Fragment() {
             val job2 = async { checkTrial() }
             val job3 = async { getAllPromo() }
             val job4 = async { checkPackage() }
+//            val job5 = async { checkVersion() }
 
             job1.await()
             job2.await()
             job3.await()
             job4.await()
+//            job5.await()
 
         }
 
@@ -149,13 +152,13 @@ class HomeFragment : Fragment() {
 
             }
         } catch (e: SocketException) {
-            /*   Handler(Looper.getMainLooper()).post {
-                   Toast.makeText(
-                       context,
-                       "Tidak Ada Jaringan ,Mohon Periksa Jaringan Anda",
-                       Toast.LENGTH_LONG
-                   ).show()
-               }*/
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "Tidak Ada Jaringan ,Mohon Periksa Jaringan Anda",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
 
             e.printStackTrace()
         }
@@ -163,6 +166,7 @@ class HomeFragment : Fragment() {
     }
 
     suspend fun getJadwalUser() {
+        jadwalList.clear()
         binding.pbJadwal.visibility = View.VISIBLE
         binding.rvJadwal.visibility = View.INVISIBLE
 
@@ -174,10 +178,10 @@ class HomeFragment : Fragment() {
                     jadwalList.add(jadwal!!)
 
                 }
-                jadwalList.clear()
                 if (jadwalList.isEmpty()) {
                     binding.tvJadwalEmpty.visibility = View.VISIBLE
                     binding.rvJadwal.visibility = View.GONE
+                    binding.pbJadwal.visibility = View.GONE
                 } else {
                     binding.rvJadwal.visibility = View.VISIBLE
                     binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
@@ -297,10 +301,35 @@ class HomeFragment : Fragment() {
 
         btnPilihJadwalTrial.setOnClickListener {
             dialog.dismiss()
+            startActivity(Intent(context, PilihPaketActivity::class.java))
         }
         dialog.show()
 
     }
+
+    private fun showPopUpUpdateAplikasi() {
+        val dialog = Dialog(requireActivity())
+        dialog.setContentView(R.layout.pop_up_update_version)
+        dialog.setCancelable(false)
+
+        //style dialog
+        val window = dialog.window!!
+        window.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnUpdate = dialog.findViewById<Button>(R.id.btn_update)
+
+        btnUpdate.setOnClickListener {
+            toGooglePlay()
+            dialog.dismiss()
+        }
+        dialog.show()
+
+    }
+
 
     private suspend fun getAllPromo() {
 
@@ -352,6 +381,21 @@ class HomeFragment : Fragment() {
             setPackage("com.android.vending")
         }
         startActivity(intent)
+    }
+
+    suspend fun checkVersion() {
+        val versionName = requireContext().packageManager
+            .getPackageInfo(requireContext().packageName, 0).versionName
+
+        val networkConfig = NetworkConfig().getVersion().getVersion()
+        if (networkConfig.isSuccessful) {
+            for (versi in networkConfig.body()!!.data!!) {
+                Log.d(TAG, "checkVersion: ${versi!!.versionName}, $versionName")
+                if (versionName != versi.versionName.toString()) {
+                    showPopUpUpdateAplikasi()
+                }
+            }
+        }
     }
 
 
