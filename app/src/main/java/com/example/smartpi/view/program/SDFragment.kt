@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class SDFragment : Fragment() {
 
@@ -50,16 +51,21 @@ class SDFragment : Fragment() {
 
     suspend fun getSD() {
         val networkConfig = NetworkConfig().getPrograms().getProgramMatematika()
-        if (networkConfig.isSuccessful) {
-            val judul = networkConfig.body()!!.data!!.sd!!.desc!!.name
-            val desc = networkConfig.body()!!.data!!.sd!!.desc!!.desc
-            val duration = networkConfig.body()!!.data!!.sd!!.desc!!.duration
-            id_program = networkConfig.body()!!.data!!.sd!!.desc!!.id!!.toString()
+        try {
+            if (networkConfig.isSuccessful) {
+                val judul = networkConfig.body()!!.data!!.sd!!.desc!!.name
+                val desc = networkConfig.body()!!.data!!.sd!!.desc!!.desc
+                val duration = networkConfig.body()!!.data!!.sd!!.desc!!.duration
+                id_program = networkConfig.body()!!.data!!.sd!!.desc!!.id!!.toString()
 
-            binding.tvJudulProgram.text = judul
-            binding.tvDescProgram.text = desc
-            binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
+                binding.tvJudulProgram.text = judul
+                binding.tvDescProgram.text = desc
+                binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
 
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

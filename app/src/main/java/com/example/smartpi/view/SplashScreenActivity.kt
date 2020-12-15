@@ -26,6 +26,7 @@ class SplashScreenActivity : AppCompatActivity() {
             if (preferences.getValues("status").equals("1")) {
                 val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
                 startActivity(intent)
+                preferences.setValues("state_trial", "0")
                 finish()
             } else {
                 if (preferences.getValues("firstTime").equals("1")) {

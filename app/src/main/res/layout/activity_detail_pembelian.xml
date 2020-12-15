@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_grey"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".view.pembelian.DetailPembelianActivity">
 
     <androidx.core.widget.NestedScrollView
@@ -192,7 +193,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="15dp"
-                        android:background="@color/grey"
+                        android:background="@color/light_grey"
                         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
                         tools:layout_editor_absoluteX="16dp" />
 

@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class PilihTrialActivity : AppCompatActivity() {
 
@@ -50,29 +51,32 @@ class PilihTrialActivity : AppCompatActivity() {
         binding.rvListTrial.visibility = View.INVISIBLE
         val network = NetworkConfig().packageTrial().getListTrial(token)
 
-        if (network.isSuccessful) {
-            for (trial in network.body()!!.data!!) {
-                trialList.add(trial!!)
+        try {
+            if (network.isSuccessful) {
+                for (trial in network.body()!!.data!!) {
+                    trialList.add(trial!!)
+                }
+                binding.rvListTrial.visibility = View.VISIBLE
+                binding.rvListTrial.adapter = ListTrialAdapter(trialList) {
+
+                    val intent = Intent(this, DetailPembelianActivity::class.java)
+                    intent.putExtra("id", it.idPaket.toString())
+                    intent.putExtra("nama", it.namaPaket.toString())
+                    intent.putExtra("harga", "0")
+                    intent.putExtra("durasi", "1 Bulan")
+                    intent.putExtra("jenis", "trial")
+                    startActivity(intent)
+
+
+                }
+                binding.pbListTrial.visibility = View.GONE
+            } else {
+                binding.pbListTrial.visibility = View.GONE
+
             }
-            binding.rvListTrial.visibility = View.VISIBLE
-            binding.rvListTrial.adapter = ListTrialAdapter(trialList) {
-
-                val intent = Intent(this, DetailPembelianActivity::class.java)
-                intent.putExtra("id", it.idPaket.toString())
-                intent.putExtra("nama", it.namaPaket.toString())
-                intent.putExtra("harga", "0")
-                intent.putExtra("durasi", "1 Bulan")
-                intent.putExtra("jenis", "trial")
-                startActivity(intent)
-
-
-            }
-            binding.pbListTrial.visibility = View.GONE
-        } else {
-            binding.pbListTrial.visibility = View.GONE
-
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
     }
-
 
 }

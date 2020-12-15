@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class GroupClassActivity : AppCompatActivity() {
     val TAG = "MyActivity"
@@ -45,37 +46,49 @@ class GroupClassActivity : AppCompatActivity() {
     private suspend fun getGroupClass() {
 
         val networkConfig = NetworkConfig().getGroupClass().getGroupClass()
-        if (networkConfig.isSuccessful) {
-            for (grup in networkConfig.body()!!.data!!) {
-                groupList.add(grup!!)
-                id = grup.id!!
-                getDetailGroupClass(id)
-                Log.d(TAG, "getGroupClass: $groupList")
-            }
 
+        try {
+            if (networkConfig.isSuccessful) {
+                for (grup in networkConfig.body()!!.data!!) {
+                    groupList.add(grup!!)
+                    id = grup.id!!
+                    getDetailGroupClass(id)
+                    Log.d(TAG, "getGroupClass: $groupList")
+                }
+
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private suspend fun getDetailGroupClass(id: Int) {
         val networkConfig = NetworkConfig().getGroupClass().getDetailGroupClass(id)
-        if (networkConfig.isSuccessful) {
-            val detailData = DetailData()
-            binding.pbLoadingGroupClass.visibility = View.GONE
-            for (kelas in networkConfig.body()!!.data!!.kelas!!) {
-                kelasList.add(kelas!!)
-                detailData.kelas = kelasList
-            }
-            for (schedule in networkConfig.body()!!.data!!.schedule!!) {
-                scheduleList.add(schedule!!)
-                detailData.schedule = scheduleList
-            }
 
-            groupDetailList.add(detailData)
+        try {
+            if (networkConfig.isSuccessful) {
+                val detailData = DetailData()
+                binding.pbLoadingGroupClass.visibility = View.GONE
+                for (kelas in networkConfig.body()!!.data!!.kelas!!) {
+                    kelasList.add(kelas!!)
+                    detailData.kelas = kelasList
+                }
+                for (schedule in networkConfig.body()!!.data!!.schedule!!) {
+                    scheduleList.add(schedule!!)
+                    detailData.schedule = scheduleList
+                }
 
-            binding.rvGroupClass.adapter = ListGroupClassAdapter(groupDetailList) {}
-        } else {
-            binding.pbLoadingGroupClass.visibility = View.GONE
-            binding.llEmpty.visibility = View.VISIBLE
+                groupDetailList.add(detailData)
+
+                binding.rvGroupClass.adapter = ListGroupClassAdapter(groupDetailList) {}
+            } else {
+                binding.pbLoadingGroupClass.visibility = View.GONE
+                binding.llEmpty.visibility = View.VISIBLE
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

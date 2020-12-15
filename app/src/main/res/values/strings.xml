@@ -324,4 +324,8 @@
     <string name="tenaga_guru">Tenaga yang profesional dan berkualitas yang merupakan lulusan universitas ternama</string>
     <string name="done">Done</string>
     <string name="belum">Belum</string>
+    <string name="tanggal">Tanggal</string>
+    <string name="_0">0</string>
+    <string name="sesi">Sesi</string>
+    <string name="level">Level</string>
 </resources>

@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class PraKerjaActivity : AppCompatActivity() {
     var praKerjaList = ArrayList<PraKerjaItem>()
@@ -27,7 +28,6 @@ class PraKerjaActivity : AppCompatActivity() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     var id = 0
-    var id_group = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPraKerjaBinding.inflate(layoutInflater)
@@ -41,34 +41,45 @@ class PraKerjaActivity : AppCompatActivity() {
     private suspend fun getPrakerja() {
 
         val networkConfig = NetworkConfig().getPrakerja().getListPrakerja()
-        if (networkConfig.isSuccessful) {
-            for (grup in networkConfig.body()!!.data!!) {
-                groupList.add(grup!!)
-                id = grup.id!!
-                getDetailGroupClass(id)
-                Log.d(TAG, "getGroupClass: $groupList")
-            }
+        try {
+            if (networkConfig.isSuccessful) {
+                for (grup in networkConfig.body()!!.data!!) {
+                    groupList.add(grup!!)
+                    id = grup.id!!
+                    getDetailGroupClass(id)
+                    Log.d(TAG, "getGroupClass: $groupList")
+                }
 
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private suspend fun getDetailGroupClass(id: Int) {
         val networkConfig = NetworkConfig().getGroupClass().getDetailGroupClass(id)
-        if (networkConfig.isSuccessful) {
-            val detailData = DetailData()
 
-            for (kelas in networkConfig.body()!!.data!!.kelas!!) {
-                kelasList.add(kelas!!)
-                detailData.kelas = kelasList
+        try {
+            if (networkConfig.isSuccessful) {
+                val detailData = DetailData()
+
+                for (kelas in networkConfig.body()!!.data!!.kelas!!) {
+                    kelasList.add(kelas!!)
+                    detailData.kelas = kelasList
+                }
+                for (schedule in networkConfig.body()!!.data!!.schedule!!) {
+                    scheduleList.add(schedule!!)
+                    detailData.schedule = scheduleList
+                }
+
+                groupDetailList.add(detailData)
+
+                binding.rvPraKerja.adapter = ListGroupClassAdapter(groupDetailList) {}
             }
-            for (schedule in networkConfig.body()!!.data!!.schedule!!) {
-                scheduleList.add(schedule!!)
-                detailData.schedule = scheduleList
-            }
 
-            groupDetailList.add(detailData)
-
-            binding.rvPraKerja.adapter = ListGroupClassAdapter(groupDetailList) {}
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
     }
 }

@@ -24,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -532,23 +533,27 @@ class HistoryFragment : Fragment() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.clFeedback)
         val networkConfig =
             NetworkConfig().getAfterClass().rateClass(token, scheduleId, rateTeacher, feedback)
-        if (networkConfig.isSuccessful) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Berhasil rate kelas",
-                    Toast.LENGTH_LONG
-                ).show()
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        try {
+            if (networkConfig.isSuccessful) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        context,
+                        "Berhasil rate kelas",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        context,
+                        "Gagal Rate Kelas",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Gagal Rate Kelas",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
     }
 
@@ -557,23 +562,28 @@ class HistoryFragment : Fragment() {
 
         val networkConfig =
             NetworkConfig().getAfterClass().inputKelasBermasalah(token, scheduleId, alasan)
-        if (networkConfig.isSuccessful) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Berhasil input kelas bermasalah",
-                    Toast.LENGTH_LONG
-                ).show()
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        try {
+            if (networkConfig.isSuccessful) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        context,
+                        "Berhasil input kelas bermasalah",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        context,
+                        "Gagal  input kelas bermasalah",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Gagal  input kelas bermasalah",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
     }

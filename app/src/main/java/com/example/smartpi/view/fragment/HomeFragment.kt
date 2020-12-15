@@ -58,6 +58,7 @@ class HomeFragment : Fragment() {
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    var stateTrial = "0"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -120,6 +121,7 @@ class HomeFragment : Fragment() {
         jadwalList.clear()
         preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
+        stateTrial = preferences.getValues("state_trial").toString()
         Log.d(TAG, "Token: $token")
 
         //setting Recylerview jadwalene
@@ -238,38 +240,43 @@ class HomeFragment : Fragment() {
     private suspend fun getGroupClass() {
 
         val network = NetworkConfig().getJadwalUser().getGroupClass(token)
-        if (network.isSuccessful) {
-            for (grup in network.body()!!.data!!) {
-                val jadwalItem = JadwalItem()
-                jadwalItem.packageName = grup!!.namaKelas
-                jadwalItem.duration = grup.duration.toString()
-                jadwalItem.teacherId = grup.teacherId
-                jadwalItem.teacherName = grup.teacher
 
-                for (schedule in grup.schedule!!) {
-                    jadwalItem.id = schedule!!.id.toString()
-                    jadwalItem.scheduleTime = schedule.scheduleTime.toString()
-                    jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
-                    jadwalItem.roomCode = schedule.roomCode.toString()
-                    jadwalItem.platform = schedule.platform.toString()
+        try {
+            if (network.isSuccessful) {
+                for (grup in network.body()!!.data!!) {
+                    val jadwalItem = JadwalItem()
+                    jadwalItem.packageName = grup!!.namaKelas
+                    jadwalItem.duration = grup.duration.toString()
+                    jadwalItem.teacherId = grup.teacherId
+                    jadwalItem.teacherName = grup.teacher
+
+                    for (schedule in grup.schedule!!) {
+                        jadwalItem.id = schedule!!.id.toString()
+                        jadwalItem.scheduleTime = schedule.scheduleTime.toString()
+                        jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
+                        jadwalItem.roomCode = schedule.roomCode.toString()
+                        jadwalItem.platform = schedule.platform.toString()
+                    }
+                    jadwalList.add(jadwalItem)
                 }
-                jadwalList.add(jadwalItem)
-            }
-            if (jadwalList.isEmpty()) {
-                binding.tvJadwalEmpty.visibility = View.VISIBLE
-                binding.rvJadwal.visibility = View.GONE
-                binding.pbJadwal.visibility = View.GONE
+                if (jadwalList.isEmpty()) {
+                    binding.tvJadwalEmpty.visibility = View.VISIBLE
+                    binding.rvJadwal.visibility = View.GONE
+                    binding.pbJadwal.visibility = View.GONE
+                } else {
+                    binding.rvJadwal.visibility = View.VISIBLE
+                    binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                        val intent =
+                            Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
+                        startActivity(intent)
+                    }
+                    binding.pbJadwal.visibility = View.GONE
+                }
             } else {
-                binding.rvJadwal.visibility = View.VISIBLE
-                binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
-                    val intent =
-                        Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
-                    startActivity(intent)
-                }
                 binding.pbJadwal.visibility = View.GONE
             }
-        } else {
-            binding.pbJadwal.visibility = View.GONE
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
 
@@ -283,7 +290,6 @@ class HomeFragment : Fragment() {
         try {
             if (network.isSuccessful) {
                 for (paket in network.body()!!.data!!) {
-
                     packageList.add(paket!!)
 
                 }
@@ -317,7 +323,10 @@ class HomeFragment : Fragment() {
                 scope.launch(Dispatchers.Main) {
                     if (checkTrial.body()!!.status == "Sudah") {
                         if (checkTrial.body()!!.isFirstTimeTrialUsed == "false") {
-                            showPopUpPilihJadwalTrial()
+                            if (stateTrial == "0") {
+                                showPopUpPilihJadwalTrial()
+                            }
+
                         }
                         binding.clJadwal.visibility = View.VISIBLE
                         val job1 = async { getJadwalUser() }
@@ -327,7 +336,10 @@ class HomeFragment : Fragment() {
                         job2.await()
                     } else {
                         binding.clJadwal.visibility = View.VISIBLE
-                        showPopUpPilihTrial()
+
+                        if (stateTrial == "0") {
+                            showPopUpPilihTrial()
+                        }
                         val job1 = async { getJadwalUser() }
                         val job2 = async { getGroupClass() }
 
@@ -359,10 +371,14 @@ class HomeFragment : Fragment() {
 
         val btnPilihTrial = dialog.findViewById<Button>(R.id.btn_pilih_trial_pop_up)
         val ivCancel = dialog.findViewById<ImageView>(R.id.iv_cancel_popUp_pilih_trial)
-        ivCancel.setOnClickListener { dialog.dismiss() }
+        ivCancel.setOnClickListener {
+            preferences.setValues("state_trial", "1").toString()
+            dialog.dismiss()
+        }
 
         btnPilihTrial.setOnClickListener {
             dialog.dismiss()
+            preferences.setValues("state_trial", "1").toString()
             startActivity(Intent(context, PilihTrialActivity::class.java))
         }
         dialog.show()
@@ -384,10 +400,14 @@ class HomeFragment : Fragment() {
 
         val btnPilihJadwalTrial = dialog.findViewById<Button>(R.id.btn_pilih_jadwa_trial_pop_up)
         val ivCancel = dialog.findViewById<ImageView>(R.id.iv_cancel_popUp_pilih_jadwal_trial)
-        ivCancel.setOnClickListener { dialog.dismiss() }
+        ivCancel.setOnClickListener {
+            preferences.setValues("state_trial", "1").toString()
+            dialog.dismiss()
+        }
 
         btnPilihJadwalTrial.setOnClickListener {
             dialog.dismiss()
+            preferences.setValues("state_trial", "1").toString()
             startActivity(Intent(context, PilihPaketActivity::class.java))
         }
         dialog.show()
@@ -475,50 +495,70 @@ class HomeFragment : Fragment() {
             .getPackageInfo(requireContext().packageName, 0).versionName
 
         val networkConfig = NetworkConfig().getVersion().getVersion()
-        if (networkConfig.isSuccessful) {
-            for (versi in networkConfig.body()!!.data!!) {
-                Log.d(TAG, "checkVersion: ${versi!!.versionName}, $versionName")
-                if (versionName != versi.versionName.toString()) {
-                    showPopUpUpdateAplikasi()
+        try {
+            if (networkConfig.isSuccessful) {
+                for (versi in networkConfig.body()!!.data!!) {
+                    Log.d(TAG, "checkVersion: ${versi!!.versionName}, $versionName")
+                    if (versionName != versi.versionName.toString()) {
+                        showPopUpUpdateAplikasi()
+                    }
                 }
             }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
     }
 
     suspend fun checkNotif() {
         updateNotifikasi()
         val networkConfig = NetworkConfig().getUser().getNotif(token)
-        if (networkConfig.isSuccessful) {
-            binding.llNotif.visibility = View.VISIBLE
-            binding.tvNotifikasi.text = networkConfig.body()!!.data!!.notif!!.size.toString()
+        try {
+            if (networkConfig.isSuccessful) {
+                binding.llNotif.visibility = View.VISIBLE
+                binding.tvNotifikasi.text = networkConfig.body()!!.data!!.notif!!.size.toString()
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     suspend fun updateNotifikasi() {
         val networkConfig = NetworkConfig().getUser().getUpdateNotif(token)
-        if (networkConfig.isSuccessful) {
-            if (networkConfig.body()!!.message == "read") {
-                binding.llNotif.visibility = View.GONE
+        try {
+            if (networkConfig.isSuccessful) {
+                if (networkConfig.body()!!.message == "read") {
+                    binding.llNotif.visibility = View.GONE
+                }
+            } else {
+                Log.d(TAG, "updateNotifikasi: gagal")
             }
-        } else {
-            Log.d(TAG, "updateNotifikasi: gagal")
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
     }
 
     private suspend fun getKelasSelesai() {
         val networkConfig = NetworkConfig().getAfterClass().getHistory(token)
-        if (networkConfig.isSuccessful) {
-            for (kelas in networkConfig.body()!!.data!!) {
-                if (kelas!!.status == 3) {
-                    if (kelas.teacherRate.toString() == "null") {
-                        kelasList.add(kelas)
-                        binding.rvKonfirmasiKelas.visibility = View.VISIBLE
+
+        try {
+            if (networkConfig.isSuccessful) {
+                for (kelas in networkConfig.body()!!.data!!) {
+                    if (kelas!!.status == 3) {
+                        if (kelas.teacherRate.toString() == "null") {
+                            kelasList.add(kelas)
+                            binding.rvKonfirmasiKelas.visibility = View.VISIBLE
+                        }
                     }
                 }
+                binding.rvKonfirmasiKelas.adapter = ListKelasSelesaiAdapter(kelasList) {}
             }
-            binding.rvKonfirmasiKelas.adapter = ListKelasSelesaiAdapter(kelasList) {}
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }
 

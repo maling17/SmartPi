@@ -1,12 +1,18 @@
 package com.example.smartpi.view.sign.lupa_password
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.smartpi.R
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityGantiLupaPasswordBinding
@@ -16,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class GantiLupaPasswordActivity : AppCompatActivity() {
@@ -43,6 +50,9 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
             finish()
         }
 
+        editTextHide(binding.etKonfirmasiLupaPassword)
+        editTextHide(binding.etPasswordLupaPassword)
+        editTextHide(binding.etPhoneGantiPassword)
     }
 
     private suspend fun gantiPassword() {
@@ -64,21 +74,26 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
             NetworkConfig().resetPassword()
                 .ubahPassword(phoneNumber, etPassword, etKonfirmasiPassword)
 
-        if (network!!.isSuccessful) {
-            binding.pbUbahPassword.visibility = View.GONE
-            binding.btnUbahKataKunci.visibility = View.VISIBLE
-            binding.tvKembaliUbahPassword.visibility = View.VISIBLE
+        try {
+            if (network!!.isSuccessful) {
+                binding.pbUbahPassword.visibility = View.GONE
+                binding.btnUbahKataKunci.visibility = View.VISIBLE
+                binding.tvKembaliUbahPassword.visibility = View.VISIBLE
 
-            Log.d(TAG, "gantiPassword: ${network.body()!!.success}")
+                Log.d(TAG, "gantiPassword: ${network.body()!!.success}")
 
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-        } else {
-            binding.pbUbahPassword.visibility = View.GONE
-            binding.btnUbahKataKunci.visibility = View.VISIBLE
-            binding.tvKembaliUbahPassword.visibility = View.VISIBLE
-            Log.d(TAG, network.errorBody().toString())
+                val intent = Intent(this, SignInActivity::class.java)
+                startActivity(intent)
+            } else {
+                binding.pbUbahPassword.visibility = View.GONE
+                binding.btnUbahKataKunci.visibility = View.VISIBLE
+                binding.tvKembaliUbahPassword.visibility = View.VISIBLE
+                Log.d(TAG, network.errorBody().toString())
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private fun changeBackgroundButton() {
@@ -112,4 +127,28 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
         finish()
     }
 
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+
+            }
+            false
+        }
+    }
 }

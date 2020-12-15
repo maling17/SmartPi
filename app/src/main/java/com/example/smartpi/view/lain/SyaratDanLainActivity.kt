@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class SyaratDanLainActivity : AppCompatActivity() {
     lateinit var preferences: Preferences
@@ -53,61 +54,83 @@ class SyaratDanLainActivity : AppCompatActivity() {
 
     private suspend fun getSyarat() {
         val network = NetworkConfig().syarat().getSyarat()
-        if (network.isSuccessful) {
-            val syarat = network.body()!!.data!!.syarat
-            val htmlSyarat: Spanned =
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
-                } else {
-                    Html.fromHtml(syarat)
-                }
-            binding.pbLoadingSyarat.visibility = View.GONE
-            binding.tvDescSyaratDanLain.text = htmlSyarat
+
+        try {
+            if (network.isSuccessful) {
+                val syarat = network.body()!!.data!!.syarat
+                val htmlSyarat: Spanned =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
+                    } else {
+                        Html.fromHtml(syarat)
+                    }
+                binding.pbLoadingSyarat.visibility = View.GONE
+                binding.tvDescSyaratDanLain.text = htmlSyarat
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private suspend fun getKebijakan() {
         val network = NetworkConfig().syarat().getKebijakan()
-        if (network.isSuccessful) {
-            val syarat = network.body()!!.data!!.syarat
-            val htmlSyarat: Spanned =
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
-                } else {
-                    Html.fromHtml(syarat)
-                }
-            binding.pbLoadingSyarat.visibility = View.GONE
-            binding.tvDescSyaratDanLain.text = htmlSyarat
+        try {
+            if (network.isSuccessful) {
+                val syarat = network.body()!!.data!!.syarat
+                val htmlSyarat: Spanned =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
+                    } else {
+                        Html.fromHtml(syarat)
+                    }
+                binding.pbLoadingSyarat.visibility = View.GONE
+                binding.tvDescSyaratDanLain.text = htmlSyarat
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private suspend fun getBantuan() {
         val network = NetworkConfig().syarat().getBantuan()
-        if (network.isSuccessful) {
-            val syarat = network.body()!!.data!!.syarat
-            val htmlSyarat: Spanned =
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
-                } else {
-                    Html.fromHtml(syarat)
-                }
-            binding.pbLoadingSyarat.visibility = View.GONE
-            binding.tvDescSyaratDanLain.text = htmlSyarat
+
+        try {
+            if (network.isSuccessful) {
+                val syarat = network.body()!!.data!!.syarat
+                val htmlSyarat: Spanned =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
+                    } else {
+                        Html.fromHtml(syarat)
+                    }
+                binding.pbLoadingSyarat.visibility = View.GONE
+                binding.tvDescSyaratDanLain.text = htmlSyarat
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private suspend fun getTentangKami() {
         val network = NetworkConfig().syarat().getTentangKami()
-        if (network.isSuccessful) {
-            val syarat = network.body()!!.data!!.syarat
-            val htmlSyarat: Spanned =
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
-                } else {
-                    Html.fromHtml(syarat)
-                }
-            binding.pbLoadingSyarat.visibility = View.GONE
-            binding.tvDescSyaratDanLain.text = htmlSyarat
+        try {
+            if (network.isSuccessful) {
+                val syarat = network.body()!!.data!!.syarat
+                val htmlSyarat: Spanned =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        Html.fromHtml(syarat, Html.FROM_HTML_MODE_LEGACY)
+                    } else {
+                        Html.fromHtml(syarat)
+                    }
+                binding.pbLoadingSyarat.visibility = View.GONE
+                binding.tvDescSyaratDanLain.text = htmlSyarat
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

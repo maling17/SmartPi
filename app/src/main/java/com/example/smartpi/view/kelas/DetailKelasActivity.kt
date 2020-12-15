@@ -25,6 +25,7 @@ import com.example.smartpi.model.JadwalItem
 import com.example.smartpi.utils.Preferences
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
+import java.net.SocketException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -274,29 +275,32 @@ class DetailKelasActivity : AppCompatActivity() {
 
         val network = NetworkConfig().cancelSchedule().cancelJadwal(token, idKelas)
 
-        if (network.isSuccessful) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this,
-                    "Kelas Berhasil Dibatalkan",
-                    Toast.LENGTH_LONG
-                ).show()
+        try {
+            if (network.isSuccessful) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Kelas Berhasil Dibatalkan",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    dialog.dismiss()
+                }
                 dialog.dismiss()
+                finish()
+
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Gagal Membatalkan Kelas",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    dialog.dismiss()
+                }
             }
-            dialog.dismiss()
-            finish()
-
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this,
-                    "Gagal Membatalkan Kelas",
-                    Toast.LENGTH_LONG
-                ).show()
-                dialog.dismiss()
-            }
-
-
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

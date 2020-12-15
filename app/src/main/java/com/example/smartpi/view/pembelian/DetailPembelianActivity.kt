@@ -1,8 +1,10 @@
 package com.example.smartpi.view.pembelian
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -12,11 +14,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.MainActivity
 import com.example.smartpi.R
@@ -32,16 +37,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailPembelianActivity : AppCompatActivity() {
 
-    var nama_produk = ""
-    var id_produk = ""
-    var harga_produk = ""
-    var hargaProdukInt = ""
-    var durasi_produk = ""
-    var codeWallet = ""
-    var jenis = ""
-    var totalHarga = 0
+    private var nama_produk = ""
+    private var id_produk = ""
+    private var harga_produk = ""
+    private var hargaProdukInt = ""
+    private var durasi_produk = ""
+    private var codeWallet = ""
+    private var jenis = ""
+    private var totalHarga = 0
 
     var token = ""
     lateinit var preferences: Preferences
@@ -52,10 +58,6 @@ class DetailPembelianActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailPembelianBinding
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-
-    var rekening = ""
-    var tagihan = ""
-    var tglExpired = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +107,31 @@ class DetailPembelianActivity : AppCompatActivity() {
         binding.btnEmail.setOnClickListener {
             scope.launch { updateEmail() }
         }
+
+        binding.etEmail.setOnKeyListener { _, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+            }
+            false
+        }
+
+        binding.etKodeVoucher.setOnKeyListener { _, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+            }
+            false
+        }
+
+        binding.etNmrHpDetailPembayaran.setOnKeyListener { _, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+            }
+            false
+        }
+
 
         binding.btnLanjutPembayaran.setOnClickListener {
             binding.btnLanjutPembayaran.visibility = View.GONE
@@ -387,7 +414,6 @@ class DetailPembelianActivity : AppCompatActivity() {
     private suspend fun requestDana() {
         val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
-        val messageBerhasil = "Silahkan cek aplikasi DANA Anda melanjutkan Pembayaran"
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestDANA(token, id_produk, etKode, etPhone)
@@ -406,7 +432,6 @@ class DetailPembelianActivity : AppCompatActivity() {
     private suspend fun requestDanaGroup() {
         val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
-        val messageBerhasil = "Silahkan cek aplikasi DANA Anda melanjutkan Pembayaran"
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestDanaGroup(token, id_produk, "DANA", etKode, etPhone)
@@ -425,7 +450,6 @@ class DetailPembelianActivity : AppCompatActivity() {
     private suspend fun requestLinkAja() {
         val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
-        val messageBerhasil = "Silahkan cek aplikasi LinkAja Anda melanjutkan Pembayaran"
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestLinkAja(token, id_produk, etKode, etPhone)
@@ -444,7 +468,6 @@ class DetailPembelianActivity : AppCompatActivity() {
     private suspend fun requestLinkAjaGroup() {
         val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
-        val messageBerhasil = "Silahkan cek aplikasi LinkAja Anda melanjutkan Pembayaran"
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet()
@@ -462,9 +485,7 @@ class DetailPembelianActivity : AppCompatActivity() {
     }
 
     private suspend fun requestGopay() {
-        val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
-        val messageBerhasil = "Silahkan cek aplikasi Gopay Anda melanjutkan Pembayaran"
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestGopay(token, id_produk, etKode)
@@ -481,9 +502,7 @@ class DetailPembelianActivity : AppCompatActivity() {
     }
 
     private suspend fun requestGopayGroup() {
-        val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
-        val messageBerhasil = "Silahkan cek aplikasi Gopay Anda melanjutkan Pembayaran"
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestGopayGroup(token, id_produk, "GOPAY", etKode)
@@ -579,6 +598,7 @@ class DetailPembelianActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private suspend fun requestVAGroupClass(bank: String, kode: String) {
         val dialog = Dialog(this)
         //style dialog
@@ -722,7 +742,7 @@ class DetailPembelianActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun ambilTrial() {
+    private suspend fun ambilTrial() {
         val networkConfig = NetworkConfig().packageTrial().ambilTrial(token, id_produk)
         if (networkConfig.isSuccessful) {
             val intent = Intent(this, MainActivity::class.java)
@@ -742,7 +762,7 @@ class DetailPembelianActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun PaymentFree() {
+    private suspend fun PaymentFree() {
         val etKode = binding.etKodeVoucher.text.toString()
         val networkConfig = NetworkConfig().getWallet().paymentFree(token, etKode, id_produk)
         Log.d("TAG", "PaymentFree: $id_produk, $totalHarga,$etKode")
@@ -766,5 +786,18 @@ class DetailPembelianActivity : AppCompatActivity() {
         }
     }
 
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 }
 

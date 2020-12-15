@@ -1,5 +1,7 @@
 package com.example.smartpi.view.sign
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -7,9 +9,12 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.smartpi.MainActivity
 import com.example.smartpi.R
 import com.example.smartpi.api.NetworkConfig
@@ -20,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class SignInPasswordActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
@@ -49,6 +55,13 @@ class SignInPasswordActivity : AppCompatActivity() {
         binding.tvLupaPassword.setOnClickListener {
             startActivity(Intent(this, LupaPasswordActivity::class.java))
         }
+        binding.etPassword.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+            }
+            false
+        }
 
     }
 
@@ -61,43 +74,47 @@ class SignInPasswordActivity : AppCompatActivity() {
         val etPassword = binding.etPassword.text.toString()
         val networkActivation =
             NetworkConfig().checkSignIn().checkSignIn(phoneNumber, etPassword)
+        try {
+            if (networkActivation!!.isSuccessful) {
+                binding.pbSignInPassword.visibility = View.INVISIBLE
+                binding.btnMasukSignIn.visibility = View.VISIBLE
+                binding.tvLupaPassword.visibility = View.VISIBLE
 
-        if (networkActivation!!.isSuccessful) {
-            binding.pbSignInPassword.visibility = View.INVISIBLE
-            binding.btnMasukSignIn.visibility = View.VISIBLE
-            binding.tvLupaPassword.visibility = View.VISIBLE
+                val token = networkActivation.body()!!.meta.toString()
+                val midToken = token.drop(11)
+                val finalToken = midToken.dropLast(1)
 
-            val token = networkActivation.body()!!.meta.toString()
-            val midToken = token.drop(11)
-            val finalToken = midToken.dropLast(1)
+                Log.d(TAG, "prosesSignIn: $finalToken")
 
-            Log.d(TAG, "prosesSignIn: $finalToken")
+                val intent = Intent(this, MainActivity::class.java)
+                preferences.setValues("token", finalToken)
+                preferences.setValues("nama", networkActivation.body()!!.data!!.username!!)
+                preferences.setValues("email", networkActivation.body()!!.data!!.email!!)
+                preferences.setValues("phone", networkActivation.body()!!.data!!.phone!!)
+                preferences.setValues("status", "1")
+                preferences.setValues("firstTime", "1")
+                preferences.setValues("user_id", networkActivation.body()!!.data!!.id.toString())
+                startActivity(intent)
+                finish()
+            } else {
+                binding.pbSignInPassword.visibility = View.INVISIBLE
+                binding.btnMasukSignIn.visibility = View.VISIBLE
+                binding.tvLupaPassword.visibility = View.VISIBLE
 
-            val intent = Intent(this, MainActivity::class.java)
-            preferences.setValues("token", finalToken)
-            preferences.setValues("nama", networkActivation.body()!!.data!!.username!!)
-            preferences.setValues("email", networkActivation.body()!!.data!!.email!!)
-            preferences.setValues("phone", networkActivation.body()!!.data!!.phone!!)
-            preferences.setValues("status", "1")
-            preferences.setValues("firstTime", "1")
-            preferences.setValues("user_id", networkActivation.body()!!.data!!.id.toString())
-            startActivity(intent)
-            finish()
-        } else {
-            binding.pbSignInPassword.visibility = View.INVISIBLE
-            binding.btnMasukSignIn.visibility = View.VISIBLE
-            binding.tvLupaPassword.visibility = View.VISIBLE
+                binding.etPassword.requestFocus()
+                binding.etPassword.error = "Password Salah"
 
-            binding.etPassword.requestFocus()
-            binding.etPassword.error = "Password Salah"
-
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this@SignInPasswordActivity,
-                    "Password Salah",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this@SignInPasswordActivity,
+                        "Password Salah",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
     }
@@ -132,5 +149,19 @@ class SignInPasswordActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this, SignInActivity::class.java))
+    }
+
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

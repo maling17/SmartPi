@@ -1,7 +1,9 @@
 package com.example.smartpi.view.sign
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,11 +14,14 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
@@ -29,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 
 class SignInActivity : AppCompatActivity() {
@@ -72,6 +78,13 @@ class SignInActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        binding.etPhone.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+            }
+            false
+        }
 
 
     }
@@ -79,12 +92,17 @@ class SignInActivity : AppCompatActivity() {
     private suspend fun getCountryCode() {
 
         val countryCode = NetworkConfig().countryCode().getCountryCode()
-        if (countryCode.isSuccessful) {
-            for (code in countryCode.body()!!.data!!) {
-                Log.d(TAG, "getCountryCode: ${code!!.name}")
-                countryCodeList.addAll(listOf(code))
+        try {
+            if (countryCode.isSuccessful) {
+                for (code in countryCode.body()!!.data!!) {
+                    Log.d(TAG, "getCountryCode: ${code!!.name}")
+                    countryCodeList.addAll(listOf(code))
+                }
             }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -135,33 +153,10 @@ class SignInActivity : AppCompatActivity() {
         //memulai Api
         val network = NetworkConfig().inputNumber().inputNumber(phoneNumber, country_code)
 
-        if (network!!.isSuccessful) {
-            if (network.body()!!.status == "activation" || network.body()!!.status == "new") {
-                val intent = Intent(this, KodeAktivasiActivity::class.java)
-                    .putExtra("nmr_telp", nmrTelp)
-                binding.pbSignIn.visibility = View.INVISIBLE
-                binding.btnSignIn.visibility = View.VISIBLE
-                binding.tvAtau.visibility = View.VISIBLE
-                binding.tvSignEmail.visibility = View.VISIBLE
-                startActivity(intent)
-                finish()
-            } else {
-                if (network.body()!!.status == "choose") {
-
-                    for (user in network.body()!!.data!!) {
-                        userList.add(user!!)
-                    }
-                    val intent = Intent(this, ChooseEmailActivity::class.java)
-                    intent.putExtra("country_code", country_code)
-                    intent.putExtra("phone_number", phoneNumber)
-                    binding.pbSignIn.visibility = View.INVISIBLE
-                    binding.btnSignIn.visibility = View.VISIBLE
-                    binding.tvAtau.visibility = View.VISIBLE
-                    binding.tvSignEmail.visibility = View.VISIBLE
-                    startActivity(intent)
-
-                } else {
-                    val intent = Intent(this, SignInPasswordActivity::class.java)
+        try {
+            if (network!!.isSuccessful) {
+                if (network.body()!!.status == "activation" || network.body()!!.status == "new") {
+                    val intent = Intent(this, KodeAktivasiActivity::class.java)
                         .putExtra("nmr_telp", nmrTelp)
                     binding.pbSignIn.visibility = View.INVISIBLE
                     binding.btnSignIn.visibility = View.VISIBLE
@@ -169,22 +164,50 @@ class SignInActivity : AppCompatActivity() {
                     binding.tvSignEmail.visibility = View.VISIBLE
                     startActivity(intent)
                     finish()
-                }
+                } else {
+                    if (network.body()!!.status == "choose") {
 
+                        for (user in network.body()!!.data!!) {
+                            userList.add(user!!)
+                        }
+                        val intent = Intent(this, ChooseEmailActivity::class.java)
+                        intent.putExtra("country_code", country_code)
+                        intent.putExtra("phone_number", phoneNumber)
+                        binding.pbSignIn.visibility = View.INVISIBLE
+                        binding.btnSignIn.visibility = View.VISIBLE
+                        binding.tvAtau.visibility = View.VISIBLE
+                        binding.tvSignEmail.visibility = View.VISIBLE
+                        startActivity(intent)
+
+                    } else {
+                        val intent = Intent(this, SignInPasswordActivity::class.java)
+                            .putExtra("nmr_telp", nmrTelp)
+                        binding.pbSignIn.visibility = View.INVISIBLE
+                        binding.btnSignIn.visibility = View.VISIBLE
+                        binding.tvAtau.visibility = View.VISIBLE
+                        binding.tvSignEmail.visibility = View.VISIBLE
+                        startActivity(intent)
+                        finish()
+                    }
+
+                }
+            } else {
+                binding.btnSignIn.visibility = View.VISIBLE
+                binding.btnSignIn.visibility = View.INVISIBLE
+                binding.tvAtau.visibility = View.VISIBLE
+                binding.tvSignEmail.visibility = View.VISIBLE
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this@SignInActivity,
+                        "Check your connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        } else {
-            binding.btnSignIn.visibility = View.VISIBLE
-            binding.btnSignIn.visibility = View.INVISIBLE
-            binding.tvAtau.visibility = View.VISIBLE
-            binding.tvSignEmail.visibility = View.VISIBLE
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this@SignInActivity,
-                    "Check your connection",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private fun changeBackgroundButton() {
@@ -260,5 +283,19 @@ class SignInActivity : AppCompatActivity() {
             }
             false
         })
+    }
+
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

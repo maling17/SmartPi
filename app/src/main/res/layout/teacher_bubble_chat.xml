@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/teacher_message"
-        style="@style/Text14RegulerWhite"
+        style="@style/Text14RegulerBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/teacher_bubble_shape"

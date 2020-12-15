@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class ProgramInggrisActivity : AppCompatActivity() {
     lateinit var binding: ActivityProgramInggrisBinding
@@ -42,16 +43,22 @@ class ProgramInggrisActivity : AppCompatActivity() {
 
     suspend fun getInggris() {
         val networkConfig = NetworkConfig().getPrograms().getProgramInggris()
-        if (networkConfig.isSuccessful) {
-            val judul = networkConfig.body()!!.data!!.desc!!.name
-            val desc = networkConfig.body()!!.data!!.desc!!.desc
-            val duration = networkConfig.body()!!.data!!.desc!!.duration
-            id_program = networkConfig.body()!!.data!!.desc!!.id!!.toString()
 
-            binding.tvJudulProgram.text = judul
-            binding.tvDescProgram.text = desc
-            binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
+        try {
+            if (networkConfig.isSuccessful) {
+                val judul = networkConfig.body()!!.data!!.desc!!.name
+                val desc = networkConfig.body()!!.data!!.desc!!.desc
+                val duration = networkConfig.body()!!.data!!.desc!!.duration
+                id_program = networkConfig.body()!!.data!!.desc!!.id!!.toString()
 
+                binding.tvJudulProgram.text = judul
+                binding.tvDescProgram.text = desc
+                binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
+
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

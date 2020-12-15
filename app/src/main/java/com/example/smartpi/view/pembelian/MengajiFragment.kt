@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 
 class MengajiFragment : Fragment() {
@@ -49,22 +50,25 @@ class MengajiFragment : Fragment() {
 
         programsList.clear()
         val networkConfig = NetworkConfig().getPrograms().getMengaji()
-        if (networkConfig.isSuccessful) {
+        try {
+            if (networkConfig.isSuccessful) {
 
-            for (programs in networkConfig.body()!!.data!!) {
-                programsList.add(programs!!)
+                for (programs in networkConfig.body()!!.data!!) {
+                    programsList.add(programs!!)
+                }
+
+                binding.pbMengaji.visibility = View.GONE
+                binding.rvMengaji.visibility = View.VISIBLE
+                binding.rvMengaji.adapter = ListProgramsAdapter(programsList) {
+                    val intent =
+                        Intent(activity, PilihPaketLanggananActivity::class.java)
+                    intent.putExtra("id_program", it.id.toString())
+                    startActivity(intent)
+
+                }
             }
-
-            binding.pbMengaji.visibility = View.GONE
-            binding.rvMengaji.visibility = View.VISIBLE
-            binding.rvMengaji.adapter = ListProgramsAdapter(programsList) {
-                val intent =
-                    Intent(activity, PilihPaketLanggananActivity::class.java)
-                intent.putExtra("id_program", it.id.toString())
-                startActivity(intent)
-
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
     }
 }

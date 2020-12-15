@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:fitsSystemWindows="true"
     tools:context=".view.kelas.DetailKelasActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +25,8 @@
             android:src="@drawable/ic_icon_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             style="@style/Text14BoldBlack"
@@ -68,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="21dp"
-        android:text="Level"
+        android:text="@string/level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_detail_kelas" />
 
@@ -78,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Level"
+        android:text="@string/level"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -89,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="130dp"
         android:layout_marginTop="21dp"
-        android:text="Sesi"
+        android:text="@string/sesi"
         app:layout_constraintStart_toEndOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_detail_kelas" />
@@ -100,7 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="0/"
+        android:text="@string/_0"
         app:layout_constraintStart_toStartOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -109,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
-        android:background="@color/dark_grey"
+        android:background="@color/light_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +125,8 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_time"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view3"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tv_jam_kelas"
@@ -131,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="Jam-"
+        android:text="@string/jam"
         app:layout_constraintBottom_toBottomOf="@+id/imageView6"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
         app:layout_constraintTop_toTopOf="@+id/imageView6" />
@@ -141,7 +144,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
-        android:background="@color/dark_grey"
+        android:background="@color/light_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -156,7 +159,8 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_calendar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toBottomOf="@+id/view4"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tv_tanggal_kelas"
@@ -164,7 +168,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="tanggal"
+        android:text="@string/tanggal"
         app:layout_constraintBottom_toBottomOf="@+id/imageView7"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
         app:layout_constraintTop_toTopOf="@+id/imageView7" />
@@ -175,7 +179,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
-        android:background="@color/dark_grey"
+        android:background="@color/light_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -207,7 +211,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
-        android:text="Asal"
+        android:text="@string/asal"
         app:layout_constraintStart_toEndOf="@+id/iv_photo_guru"
         app:layout_constraintTop_toBottomOf="@+id/tv_nama_guru" />
 
@@ -219,14 +223,15 @@
         android:src="@drawable/ic_icon_chat"
         app:layout_constraintBottom_toBottomOf="@+id/view8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view7" />
+        app:layout_constraintTop_toBottomOf="@+id/view7"
+        tools:ignore="ContentDescription" />
 
     <View
         android:id="@+id/view8"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="22dp"
-        android:background="@color/dark_grey"
+        android:background="@color/light_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

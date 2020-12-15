@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class SMPFragment : Fragment() {
 
@@ -50,16 +51,21 @@ class SMPFragment : Fragment() {
 
     suspend fun getSMP() {
         val networkConfig = NetworkConfig().getPrograms().getProgramMatematika()
-        if (networkConfig.isSuccessful) {
-            val judul = networkConfig.body()!!.data!!.smp!!.desc!!.name
-            val desc = networkConfig.body()!!.data!!.smp!!.desc!!.desc
-            val duration = networkConfig.body()!!.data!!.smp!!.desc!!.duration
-            id_program = networkConfig.body()!!.data!!.smp!!.desc!!.id!!.toString()
+        try {
+            if (networkConfig.isSuccessful) {
+                val judul = networkConfig.body()!!.data!!.smp!!.desc!!.name
+                val desc = networkConfig.body()!!.data!!.smp!!.desc!!.desc
+                val duration = networkConfig.body()!!.data!!.smp!!.desc!!.duration
+                id_program = networkConfig.body()!!.data!!.smp!!.desc!!.id!!.toString()
 
-            binding.tvJudulProgram.text = judul
-            binding.tvDescProgram.text = desc
-            binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
+                binding.tvJudulProgram.text = judul
+                binding.tvDescProgram.text = desc
+                binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
 
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

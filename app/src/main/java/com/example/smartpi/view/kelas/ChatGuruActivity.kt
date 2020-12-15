@@ -16,6 +16,7 @@ import com.example.smartpi.model.ChatDataItem
 import com.example.smartpi.utils.Preferences
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
+import java.net.SocketException
 
 class ChatGuruActivity : AppCompatActivity() {
     lateinit var binding: ActivityChatGuruBinding
@@ -45,9 +46,8 @@ class ChatGuruActivity : AppCompatActivity() {
         binding.rvChat.layoutManager = LinearLayoutManager(this)
 
         scope.launch {
-            repeat(12) {
+            while (true) {
                 getMessage()
-                Log.d("TAG", "onCreate: chat is worked")
                 delay(5000L)
             }
 
@@ -73,14 +73,19 @@ class ChatGuruActivity : AppCompatActivity() {
     private suspend fun getMessage() {
         chatList.clear()
         val networkConfig = NetworkConfig().getMessage().getMessage(token, schedule_id)
-        if (networkConfig.isSuccessful) {
-            for (chat in networkConfig.body()!!.data!!) {
-                chatList.add(chat!!)
+        try {
+            if (networkConfig.isSuccessful) {
+                for (chat in networkConfig.body()!!.data!!) {
+                    chatList.add(chat!!)
+                }
+                binding.rvChat.adapter = ChatAdapter(this, chatList)
+            } else {
+                Log.d("TAG", "getMessage: gagal")
             }
-            binding.rvChat.adapter = ChatAdapter(this, chatList)
-        } else {
-            Log.d("TAG", "getMessage: gagal")
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private suspend fun sendMessage() {
@@ -88,11 +93,16 @@ class ChatGuruActivity : AppCompatActivity() {
         val networkConfig =
             NetworkConfig().getMessage().sendMessage(token, schedule_id, etMessage.toString())
         binding.etMessage.text.clear()
-        if (networkConfig.isSuccessful) {
-            getMessage()
-        } else {
-            Log.d("TAG", "sendMessage: gagal")
+        try {
+            if (networkConfig.isSuccessful) {
+                getMessage()
+            } else {
+                Log.d("TAG", "sendMessage: gagal")
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     fun Fragment.hideKeyboard() {

@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class AkademikFragment : Fragment() {
 
@@ -52,23 +53,28 @@ class AkademikFragment : Fragment() {
 
         programsList.clear()
         val networkConfig = NetworkConfig().getPrograms().getMatematika()
-        if (networkConfig.isSuccessful) {
 
-            for (programs in networkConfig.body()!!.data!!) {
-                programsList.add(programs!!)
-            }
-            binding.pbAkademik.visibility = View.GONE
-            binding.rvAkademik.visibility = View.VISIBLE
-            binding.rvAkademik.adapter = ListProgramsAdapter(programsList) {
+        try {
+            if (networkConfig.isSuccessful) {
 
-                val intent =
-                    Intent(activity, PilihPaketLanggananActivity::class.java)
-                intent.putExtra("id_program", it.id.toString())
-                Log.d(TAG, "getMatematika: ${it.id}")
-                startActivity(intent)
+                for (programs in networkConfig.body()!!.data!!) {
+                    programsList.add(programs!!)
+                }
+                binding.pbAkademik.visibility = View.GONE
+                binding.rvAkademik.visibility = View.VISIBLE
+                binding.rvAkademik.adapter = ListProgramsAdapter(programsList) {
+
+                    val intent =
+                        Intent(activity, PilihPaketLanggananActivity::class.java)
+                    intent.putExtra("id_program", it.id.toString())
+                    Log.d(TAG, "getMatematika: ${it.id}")
+                    startActivity(intent)
+                }
             }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
 
     }
 }

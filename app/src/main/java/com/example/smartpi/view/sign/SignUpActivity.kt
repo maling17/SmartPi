@@ -1,13 +1,20 @@
 package com.example.smartpi.view.sign
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.smartpi.MainActivity
 import com.example.smartpi.R
 import com.example.smartpi.api.NetworkConfig
@@ -17,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class SignUpActivity : AppCompatActivity() {
@@ -39,6 +47,9 @@ class SignUpActivity : AppCompatActivity() {
         binding.tvNmrTelpSignUp.text = textNmrTlp
 
         changeBackgroundButton()
+        editTextHide(binding.etKonfimasiPasswordSignUp)
+        editTextHide(binding.etNamaSignUp)
+        editTextHide(binding.etPasswordSignUp)
 
     }
 
@@ -50,27 +61,31 @@ class SignUpActivity : AppCompatActivity() {
 
         val network =
             NetworkConfig().signUp().signUp(phoneNumber, passwordUser, namaUser, passwordKonfirmasi)
+        try {
+            if (network!!.isSuccessful) {
+                val token = network.body()!!.meta.toString()
+                val midToken = token.drop(17)
+                val finalToken = midToken.dropLast(1)
+                val intent = Intent(this, MainActivity::class.java)
 
-        if (network!!.isSuccessful) {
-            val token = network.body()!!.meta.toString()
-            val midToken = token.drop(17)
-            val finalToken = midToken.dropLast(1)
-            val intent = Intent(this, MainActivity::class.java)
+                preferences.setValues("token", finalToken)
+                preferences.setValues("status", "1")
+                startActivity(intent)
+                finish()
 
-            preferences.setValues("token", finalToken)
-            preferences.setValues("status", "1")
-            startActivity(intent)
-            finish()
-
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this@SignUpActivity,
-                    "Password atau Konfirmasi password ada yang salah",
-                    Toast.LENGTH_LONG
-                ).show()
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this@SignUpActivity,
+                        "Password atau Konfirmasi password ada yang salah",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private fun changeBackgroundButton() {
@@ -101,4 +116,28 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+
+            }
+            false
+        }
+    }
 }

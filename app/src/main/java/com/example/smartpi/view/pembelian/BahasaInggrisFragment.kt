@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 
 class BahasaInggrisFragment : Fragment() {
@@ -48,20 +49,26 @@ class BahasaInggrisFragment : Fragment() {
 
         programsList.clear()
         val networkConfig = NetworkConfig().getPrograms().getInggris()
-        if (networkConfig.isSuccessful) {
 
-            for (programs in networkConfig.body()!!.data!!) {
-                programsList.add(programs!!)
-            }
-            binding.pbInggris.visibility = View.GONE
-            binding.rvInggris.visibility = View.VISIBLE
+        try {
+            if (networkConfig.isSuccessful) {
 
-            binding.rvInggris.adapter = ListProgramsAdapter(programsList) {
-                val intent =
-                    Intent(activity, PilihPaketLanggananActivity::class.java)
-                intent.putExtra("id_program", it.id.toString())
-                startActivity(intent)
+                for (programs in networkConfig.body()!!.data!!) {
+                    programsList.add(programs!!)
+                }
+                binding.pbInggris.visibility = View.GONE
+                binding.rvInggris.visibility = View.VISIBLE
+
+                binding.rvInggris.adapter = ListProgramsAdapter(programsList) {
+                    val intent =
+                        Intent(activity, PilihPaketLanggananActivity::class.java)
+                    intent.putExtra("id_program", it.id.toString())
+                    startActivity(intent)
+                }
             }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
     }

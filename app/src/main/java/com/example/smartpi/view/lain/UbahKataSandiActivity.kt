@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class UbahKataSandiActivity : AppCompatActivity() {
     private val job = Job()
@@ -41,20 +42,26 @@ class UbahKataSandiActivity : AppCompatActivity() {
         val oldPassword = binding.etPasswordLama.text.toString()
         val networkConfig = NetworkConfig().profile()
             .ubahKataSandi(token, oldPassword, newPassword, confrimationPassword)
-        if (networkConfig.isSuccessful) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(this, "Ubah Kata Sandi Berhasil", Toast.LENGTH_LONG).show()
-                finish()
+
+        try {
+            if (networkConfig.isSuccessful) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(this, "Ubah Kata Sandi Berhasil", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Ubah Kata Sandi Gagal, Silahkan coba lagi atau cek jaringan anda",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this,
-                    "Ubah Kata Sandi Gagal, Silahkan coba lagi atau cek jaringan anda",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private fun changeBackgroundButton() {

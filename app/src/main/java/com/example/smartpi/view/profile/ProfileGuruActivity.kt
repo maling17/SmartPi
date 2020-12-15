@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class ProfileGuruActivity : AppCompatActivity() {
 
@@ -40,24 +41,28 @@ class ProfileGuruActivity : AppCompatActivity() {
         nama_guru = intent.getStringExtra("nama_guru")
         rating = intent.getStringExtra("rating").toFloat()
 
-
         val networkConfig = NetworkConfig().getTeacher().getDetailTeacher(token, id_guru)
-        if (networkConfig.isSuccessful) {
-            var str: String = networkConfig.body()!!.data!!.profile.toString()
-            str = if (str.isEmpty() || str == "null") {
-                "Guru tidak mengisi"
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString()
+        try {
+            if (networkConfig.isSuccessful) {
+                var str: String = networkConfig.body()!!.data!!.profile.toString()
+                str = if (str.isEmpty() || str == "null") {
+                    "Guru tidak mengisi"
                 } else {
-                    Html.fromHtml(str).toString()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Html.fromHtml(str, Html.FROM_HTML_MODE_LEGACY).toString()
+                    } else {
+                        Html.fromHtml(str).toString()
+                    }
                 }
+                binding.tvDescGuru.text = str
+                binding.tvNamaGuruProfile.text = nama_guru
+                binding.tvRating.text = rating.toString()
+                Picasso.get().load(networkConfig.body()!!.data!!.avatar.toString())
+                    .into(binding.ivTeacherProfile)
             }
-            binding.tvDescGuru.text = str
-            binding.tvNamaGuruProfile.text = nama_guru
-            binding.tvRating.text = rating.toString()
-            Picasso.get().load(networkConfig.body()!!.data!!.avatar.toString())
-                .into(binding.ivTeacherProfile)
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

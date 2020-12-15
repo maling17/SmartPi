@@ -10,6 +10,7 @@ import com.example.smartpi.databinding.ActivityNotifikasiBinding
 import com.example.smartpi.model.NotifItem
 import com.example.smartpi.utils.Preferences
 import kotlinx.coroutines.*
+import java.net.SocketException
 
 class NotifikasiActivity : AppCompatActivity() {
     var token = ""
@@ -41,23 +42,34 @@ class NotifikasiActivity : AppCompatActivity() {
     suspend fun getNotifikasi() {
 
         val networkConfig = NetworkConfig().getUser().getNotif(token)
-        if (networkConfig.isSuccessful) {
-            for (notif in networkConfig.body()!!.data!!.notif!!) {
-                notifList.add(notif!!)
-            }
-            binding.rvNotifikasi.adapter = ListNotifAdapter(notifList) {
+        try {
+            if (networkConfig.isSuccessful) {
+                for (notif in networkConfig.body()!!.data!!.notif!!) {
+                    notifList.add(notif!!)
+                }
+                binding.rvNotifikasi.adapter = ListNotifAdapter(notifList) {
 
+                }
             }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     suspend fun updateNotifikasi() {
         val networkConfig = NetworkConfig().getUser().getUpdateNotif(token)
-        if (networkConfig.isSuccessful) {
-            Log.d(TAG, "updateNotifikasi: Berhasil")
-        } else {
-            Log.d(TAG, "updateNotifikasi: gagal")
+
+        try {
+            if (networkConfig.isSuccessful) {
+                Log.d(TAG, "updateNotifikasi: Berhasil")
+            } else {
+                Log.d(TAG, "updateNotifikasi: gagal")
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
 
     }
 }

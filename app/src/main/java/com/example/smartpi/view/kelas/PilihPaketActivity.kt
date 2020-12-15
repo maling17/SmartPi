@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class PilihPaketActivity : AppCompatActivity() {
 
@@ -90,35 +91,39 @@ class PilihPaketActivity : AppCompatActivity() {
         packageList.clear()
         binding.pbPilihPaket.visibility = View.VISIBLE
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
-        if (network.isSuccessful) {
-            for (paket in network.body()!!.data!!) {
+        try {
+            if (network.isSuccessful) {
+                for (paket in network.body()!!.data!!) {
 
-                binding.pbPilihPaket.visibility = View.GONE
-                packageList.add(paket!!)
+                    binding.pbPilihPaket.visibility = View.GONE
+                    packageList.add(paket!!)
 
-            }
-            binding.rvPilihPaket.adapter = ListPackageActiveAdapter(packageList) {
-                val bundle = Bundle()
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id.toString())
-                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.package_name)
-                mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                }
+                binding.rvPilihPaket.adapter = ListPackageActiveAdapter(packageList) {
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id.toString())
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.package_name)
+                    mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
-                val indexArrayList = packageList.indexOf(it) //mengindex dulu isi yang ada di array
-                kode_teacher =
-                    packageList[indexArrayList].kode_teacher.toString() //mengfilter dan mengambil value kode_teacher
-                user_avalaible_id = packageList[indexArrayList].id.toString()
-                scope.launch(Dispatchers.Main) { getTeacherProduct(kode_teacher) }
+                    val indexArrayList =
+                        packageList.indexOf(it) //mengindex dulu isi yang ada di array
+                    kode_teacher =
+                        packageList[indexArrayList].kode_teacher.toString() //mengfilter dan mengambil value kode_teacher
+                    user_avalaible_id = packageList[indexArrayList].id.toString()
+                    scope.launch(Dispatchers.Main) { getTeacherProduct(kode_teacher) }
+                }
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Tidak dapat mengambil paket",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this,
-                    "Tidak dapat mengambil paket",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
     }
 
     private suspend fun getTeacherProduct(kode_teacher: String) {
@@ -128,28 +133,32 @@ class PilihPaketActivity : AppCompatActivity() {
         binding.pbPilihPaket.visibility = View.VISIBLE
 
         val network = NetworkConfig().getTeacher().getTeacherProduct(token, kode_teacher)
-        if (network.isSuccessful) {
-            for (teacher in network.body()!!.teacher!!) {
-                binding.pbPilihPaket.visibility = View.GONE
-                teacherList.add(teacher!!)
 
-            }
-            binding.rvPilihGuru.adapter = ListTeacherProductAdapter(teacherList) {
+        try {
+            if (network.isSuccessful) {
+                for (teacher in network.body()!!.teacher!!) {
+                    binding.pbPilihPaket.visibility = View.GONE
+                    teacherList.add(teacher!!)
 
-                val intent = Intent(this, PilihJadwalActivity::class.java).putExtra("data", it)
-                    .putExtra("user_avalaible_id", user_avalaible_id)
-                startActivity(intent)
+                }
+                binding.rvPilihGuru.adapter = ListTeacherProductAdapter(teacherList) {
+
+                    val intent = Intent(this, PilihJadwalActivity::class.java).putExtra("data", it)
+                        .putExtra("user_avalaible_id", user_avalaible_id)
+                    startActivity(intent)
+                }
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Tidak dapat mengambil guru",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this,
-                    "Tidak dapat mengambil guru",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
     }
 
     suspend fun filterUmumGuru() {
@@ -170,28 +179,31 @@ class PilihPaketActivity : AppCompatActivity() {
         val networkConfig = NetworkConfig().getTeacher()
             .filterTeacherUmum(token, range_akhir, hari, kode_teacher, timezone, hayu_atuh)
 
-        if (networkConfig.isSuccessful) {
-            for (teacher in networkConfig.body()!!.data!!) {
-                binding.pbPilihPaket.visibility = View.GONE
-                filterTeacherList.add(teacher!!)
+        try {
+            if (networkConfig.isSuccessful) {
+                for (teacher in networkConfig.body()!!.data!!) {
+                    binding.pbPilihPaket.visibility = View.GONE
+                    filterTeacherList.add(teacher!!)
 
-            }
-            binding.rvPilihGuru.adapter = ListFilterAdapter(filterTeacherList) {
+                }
+                binding.rvPilihGuru.adapter = ListFilterAdapter(filterTeacherList) {
 
-                val teacherItem = TeacherItem()
-                teacherItem.recommended = it.recommended
-                teacherItem.rating = it.rating
-                teacherItem.name = it.name
-                teacherItem.avatar = it.avatar
-                teacherItem.id = it.id
-                val intent =
-                    Intent(this, PilihJadwalActivity::class.java).putExtra("data", teacherItem)
-                        .putExtra("user_avalaible_id", user_avalaible_id)
-                startActivity(intent)
+                    val teacherItem = TeacherItem()
+                    teacherItem.recommended = it.recommended
+                    teacherItem.rating = it.rating
+                    teacherItem.name = it.name
+                    teacherItem.avatar = it.avatar
+                    teacherItem.id = it.id
+                    val intent =
+                        Intent(this, PilihJadwalActivity::class.java).putExtra("data", teacherItem)
+                            .putExtra("user_avalaible_id", user_avalaible_id)
+                    startActivity(intent)
+                }
             }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
-
     }
 
     suspend fun filterKhususGuru() {
@@ -207,28 +219,31 @@ class PilihPaketActivity : AppCompatActivity() {
         val networkConfig = NetworkConfig().getTeacher()
             .filterTeacherKhusus(token, waktu, timezone, kode_teacher)
 
-        if (networkConfig.isSuccessful) {
-            for (teacher in networkConfig.body()!!.data!!) {
-                binding.pbPilihPaket.visibility = View.GONE
-                filterTeacherKhususList.add(teacher!!)
+        try {
+            if (networkConfig.isSuccessful) {
+                for (teacher in networkConfig.body()!!.data!!) {
+                    binding.pbPilihPaket.visibility = View.GONE
+                    filterTeacherKhususList.add(teacher!!)
 
+                }
+                binding.rvPilihGuru.adapter = ListFilterKhususAdapter(filterTeacherKhususList) {
+                    binding.pbLoadingPilihPaket.visibility = View.VISIBLE
+                    val teacherItem = TeacherItem()
+                    teacherItem.recommended = it.recommended
+                    teacherItem.rating = it.rating
+                    teacherItem.name = it.name
+                    teacherItem.avatar = it.avatar
+                    teacherItem.id = it.id
+                    val intent =
+                        Intent(this, PilihJadwalActivity::class.java).putExtra("data", teacherItem)
+                            .putExtra("user_avalaible_id", user_avalaible_id)
+                    startActivity(intent)
+                    binding.pbLoadingPilihPaket.visibility = View.GONE
+                }
             }
-            binding.rvPilihGuru.adapter = ListFilterKhususAdapter(filterTeacherKhususList) {
-                binding.pbLoadingPilihPaket.visibility = View.VISIBLE
-                val teacherItem = TeacherItem()
-                teacherItem.recommended = it.recommended
-                teacherItem.rating = it.rating
-                teacherItem.name = it.name
-                teacherItem.avatar = it.avatar
-                teacherItem.id = it.id
-                val intent =
-                    Intent(this, PilihJadwalActivity::class.java).putExtra("data", teacherItem)
-                        .putExtra("user_avalaible_id", user_avalaible_id)
-                startActivity(intent)
-                binding.pbLoadingPilihPaket.visibility = View.GONE
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
 
     }
 

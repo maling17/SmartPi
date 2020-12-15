@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class PilihPaketLanggananActivity : AppCompatActivity() {
@@ -35,19 +36,24 @@ class PilihPaketLanggananActivity : AppCompatActivity() {
     suspend fun getPaketLangganan() {
 
         val networkConfig = NetworkConfig().getPaketLangganan().getPricePaket(id_paket)
-        if (networkConfig.isSuccessful) {
-            for (paket in networkConfig.body()!!.data!!) {
-                paketList.add(paket!!)
-            }
-            binding.rvPaketLangganan.layoutManager = LinearLayoutManager(this)
-            binding.rvPaketLangganan.adapter = PaketLanggananAdapter(paketList) {
 
-                val intent = Intent(this, DetailPaketActivity::class.java)
-                intent.putExtra("id_paket", it.id.toString())
-                startActivity(intent)
+        try {
+            if (networkConfig.isSuccessful) {
+                for (paket in networkConfig.body()!!.data!!) {
+                    paketList.add(paket!!)
+                }
+                binding.rvPaketLangganan.layoutManager = LinearLayoutManager(this)
+                binding.rvPaketLangganan.adapter = PaketLanggananAdapter(paketList) {
 
+                    val intent = Intent(this, DetailPaketActivity::class.java)
+                    intent.putExtra("id_paket", it.id.toString())
+                    startActivity(intent)
+
+                }
             }
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
     }
 }

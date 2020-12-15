@@ -1,7 +1,9 @@
 package com.example.smartpi.view.sign.lupa_password
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,10 +12,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
@@ -25,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class LupaPasswordActivity : AppCompatActivity() {
 
@@ -56,16 +63,22 @@ class LupaPasswordActivity : AppCompatActivity() {
             scope.launch(Dispatchers.Main) { showPopupDialog() }
         }
         binding.tvKembaliLupaPassword.setOnClickListener { finish() }
+        editTextHide(binding.etPhoneLupaPassword)
     }
 
     private suspend fun getCountryCode() {
 
         val countryCode = NetworkConfig().countryCode().getCountryCode()
-        if (countryCode.isSuccessful) {
-            for (code in countryCode.body()!!.data!!) {
-                countryCodeList.add(code!!)
+        try {
+            if (countryCode.isSuccessful) {
+                for (code in countryCode.body()!!.data!!) {
+                    countryCodeList.add(code!!)
+                }
             }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -112,21 +125,25 @@ class LupaPasswordActivity : AppCompatActivity() {
 
         //memulai Api
         val network = NetworkConfig().resetPassword().resetPassword(country_code, phone_number)
+        try {
+            if (network!!.isSuccessful) {
+                binding.btnUbahPassword.visibility = View.VISIBLE
+                binding.pbLupaPassword.visibility = View.INVISIBLE
+                binding.tvKembaliLupaPassword.visibility = View.VISIBLE
 
-        if (network!!.isSuccessful) {
-            binding.btnUbahPassword.visibility = View.VISIBLE
-            binding.pbLupaPassword.visibility = View.INVISIBLE
-            binding.tvKembaliLupaPassword.visibility = View.VISIBLE
-
-            val intent = Intent(this, LupaPasswordAktivasiActivity::class.java)
-                .putExtra("nmr_telp", nmrTelp)
-            startActivity(intent)
-        } else {
-            binding.btnUbahPassword.visibility = View.VISIBLE
-            binding.pbLupaPassword.visibility = View.INVISIBLE
-            binding.tvKembaliLupaPassword.visibility = View.VISIBLE
-            Log.d(TAG, network.errorBody().toString())
+                val intent = Intent(this, LupaPasswordAktivasiActivity::class.java)
+                    .putExtra("nmr_telp", nmrTelp)
+                startActivity(intent)
+            } else {
+                binding.btnUbahPassword.visibility = View.VISIBLE
+                binding.pbLupaPassword.visibility = View.INVISIBLE
+                binding.tvKembaliLupaPassword.visibility = View.VISIBLE
+                Log.d(TAG, network.errorBody().toString())
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     private fun changeBackgroundButton() {
@@ -204,5 +221,30 @@ class LupaPasswordActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+    }
+
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+
+            }
+            false
+        }
     }
 }

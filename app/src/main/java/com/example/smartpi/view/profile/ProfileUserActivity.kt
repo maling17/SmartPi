@@ -16,6 +16,7 @@ import com.example.smartpi.model.JadwalItem
 import com.example.smartpi.model.PackageActiveItem
 import com.example.smartpi.utils.Preferences
 import kotlinx.coroutines.*
+import java.net.SocketException
 
 class ProfileUserActivity : AppCompatActivity() {
     var token = ""
@@ -63,53 +64,65 @@ class ProfileUserActivity : AppCompatActivity() {
         packageList.clear()
         binding.pbLoadingPaketAktif.visibility = View.VISIBLE
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
-        if (network.isSuccessful) {
-            Log.d(TAG, "getPackageActive: ${network.body()}")
-            for (paket in network.body()!!.data!!) {
+        try {
+            if (network.isSuccessful) {
+                Log.d(TAG, "getPackageActive: ${network.body()}")
+                for (paket in network.body()!!.data!!) {
 
+                    binding.pbLoadingPaketAktif.visibility = View.GONE
+                    packageList.add(paket!!)
+
+                }
+                binding.rvPaketAktif.adapter = ListPackageActiveProfileAdapter(packageList) {}
+            } else {
                 binding.pbLoadingPaketAktif.visibility = View.GONE
-                packageList.add(paket!!)
-
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Tidak dapat mengambil paket",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-            binding.rvPaketAktif.adapter = ListPackageActiveProfileAdapter(packageList) {}
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this,
-                    "Tidak dapat mengambil paket",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
     }
 
     private suspend fun getGroupClass() {
 
         jadwalList.clear()
+        binding.pbLoadingGroupClassAktif.visibility = View.VISIBLE
         val network = NetworkConfig().getJadwalUser().getGroupClass(token)
-        if (network.isSuccessful) {
-            for (grup in network.body()!!.data!!) {
-                val jadwalItem = JadwalItem()
-                jadwalItem.packageName = grup!!.namaKelas
-                jadwalItem.duration = grup.duration.toString()
-                jadwalItem.teacherId = grup.teacherId
-                jadwalItem.teacherName = grup.teacher
+        try {
+            if (network.isSuccessful) {
+                for (grup in network.body()!!.data!!) {
+                    val jadwalItem = JadwalItem()
+                    jadwalItem.packageName = grup!!.namaKelas
+                    jadwalItem.duration = grup.duration.toString()
+                    jadwalItem.teacherId = grup.teacherId
+                    jadwalItem.teacherName = grup.teacher
 
-                for (schedule in grup.schedule!!) {
-                    jadwalItem.id = schedule!!.id.toString()
-                    jadwalItem.scheduleTime = schedule.scheduleTime.toString()
-                    jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
-                    jadwalItem.roomCode = schedule.roomCode.toString()
-                    jadwalItem.platform = schedule.platform.toString()
+                    for (schedule in grup.schedule!!) {
+                        jadwalItem.id = schedule!!.id.toString()
+                        jadwalItem.scheduleTime = schedule.scheduleTime.toString()
+                        jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
+                        jadwalItem.roomCode = schedule.roomCode.toString()
+                        jadwalItem.platform = schedule.platform.toString()
+                    }
+                    jadwalList.add(jadwalItem)
+
                 }
-                jadwalList.add(jadwalItem)
+
+                binding.rvGroupClassAktif.adapter = ListGroupClassActiveAdapter(jadwalList) {}
+                binding.pbLoadingGroupClassAktif.visibility = View.GONE
+
+            } else {
+                binding.pbLoadingGroupClassAktif.visibility = View.GONE
             }
-
-            binding.rvGroupClassAktif.adapter = ListGroupClassActiveAdapter(jadwalList) {}
-
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
 
     }
 }

@@ -1,5 +1,7 @@
 package com.example.smartpi.view.sign
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -7,12 +9,18 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.smartpi.R
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityKodeAktivasiBinding
 import kotlinx.coroutines.*
+import java.net.SocketException
 
 class KodeAktivasiActivity : AppCompatActivity() {
 
@@ -39,6 +47,7 @@ class KodeAktivasiActivity : AppCompatActivity() {
 
         }
 
+        editTextHide(binding.etKodeAktivasi)
 
     }
 
@@ -122,24 +131,53 @@ class KodeAktivasiActivity : AppCompatActivity() {
         val networkActivation =
             NetworkConfig().inputActivation().inputActivation(phoneNumber, etKode)
 
-        if (networkActivation!!.isSuccessful) {
-
-            val intent = Intent(this, SignUpActivity::class.java)
-                .putExtra("nmr_telp", phoneNumber)
-            startActivity(intent)
-        } else {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    this@KodeAktivasiActivity,
-                    "Kode Aktivasi Salah",
-                    Toast.LENGTH_SHORT
-                ).show()
+        try {
+            if (networkActivation!!.isSuccessful) {
+                val intent = Intent(this, SignUpActivity::class.java)
+                    .putExtra("nmr_telp", phoneNumber)
+                startActivity(intent)
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this@KodeAktivasiActivity,
+                        "Kode Aktivasi Salah",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this, SignInActivity::class.java))
+    }
+
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
+                hideKeyboard()
+                return@setOnKeyListener true
+
+            }
+            false
+        }
     }
 }

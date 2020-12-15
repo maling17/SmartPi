@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".view.fragment.LainnyaFragment">
 
     <ScrollView
@@ -107,7 +108,7 @@
                             android:id="@+id/view"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
@@ -221,7 +222,7 @@
                             android:id="@+id/view2"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
@@ -270,7 +271,7 @@
                             android:id="@+id/view3"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
@@ -384,7 +385,7 @@
                             android:id="@+id/view5"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"

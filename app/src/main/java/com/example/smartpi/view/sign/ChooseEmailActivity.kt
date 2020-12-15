@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class ChooseEmailActivity : AppCompatActivity() {
     lateinit var binding: ActivityChooseEmailBinding
@@ -42,16 +43,22 @@ class ChooseEmailActivity : AppCompatActivity() {
 
     private suspend fun getUser() {
         val network = NetworkConfig().inputNumber().inputNumber(phoneNumber, country_code)
-        if (network!!.isSuccessful) {
-            for (user in network.body()!!.data!!) {
-                userList.add(user!!)
+
+        try {
+            if (network!!.isSuccessful) {
+                for (user in network.body()!!.data!!) {
+                    userList.add(user!!)
+                }
+                binding.rvEmail.adapter = ChooseEmailAdapter(userList) {
+                    val intent = Intent(this, SignInEmailActivity::class.java)
+                    intent.putExtra("status_email", "1")
+                    intent.putExtra("user", it)
+                    startActivity(intent)
+                }
             }
-            binding.rvEmail.adapter = ChooseEmailAdapter(userList) {
-                val intent = Intent(this, SignInEmailActivity::class.java)
-                intent.putExtra("status_email", "1")
-                intent.putExtra("user", it)
-                startActivity(intent)
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

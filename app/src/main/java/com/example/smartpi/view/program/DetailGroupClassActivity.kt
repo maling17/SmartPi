@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,60 +49,74 @@ class DetailGroupClassActivity : AppCompatActivity() {
         id = intent.getStringExtra("id_group").toInt()
 
         val networkConfig = NetworkConfig().getGroupClass().getDetailGroupClass(id)
-        if (networkConfig.isSuccessful) {
 
-            for (kelas in networkConfig.body()!!.data!!.kelas!!) {
-                binding.tvNamaGroup.text = kelas!!.namaKelas
-                binding.tvDeskripsi.text = kelas.desc
-                Picasso.get().load(kelas.gambar).into(binding.ivBannerDetailGroup)
-                binding.tvHarga.text = "Rp${kelas.price}"
-                binding.tvDurasi.text = "${kelas.duration} Jam"
-                binding.tvNarasumber.text = kelas.teacher
-                binding.tvKuota.text = "Kuota kelas max.${kelas.kuota} orang"
+        try {
+            if (networkConfig.isSuccessful) {
 
-                price = kelas.price!!.toFloat()
-                nama = kelas.namaKelas.toString()
-                durasi = "-"
+                for (kelas in networkConfig.body()!!.data!!.kelas!!) {
+                    binding.tvNamaGroup.text = kelas!!.namaKelas
+                    binding.tvDeskripsi.text = kelas.desc
+                    Picasso.get().load(kelas.gambar).into(binding.ivBannerDetailGroup)
+                    binding.tvHarga.text = "Rp${kelas.price}"
+                    binding.tvDurasi.text = "${kelas.duration} Jam"
+                    binding.tvNarasumber.text = kelas.teacher
+                    binding.tvKuota.text = "Kuota kelas max.${kelas.kuota} orang"
+
+                    price = kelas.price!!.toFloat()
+                    nama = kelas.namaKelas.toString()
+                    durasi = "-"
+                }
+                for (schedule in networkConfig.body()!!.data!!.schedule!!) {
+
+                    val tanggal = schedule!!.scheduleTime!!.toDate().formatTo("EEEE, dd MMMM yyyy")
+                    val waktuStart = schedule.scheduleTime!!.toDate().formatTo("HH:mm")
+                    val waktuEnd = schedule.scheduleEnd!!.toDate().formatTo("HH:mm")
+
+                    binding.tvCalendar.text = "$tanggal, $waktuStart-$waktuEnd"
+
+                }
             }
-            for (schedule in networkConfig.body()!!.data!!.schedule!!) {
 
-                val tanggal = schedule!!.scheduleTime!!.toDate().formatTo("EEEE, dd MMMM yyyy")
-                val waktuStart = schedule.scheduleTime!!.toDate().formatTo("HH:mm")
-                val waktuEnd = schedule.scheduleEnd!!.toDate().formatTo("HH:mm")
-
-                binding.tvCalendar.text = "$tanggal, $waktuStart-$waktuEnd"
-
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
 
     }
 
     private suspend fun createGroupClass() {
-        if (price == 0F) {
-            val networkConfig = NetworkConfig().getGroupClass().createGroupScheduleFree(token, id)
-            if (networkConfig.isSuccessful) {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(this, "Pembuatan Group Class Berhasil", Toast.LENGTH_LONG).show()
+
+        try {
+            if (price == 0F) {
+                val networkConfig =
+                    NetworkConfig().getGroupClass().createGroupScheduleFree(token, id)
+                if (networkConfig.isSuccessful) {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(this, "Pembuatan Group Class Berhasil", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    finish()
+                } else {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(
+                            this,
+                            "Pembuatan Group Class Gagal, Silahkan coba lagi atau cek jaringan anda",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-                finish()
             } else {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(
-                        this,
-                        "Pembuatan Group Class Gagal, Silahkan coba lagi atau cek jaringan anda",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                val intent = Intent(this, DetailPembelianActivity::class.java)
+                intent.putExtra("id", id.toString())
+                intent.putExtra("nama", nama)
+                intent.putExtra("harga", price.toString())
+                intent.putExtra("durasi", durasi.toString())
+                intent.putExtra("jenis", "group")
+                startActivity(intent)
             }
-        } else {
-            val intent = Intent(this, DetailPembelianActivity::class.java)
-            intent.putExtra("id", id.toString())
-            intent.putExtra("nama", nama)
-            intent.putExtra("harga", price.toString())
-            intent.putExtra("durasi", durasi.toString())
-            intent.putExtra("jenis", "group")
-            startActivity(intent)
+
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
 
     }

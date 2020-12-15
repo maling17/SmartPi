@@ -106,37 +106,41 @@ class JadwalFragment : Fragment() {
     private suspend fun getGroupClass() {
 
         val network = NetworkConfig().getJadwalUser().getGroupClass(token)
-        if (network.isSuccessful) {
-            for (grup in network.body()!!.data!!) {
-                val jadwalItem = JadwalItem()
-                jadwalItem.packageName = grup!!.namaKelas
-                jadwalItem.duration = grup.duration.toString()
-                jadwalItem.teacherId = grup.teacherId
-                jadwalItem.teacherName = grup.teacher
 
-                for (schedule in grup.schedule!!) {
-                    jadwalItem.id = schedule!!.id.toString()
-                    jadwalItem.scheduleTime = schedule.scheduleTime.toString()
-                    jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
-                    jadwalItem.roomCode = schedule.roomCode.toString()
-                    jadwalItem.platform = schedule.platform.toString()
+        try {
+            if (network.isSuccessful) {
+                for (grup in network.body()!!.data!!) {
+                    val jadwalItem = JadwalItem()
+                    jadwalItem.packageName = grup!!.namaKelas
+                    jadwalItem.duration = grup.duration.toString()
+                    jadwalItem.teacherId = grup.teacherId
+                    jadwalItem.teacherName = grup.teacher
+
+                    for (schedule in grup.schedule!!) {
+                        jadwalItem.id = schedule!!.id.toString()
+                        jadwalItem.scheduleTime = schedule.scheduleTime.toString()
+                        jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
+                        jadwalItem.roomCode = schedule.roomCode.toString()
+                        jadwalItem.platform = schedule.platform.toString()
+                    }
+                    jadwalList.add(jadwalItem)
                 }
-                jadwalList.add(jadwalItem)
+
+                binding.svJadwal.visibility = View.VISIBLE
+                binding.fabJadwal.visibility = View.VISIBLE
+                binding.pbListJadwal.visibility = View.GONE
+                binding.llBelumBuatJadwal.visibility = View.GONE
+
+                binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                    val intent =
+                        Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
+                    startActivity(intent)
+
+                }
             }
-
-            binding.svJadwal.visibility = View.VISIBLE
-            binding.fabJadwal.visibility = View.VISIBLE
-            binding.pbListJadwal.visibility = View.GONE
-            binding.llBelumBuatJadwal.visibility = View.GONE
-
-            binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
-                val intent =
-                    Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
-                startActivity(intent)
-
-            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
-
 
     }
 

@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class PembelianFragment : Fragment() {
 
@@ -40,7 +41,7 @@ class PembelianFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        preferences = Preferences(activity!!.applicationContext)
+        preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
         scope.launch(Dispatchers.Main) { checkTrial() }
 
@@ -60,20 +61,22 @@ class PembelianFragment : Fragment() {
 
     private suspend fun checkTrial() {
         val checkTrial = NetworkConfig().getCheckTrial().getCheckTrial(token)
-        if (checkTrial.isSuccessful) {
-            scope.launch(Dispatchers.Main) {
-                if (checkTrial.body()!!.status == "Sudah") {
-                    binding.constraintLayout3.visibility = View.GONE
-                    binding.pbPembelianFragment.visibility = View.GONE
-                } else {
-                    binding.constraintLayout3.visibility = View.VISIBLE
-                    binding.pbPembelianFragment.visibility = View.GONE
+        try {
+            if (checkTrial.isSuccessful) {
+                scope.launch(Dispatchers.Main) {
+                    if (checkTrial.body()!!.status == "Sudah") {
+                        binding.constraintLayout3.visibility = View.GONE
+                        binding.pbPembelianFragment.visibility = View.GONE
+                    } else {
+                        binding.constraintLayout3.visibility = View.VISIBLE
+                        binding.pbPembelianFragment.visibility = View.GONE
+                    }
                 }
+            } else {
+                Log.d(TAG, "checkTrial: Something wrong")
             }
-        } else {
-            Log.d(TAG, "checkTrial: Something wrong")
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
     }
-
-
 }

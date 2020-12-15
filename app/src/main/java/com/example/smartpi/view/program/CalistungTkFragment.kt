@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 class CalistungTkFragment : Fragment() {
 
@@ -51,16 +52,21 @@ class CalistungTkFragment : Fragment() {
 
     suspend fun getCalistung() {
         val networkConfig = NetworkConfig().getPrograms().getProgramMatematika()
-        if (networkConfig.isSuccessful) {
-            val judul = networkConfig.body()!!.data!!.tk!!.desc!!.name
-            val desc = networkConfig.body()!!.data!!.tk!!.desc!!.desc
-            val duration = networkConfig.body()!!.data!!.tk!!.desc!!.duration
-            id_program = networkConfig.body()!!.data!!.tk!!.desc!!.id!!.toString()
+        try {
+            if (networkConfig.isSuccessful) {
+                val judul = networkConfig.body()!!.data!!.tk!!.desc!!.name
+                val desc = networkConfig.body()!!.data!!.tk!!.desc!!.desc
+                val duration = networkConfig.body()!!.data!!.tk!!.desc!!.duration
+                id_program = networkConfig.body()!!.data!!.tk!!.desc!!.id!!.toString()
 
-            binding.tvJudulProgram.text = judul
-            binding.tvDescProgram.text = desc
-            binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
+                binding.tvJudulProgram.text = judul
+                binding.tvDescProgram.text = desc
+                binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
 
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
         }
+
     }
 }

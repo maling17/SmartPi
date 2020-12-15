@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailPraKerjaActivity : AppCompatActivity() {
@@ -58,31 +59,37 @@ class DetailPraKerjaActivity : AppCompatActivity() {
     }
 
     private suspend fun createGroupClass() {
-        if (price == 0F) {
-            val networkConfig = NetworkConfig().getGroupClass().createGroupScheduleFree(token, id)
-            if (networkConfig.isSuccessful) {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(this, "Pembuatan Group Class Berhasil", Toast.LENGTH_LONG).show()
-                }
-                finish()
-            } else {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(
-                        this,
-                        "Pembuatan Group Class Gagal, Silahkan coba lagi atau cek jaringan anda",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        } else {
-            val intent = Intent(this, DetailPembelianActivity::class.java)
-            intent.putExtra("id", id.toString())
-            intent.putExtra("nama", nama)
-            intent.putExtra("harga", price.toString())
-            intent.putExtra("durasi", durasi.toString())
-            intent.putExtra("jenis", "group")
-            startActivity(intent)
-        }
 
+        try {
+            if (price == 0F) {
+                val networkConfig =
+                    NetworkConfig().getGroupClass().createGroupScheduleFree(token, id)
+                if (networkConfig.isSuccessful) {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(this, "Pembuatan Group Class Berhasil", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    finish()
+                } else {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(
+                            this,
+                            "Pembuatan Group Class Gagal, Silahkan coba lagi atau cek jaringan anda",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            } else {
+                val intent = Intent(this, DetailPembelianActivity::class.java)
+                intent.putExtra("id", id.toString())
+                intent.putExtra("nama", nama)
+                intent.putExtra("harga", price.toString())
+                intent.putExtra("durasi", durasi.toString())
+                intent.putExtra("jenis", "group")
+                startActivity(intent)
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
+        }
     }
 }
