@@ -73,6 +73,9 @@ class GroupClassActivity : AppCompatActivity() {
             groupDetailList.add(detailData)
 
             binding.rvGroupClass.adapter = ListGroupClassAdapter(groupDetailList) {}
+        } else {
+            binding.pbLoadingGroupClass.visibility = View.GONE
+            binding.llEmpty.visibility = View.VISIBLE
         }
     }
 }

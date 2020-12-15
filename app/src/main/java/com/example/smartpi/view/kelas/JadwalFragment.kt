@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.adapter.JadwalHomeAdapter
+import com.example.smartpi.adapter.JadwalKelasAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentJadwalBinding
 import com.example.smartpi.model.JadwalItem
@@ -64,6 +65,7 @@ class JadwalFragment : Fragment() {
         jadwalList.clear()
         preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
+
         //setting Recylerview jadwal
         binding.rvListJadwal.layoutManager = LinearLayoutManager(context)
         binding.rvListJadwal.isNestedScrollingEnabled = false
@@ -74,7 +76,6 @@ class JadwalFragment : Fragment() {
     }
 
     suspend fun getJadwalUser() {
-
         val networkConfig = NetworkConfig().getJadwalUser().getJadwalUser(token)
 
         try {
@@ -84,17 +85,17 @@ class JadwalFragment : Fragment() {
 
                     jadwalList.add(jadwal!!)
                 }
-                binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+
+                binding.svJadwal.visibility = View.VISIBLE
+                binding.fabJadwal.visibility = View.VISIBLE
+                binding.pbListJadwal.visibility = View.GONE
+                binding.llBelumBuatJadwal.visibility = View.GONE
+                binding.rvListJadwal.adapter = JadwalKelasAdapter(jadwalList) {
                     val intent =
                         Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                     startActivity(intent)
 
                 }
-                binding.svJadwal.visibility = View.VISIBLE
-                binding.fabJadwal.visibility = View.VISIBLE
-                binding.pbListJadwal.visibility = View.GONE
-                binding.llBelumBuatJadwal.visibility = View.GONE
-
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -104,7 +105,6 @@ class JadwalFragment : Fragment() {
 
     private suspend fun getGroupClass() {
 
-        jadwalList.clear()
         val network = NetworkConfig().getJadwalUser().getGroupClass(token)
         if (network.isSuccessful) {
             for (grup in network.body()!!.data!!) {
@@ -124,17 +124,17 @@ class JadwalFragment : Fragment() {
                 jadwalList.add(jadwalItem)
             }
 
+            binding.svJadwal.visibility = View.VISIBLE
+            binding.fabJadwal.visibility = View.VISIBLE
+            binding.pbListJadwal.visibility = View.GONE
+            binding.llBelumBuatJadwal.visibility = View.GONE
+
             binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
                 val intent =
                     Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                 startActivity(intent)
 
             }
-            binding.svJadwal.visibility = View.VISIBLE
-            binding.fabJadwal.visibility = View.VISIBLE
-            binding.pbListJadwal.visibility = View.GONE
-            binding.llBelumBuatJadwal.visibility = View.GONE
-
         }
 
 
@@ -154,6 +154,7 @@ class JadwalFragment : Fragment() {
                     val job2 = async { getGroupClass() }
                     job1.await()
                     job2.await()
+
                 }
 
                 if (jadwalList.isEmpty()) {

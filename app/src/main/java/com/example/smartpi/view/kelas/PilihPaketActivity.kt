@@ -18,6 +18,7 @@ import com.example.smartpi.databinding.ActivityPilihPaketBinding
 import com.example.smartpi.model.*
 import com.example.smartpi.utils.Preferences
 import com.example.smartpi.view.kelas.filter.FilterWaktuActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,6 +37,7 @@ class PilihPaketActivity : AppCompatActivity() {
     private var statusFilter = "0"
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
     var kode_teacher = ""
     private lateinit var binding: ActivityPilihPaketBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,8 @@ class PilihPaketActivity : AppCompatActivity() {
         binding = ActivityPilihPaketBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
@@ -94,6 +98,11 @@ class PilihPaketActivity : AppCompatActivity() {
 
             }
             binding.rvPilihPaket.adapter = ListPackageActiveAdapter(packageList) {
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id.toString())
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.package_name)
+                mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+
                 val indexArrayList = packageList.indexOf(it) //mengindex dulu isi yang ada di array
                 kode_teacher =
                     packageList[indexArrayList].kode_teacher.toString() //mengfilter dan mengambil value kode_teacher

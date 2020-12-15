@@ -73,7 +73,7 @@ class JadwalHomeAdapter(
 
         val layoutInflater = LayoutInflater.from(parent.context)
         contextAdapter = parent.context
-        val inflatedView: View = layoutInflater.inflate(R.layout.list_jadwal, parent, false)
+        val inflatedView: View = layoutInflater.inflate(R.layout.list_jadwal_home, parent, false)
         return JadwalHomeAdapter.LeagueViewHolder(inflatedView)
 
     }

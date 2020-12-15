@@ -1,6 +1,6 @@
 package com.example.smartpi.api
 
-import com.example.smartpi.model.CreateScheduleModel
+import com.example.smartpi.model.CreateGroupClassModel
 import com.example.smartpi.model.DetailGroupClassModel
 import com.example.smartpi.model.ListGroupClassModel
 import com.google.gson.annotations.SerializedName
@@ -20,13 +20,12 @@ interface GroupClassApi {
     suspend fun getDetailGroupClass(@Path("id") id: Int): Response<DetailGroupClassModel>
 
     @FormUrlEncoded
-    @POST("group/schedule/create")
+    @POST("group/buy/discount100")
     @Headers("Accept: application/json")
     @SerializedName("data")
-    suspend fun createGroupSchedule(
+    suspend fun createGroupScheduleFree(
         @Header("Authorization") token: String?,
-        @Field("user_available_id") user_available_id: String?,
-        @Field("class_id") class_id: String?
-    ): Response<CreateScheduleModel>
+        @Field("class_id") class_id: Int?
+    ): Response<CreateGroupClassModel>
 
 }

@@ -104,6 +104,18 @@
         <item name="fontFamily">@font/open_sans</item>
     </style>
 
+    <style name="Text14RegulerDarkGrey">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="Text14BoldDarkGrey">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="fontFamily">@font/open_sans_bold</item>
+    </style>
+
     <style name="Text12RegulerBlack">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black</item>

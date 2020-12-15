@@ -76,7 +76,11 @@ class SignInPasswordActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             preferences.setValues("token", finalToken)
             preferences.setValues("nama", networkActivation.body()!!.data!!.username!!)
+            preferences.setValues("email", networkActivation.body()!!.data!!.email!!)
+            preferences.setValues("phone", networkActivation.body()!!.data!!.phone!!)
             preferences.setValues("status", "1")
+            preferences.setValues("firstTime", "1")
+            preferences.setValues("user_id", networkActivation.body()!!.data!!.id.toString())
             startActivity(intent)
             finish()
         } else {

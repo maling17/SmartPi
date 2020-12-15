@@ -468,6 +468,7 @@ class PilihJadwalActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+            Log.d(TAG, "createSchedule1Sesi: ${networkConfig.body()!!.warning}")
         }
     }
 

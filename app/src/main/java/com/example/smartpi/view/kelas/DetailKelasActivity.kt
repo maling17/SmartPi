@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -34,6 +35,7 @@ class DetailKelasActivity : AppCompatActivity() {
 
     var timeInMilliseconds: Long = 0
     var token = ""
+    var schedule_id = ""
     lateinit var preferences: Preferences
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -66,6 +68,7 @@ class DetailKelasActivity : AppCompatActivity() {
 
         binding.btnPersiapanKelas.setOnClickListener { popUpSyarat() }
 
+
     }
 
     private fun imageSlide() {
@@ -87,6 +90,7 @@ class DetailKelasActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun getDetailKelas() {
         val dataKelas = intent.getParcelableExtra<JadwalItem>("data")!!
+        schedule_id = dataKelas.id.toString()
 
         val jamMulai = dataKelas.scheduleTime.toString()
         val jamAkhir = dataKelas.scheduleEnd.toString()
@@ -126,6 +130,16 @@ class DetailKelasActivity : AppCompatActivity() {
             Picasso.get().load(R.drawable.ic_icon_person).into(binding.ivPhotoGuru)
         } else {
             Picasso.get().load(urlPhoto).into(binding.ivPhotoGuru)
+        }
+
+        binding.ivChat.setOnClickListener {
+            val intent = Intent(this, ChatGuruActivity::class.java)
+            intent.putExtra("schedule_id", schedule_id)
+            intent.putExtra("nama_teacher", dataKelas.teacherName)
+            intent.putExtra("nama_kelas", dataKelas.packageName)
+            intent.putExtra("image", dataKelas.teacherAvatar)
+
+            startActivity(intent)
         }
 
 

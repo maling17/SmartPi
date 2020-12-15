@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentPembelianBinding
 import com.example.smartpi.utils.Preferences
+import com.example.smartpi.view.kelas.PilihTrialActivity
 import com.example.smartpi.view.pembelian.LanggananPaketActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,14 @@ class PembelianFragment : Fragment() {
 
         binding.btnLihatLangganan.setOnClickListener {
             startActivity(Intent(context, LanggananPaketActivity::class.java))
+        }
+        binding.btnLihatTrial.setOnClickListener {
+            startActivity(
+                Intent(
+                    context,
+                    PilihTrialActivity::class.java
+                )
+            )
         }
 
     }

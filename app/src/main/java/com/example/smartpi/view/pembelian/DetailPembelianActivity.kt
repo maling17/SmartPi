@@ -9,10 +9,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.MainActivity
@@ -34,8 +37,11 @@ class DetailPembelianActivity : AppCompatActivity() {
     var nama_produk = ""
     var id_produk = ""
     var harga_produk = ""
+    var hargaProdukInt = ""
     var durasi_produk = ""
     var codeWallet = ""
+    var jenis = ""
+    var totalHarga = 0
 
     var token = ""
     lateinit var preferences: Preferences
@@ -63,6 +69,7 @@ class DetailPembelianActivity : AppCompatActivity() {
         nama_produk = intent.getStringExtra("nama")
         harga_produk = intent.getStringExtra("harga")
         durasi_produk = intent.getStringExtra("durasi")
+        jenis = intent.getStringExtra("jenis")
 
         binding.tvHargaPaketDetailPembayaran.text = harga_produk
         binding.tvMasaAktif.text = durasi_produk
@@ -90,26 +97,44 @@ class DetailPembelianActivity : AppCompatActivity() {
             finish()
         }
         binding.btnBayar.setOnClickListener {
-            scope.launch { checkVoucher() }
+            scope.launch { checkEmail() }
         }
         binding.clBankOther.setOnClickListener {
             scope.launch { requestXendit(binding.etKodeVoucher.text.toString()) }
         }
+        binding.btnEmail.setOnClickListener {
+            scope.launch { updateEmail() }
+        }
+
         binding.btnLanjutPembayaran.setOnClickListener {
             binding.btnLanjutPembayaran.visibility = View.GONE
             binding.pbPembayaran.visibility = View.VISIBLE
             when (codeWallet) {
                 "OVO" -> {
-                    scope.launch { requestOVO() }
+                    if (jenis == "paket") {
+                        scope.launch { requestOVO() }
+                    } else {
+                        scope.launch { requestOVOGroup() }
+                    }
+
                 }
                 "DANA" -> {
-                    scope.launch { requestDana() }
+                    if (jenis == "paket") {
+                        scope.launch { requestDana() }
+                    } else {
+                        scope.launch { requestDanaGroup() }
+                    }
                 }
                 "LINKAJA" -> {
-                    scope.launch { requestLinkAja() }
+                    if (jenis == "paket") {
+                        scope.launch { requestLinkAja() }
+                    } else {
+                        scope.launch { requestLinkAjaGroup() }
+                    }
                 }
             }
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -151,7 +176,11 @@ class DetailPembelianActivity : AppCompatActivity() {
                         codeWallet = it.code
                     }
                     "GOPAY" -> {
-                        scope.launch { requestGopay() }
+                        if (jenis == "paket") {
+                            scope.launch { requestGopay() }
+                        } else {
+                            scope.launch { requestGopayGroup() }
+                        }
                     }
                 }
             }
@@ -171,25 +200,39 @@ class DetailPembelianActivity : AppCompatActivity() {
                 when (it.code) {
                     "MANDIRI" -> {
                         scope.launch {
+                            if (jenis == "paket") {
+                                requestVA(it.code, etKode.toString())
+                            } else {
+                                requestVAGroupClass(it.code, etKode.toString())
+                            }
 
-                            requestVA(it.code, etKode.toString())
                         }
                     }
                     "BNI" -> {
                         scope.launch {
-
-                            requestVA(it.code, etKode.toString())
+                            if (jenis == "paket") {
+                                requestVA(it.code, etKode.toString())
+                            } else {
+                                requestVAGroupClass(it.code, etKode.toString())
+                            }
                         }
                     }
                     "BRI" -> {
                         scope.launch {
-                            requestVA(it.code, etKode.toString())
+                            if (jenis == "paket") {
+                                requestVA(it.code, etKode.toString())
+                            } else {
+                                requestVAGroupClass(it.code, etKode.toString())
+                            }
                         }
                     }
                     "PERMATA" -> {
-
                         scope.launch {
-                            requestVA(it.code, etKode.toString())
+                            if (jenis == "paket") {
+                                requestVA(it.code, etKode.toString())
+                            } else {
+                                requestVAGroupClass(it.code, etKode.toString())
+                            }
                         }
                     }
                     "BCA" -> {
@@ -217,9 +260,10 @@ class DetailPembelianActivity : AppCompatActivity() {
 
         val bsbPembayaran = BottomSheetBehavior.from(binding.llWallet)
         val bsbInputNmr = BottomSheetBehavior.from(binding.llInputNomor)
-
+        val bsbEmail = BottomSheetBehavior.from(binding.llEmail)
         bsbPembayaran.skipCollapsed = true
         bsbInputNmr.skipCollapsed = true
+        bsbEmail.skipCollapsed = true
 
         binding.ivCancelPembelian.setOnClickListener {
             bsbPembayaran.state = BottomSheetBehavior.STATE_HIDDEN
@@ -229,6 +273,32 @@ class DetailPembelianActivity : AppCompatActivity() {
         }
         bsbPembayaran.state = BottomSheetBehavior.STATE_HIDDEN
         bsbInputNmr.state = BottomSheetBehavior.STATE_HIDDEN
+        bsbEmail.state = BottomSheetBehavior.STATE_HIDDEN
+
+        bsbInputNmr.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        bsbPembayaran.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
 
         bsbInputNmr.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -256,7 +326,7 @@ class DetailPembelianActivity : AppCompatActivity() {
         })
 
 
-        bsbPembayaran.addBottomSheetCallback(object :
+        bsbEmail.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
@@ -297,6 +367,23 @@ class DetailPembelianActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun requestOVOGroup() {
+        val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
+        val etKode = binding.etKodeVoucher.text.toString()
+        val messageBerhasil = "Silahkan cek aplikasi OVO Anda melanjutkan Pembayaran"
+        val messageGagal = "Silahkan Cek kembali "
+
+        val networkConfig =
+            NetworkConfig().getWallet().requestOVOGroup(token, id_produk, "OVO", etKode, etPhone)
+        if (networkConfig.isSuccessful) {
+            alertDialogPermintaanPembayaran("Berhasil", messageBerhasil)
+            binding.btnLanjutPembayaran.visibility = View.VISIBLE
+            binding.pbPembayaran.visibility = View.GONE
+        } else {
+            alertDialogPermintaanPembayaran("Gagal", messageGagal)
+        }
+    }
+
     private suspend fun requestDana() {
         val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
@@ -304,6 +391,25 @@ class DetailPembelianActivity : AppCompatActivity() {
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestDANA(token, id_produk, etKode, etPhone)
+        if (networkConfig.isSuccessful) {
+            val url = networkConfig.body()!!.data!!.checkoutUrl
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+            binding.btnLanjutPembayaran.visibility = View.VISIBLE
+            binding.pbPembayaran.visibility = View.GONE
+        } else {
+            alertDialogPermintaanPembayaran("Gagal", messageGagal)
+        }
+    }
+
+    private suspend fun requestDanaGroup() {
+        val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
+        val etKode = binding.etKodeVoucher.text.toString()
+        val messageBerhasil = "Silahkan cek aplikasi DANA Anda melanjutkan Pembayaran"
+        val messageGagal = "Silahkan Cek kembali "
+        val networkConfig =
+            NetworkConfig().getWallet().requestDanaGroup(token, id_produk, "DANA", etKode, etPhone)
         if (networkConfig.isSuccessful) {
             val url = networkConfig.body()!!.data!!.checkoutUrl
             val intent = Intent(Intent.ACTION_VIEW)
@@ -335,6 +441,26 @@ class DetailPembelianActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun requestLinkAjaGroup() {
+        val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
+        val etKode = binding.etKodeVoucher.text.toString()
+        val messageBerhasil = "Silahkan cek aplikasi LinkAja Anda melanjutkan Pembayaran"
+        val messageGagal = "Silahkan Cek kembali "
+        val networkConfig =
+            NetworkConfig().getWallet()
+                .requestLinkAjaGroup(token, id_produk, "LINKAJA", etKode, etPhone)
+        if (networkConfig.isSuccessful) {
+            val url = networkConfig.body()!!.data!!.checkoutUrl
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+            binding.btnLanjutPembayaran.visibility = View.VISIBLE
+            binding.pbPembayaran.visibility = View.GONE
+        } else {
+            alertDialogPermintaanPembayaran("Gagal", messageGagal)
+        }
+    }
+
     private suspend fun requestGopay() {
         val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
         val etKode = binding.etKodeVoucher.text.toString()
@@ -342,6 +468,25 @@ class DetailPembelianActivity : AppCompatActivity() {
         val messageGagal = "Silahkan Cek kembali "
         val networkConfig =
             NetworkConfig().getWallet().requestGopay(token, id_produk, etKode)
+        if (networkConfig.isSuccessful) {
+            val url = networkConfig.body()!!.data!!.actions!![1]!!.url
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+            binding.btnLanjutPembayaran.visibility = View.VISIBLE
+            binding.pbPembayaran.visibility = View.GONE
+        } else {
+            alertDialogPermintaanPembayaran("Gagal", messageGagal)
+        }
+    }
+
+    private suspend fun requestGopayGroup() {
+        val etPhone = binding.etNmrHpDetailPembayaran.text.toString()
+        val etKode = binding.etKodeVoucher.text.toString()
+        val messageBerhasil = "Silahkan cek aplikasi Gopay Anda melanjutkan Pembayaran"
+        val messageGagal = "Silahkan Cek kembali "
+        val networkConfig =
+            NetworkConfig().getWallet().requestGopayGroup(token, id_produk, "GOPAY", etKode)
         if (networkConfig.isSuccessful) {
             val url = networkConfig.body()!!.data!!.actions!![1]!!.url
             val intent = Intent(Intent.ACTION_VIEW)
@@ -434,6 +579,50 @@ class DetailPembelianActivity : AppCompatActivity() {
 
     }
 
+    private suspend fun requestVAGroupClass(bank: String, kode: String) {
+        val dialog = Dialog(this)
+        //style dialog
+        val window = dialog.window!!
+        window.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.setContentView(R.layout.pop_up_loading_virtual_account)
+        dialog.setCancelable(true)
+
+        val tvApakahYakin = dialog.findViewById<TextView>(R.id.tv_request)
+        tvApakahYakin.text = "Requesting Virtual Account Info"
+
+        dialog.show()
+
+        val vaNetwork =
+            NetworkConfig().getWallet().requestVAGroupClass(token, id_produk, bank, kode)
+        if (vaNetwork.isSuccessful) {
+            val rekening = vaNetwork.body()!!.data!!.accountNumber.toString()
+            val tglExpired = vaNetwork.body()!!.data!!.expirationDate.toString()
+            val tagihan = vaNetwork.body()!!.data!!.expectedAmount.toString()
+
+            Log.d("TAG", "getVA: $id_produk, $rekening , $tglExpired, $tagihan ")
+
+            val intent = Intent(
+                this@DetailPembelianActivity,
+                VirtualAccountActivity::class.java
+            )
+            intent.putExtra("tgl", tglExpired)
+            intent.putExtra("rekening", rekening)
+            intent.putExtra("tagihan", tagihan)
+            intent.putExtra("bank", bank)
+            startActivity(intent)
+            dialog.dismiss()
+        } else {
+            Log.d("TAG", "requestVA: GAGAL")
+        }
+
+
+    }
+
     private suspend fun requestXendit(kode: String) {
 
         val dialog = Dialog(this)
@@ -471,15 +660,111 @@ class DetailPembelianActivity : AppCompatActivity() {
     private suspend fun checkVoucher() {
         val bsbPembayaran = BottomSheetBehavior.from(binding.llWallet)
 
+        hargaProdukInt = if (jenis == "paket") {
+            harga_produk.drop(4).replace(".", "")
+        } else {
+            harga_produk
+        }
+
         val etKode = binding.etKodeVoucher.text.toString()
         val networkConfig = NetworkConfig().getWallet().checkVoucher(token, etKode, id_produk)
         if (networkConfig.isSuccessful) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            totalHarga =
+                hargaProdukInt.toInt() - networkConfig.body()!!.data!!.voucherValue!!.toInt()
+            if (totalHarga == 0) {
+                PaymentFree()
+            }
         } else {
             bsbPembayaran.state = BottomSheetBehavior.STATE_EXPANDED
 
         }
     }
+
+    suspend fun checkEmail() {
+        val bsbEmail = BottomSheetBehavior.from(binding.llEmail)
+        val networkConfig = NetworkConfig().getUser().checkEmail(token)
+        if (networkConfig.isSuccessful) {
+            if (jenis == "trial") {
+                ambilTrial()
+            } else {
+                checkVoucher()
+            }
+
+        } else {
+            bsbEmail.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    suspend fun updateEmail() {
+        val bsbEmail = BottomSheetBehavior.from(binding.llEmail)
+        val bsbWallet = BottomSheetBehavior.from(binding.llWallet)
+        val email = binding.etEmail.text.toString()
+        val networkConfig = NetworkConfig().getUser().updateEmail(token, email)
+        if (networkConfig.isSuccessful) {
+            bsbEmail.state = BottomSheetBehavior.STATE_HIDDEN
+            binding.pbEmail.visibility = View.GONE
+            binding.btnEmail.visibility = View.VISIBLE
+            bsbWallet.state = BottomSheetBehavior.STATE_EXPANDED
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(this, "Email berhasil didaftarkan", Toast.LENGTH_LONG).show()
+            }
+
+        } else {
+            binding.pbEmail.visibility = View.GONE
+            binding.btnEmail.visibility = View.VISIBLE
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    this,
+                    "Email Gagal didaftarkan, Harap coba lagi atau cek koneksi anda",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    suspend fun ambilTrial() {
+        val networkConfig = NetworkConfig().packageTrial().ambilTrial(token, id_produk)
+        if (networkConfig.isSuccessful) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(this, "Ambil Trial Berhasil", Toast.LENGTH_SHORT).show()
+            }
+            finish()
+        } else {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    this,
+                    "Ambil Trial Gagal, Silahkan coba lagi atau cek koneksi anda.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    suspend fun PaymentFree() {
+        val etKode = binding.etKodeVoucher.text.toString()
+        val networkConfig = NetworkConfig().getWallet().paymentFree(token, etKode, id_produk)
+        Log.d("TAG", "PaymentFree: $id_produk, $totalHarga,$etKode")
+        if (networkConfig.isSuccessful) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            Log.d("TAG", "PaymentFree: ${networkConfig.body()}")
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(this, "Paket berhasil diambil", Toast.LENGTH_SHORT).show()
+            }
+            finish()
+        } else {
+            Log.d("TAG", "PaymentFree :${networkConfig.body()}")
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    this,
+                    "Paket gagal diambil, silahkan cek koneksi dan coba lagi",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
 }
 

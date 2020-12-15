@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -12,8 +14,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:windowSoftInputMode="stateVisible|adjustResize"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".view.profile.ProfileGuruActivity"></activity>
+        <activity android:name=".view.landingpage.BaseLandingPageActivity"></activity>
+        <activity android:name=".view.kelas.ChatGuruActivity" />
+        <activity android:name=".view.notifikasi.NotifikasiActivity" />
+        <activity android:name=".view.prakerja.DetailPraKerjaActivity" />
+        <activity android:name=".view.prakerja.PraKerjaActivity" />
+        <activity android:name=".view.profile.ProfileUserActivity" />
+        <activity android:name=".view.profile.ProfileGuruActivity" />
         <activity android:name=".view.program.DetailGroupClassActivity" />
         <activity android:name=".view.program.GroupClassActivity" />
         <activity android:name=".view.program.ProgramMengajiActivity" />

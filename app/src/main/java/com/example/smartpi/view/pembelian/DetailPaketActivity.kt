@@ -45,6 +45,7 @@ class DetailPaketActivity : AppCompatActivity() {
                 intent.putExtra("nama", data.name)
                 intent.putExtra("harga", data.price.toString())
                 intent.putExtra("durasi", data.durasi.toString())
+                intent.putExtra("jenis", "paket")
                 startActivity(intent)
 
             }

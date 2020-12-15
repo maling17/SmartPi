@@ -1,10 +1,15 @@
 package com.example.smartpi.view.program
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityDetailGroupClassBinding
 import com.example.smartpi.utils.Preferences
+import com.example.smartpi.view.pembelian.DetailPembelianActivity
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,14 +24,24 @@ class DetailGroupClassActivity : AppCompatActivity() {
     private val job = Job()
 
     private val scope = CoroutineScope(job + Dispatchers.Main)
+    var token = ""
     var id = 0
+    var price = 0F
+    var nama = ""
+    var durasi = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailGroupClassBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        preferences = Preferences(this)
+        token = "Bearer ${preferences.getValues("token")}"
         scope.launch { getData() }
+        binding.btnBeli.setOnClickListener {
+            scope.launch {
+                createGroupClass()
+            }
+        }
     }
 
     private suspend fun getData() {
@@ -43,6 +58,10 @@ class DetailGroupClassActivity : AppCompatActivity() {
                 binding.tvDurasi.text = "${kelas.duration} Jam"
                 binding.tvNarasumber.text = kelas.teacher
                 binding.tvKuota.text = "Kuota kelas max.${kelas.kuota} orang"
+
+                price = kelas.price!!.toFloat()
+                nama = kelas.namaKelas.toString()
+                durasi = "-"
             }
             for (schedule in networkConfig.body()!!.data!!.schedule!!) {
 
@@ -55,6 +74,35 @@ class DetailGroupClassActivity : AppCompatActivity() {
             }
         }
 
+
+    }
+
+    private suspend fun createGroupClass() {
+        if (price == 0F) {
+            val networkConfig = NetworkConfig().getGroupClass().createGroupScheduleFree(token, id)
+            if (networkConfig.isSuccessful) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(this, "Pembuatan Group Class Berhasil", Toast.LENGTH_LONG).show()
+                }
+                finish()
+            } else {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Pembuatan Group Class Gagal, Silahkan coba lagi atau cek jaringan anda",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        } else {
+            val intent = Intent(this, DetailPembelianActivity::class.java)
+            intent.putExtra("id", id.toString())
+            intent.putExtra("nama", nama)
+            intent.putExtra("harga", price.toString())
+            intent.putExtra("durasi", durasi.toString())
+            intent.putExtra("jenis", "group")
+            startActivity(intent)
+        }
 
     }
 
@@ -73,5 +121,5 @@ class DetailGroupClassActivity : AppCompatActivity() {
         return formatter.format(this)
     }
 
-
 }
+

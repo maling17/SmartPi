@@ -20,9 +20,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.R
 import com.example.smartpi.adapter.JadwalHomeAdapter
+import com.example.smartpi.adapter.ListKelasSelesaiAdapter
 import com.example.smartpi.adapter.PromoAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentHomeBinding
+import com.example.smartpi.model.HistoryItem
 import com.example.smartpi.model.JadwalItem
 import com.example.smartpi.model.PackageActiveItem
 import com.example.smartpi.model.PromoItem
@@ -30,12 +32,17 @@ import com.example.smartpi.utils.Preferences
 import com.example.smartpi.view.kelas.DetailKelasActivity
 import com.example.smartpi.view.kelas.PilihPaketActivity
 import com.example.smartpi.view.kelas.PilihTrialActivity
+import com.example.smartpi.view.notifikasi.NotifikasiActivity
+import com.example.smartpi.view.prakerja.PraKerjaActivity
+import com.example.smartpi.view.profile.ProfileUserActivity
 import com.example.smartpi.view.program.GroupClassActivity
 import com.example.smartpi.view.program.ProgramInggrisActivity
 import com.example.smartpi.view.program.ProgramMatematikaActivity
 import com.example.smartpi.view.program.ProgramMengajiActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.*
 import java.net.SocketException
+
 
 class HomeFragment : Fragment() {
 
@@ -45,9 +52,10 @@ class HomeFragment : Fragment() {
     private var jadwalList = ArrayList<JadwalItem>()
     private var promoList = ArrayList<PromoItem>()
     private var packageList = ArrayList<PackageActiveItem>()
+    private var kelasList = ArrayList<HistoryItem>()
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -63,10 +71,12 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
         val kelasFragment = KelasFragment()
         binding.tvLihatSemua.setOnClickListener {
             setFragment(kelasFragment)
         }
+
 
         binding.btnBikinJadwal.setOnClickListener {
             startActivity(
@@ -93,6 +103,15 @@ class HomeFragment : Fragment() {
         binding.ivGroupClass.setOnClickListener {
             startActivity(Intent(context, GroupClassActivity::class.java))
         }
+        binding.ivToProfile.setOnClickListener {
+            startActivity(Intent(context, ProfileUserActivity::class.java))
+        }
+        binding.ivPraKerja.setOnClickListener {
+            startActivity(Intent(context, PraKerjaActivity::class.java))
+        }
+        binding.ivNotif.setOnClickListener {
+            startActivity(Intent(context, NotifikasiActivity::class.java))
+        }
     }
 
     override fun onStart() {
@@ -103,7 +122,7 @@ class HomeFragment : Fragment() {
         token = "Bearer ${preferences.getValues("token")}"
         Log.d(TAG, "Token: $token")
 
-        //setting Recylerview jadwal
+        //setting Recylerview jadwalene
         binding.rvJadwal.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvJadwal.isNestedScrollingEnabled = false
@@ -112,6 +131,8 @@ class HomeFragment : Fragment() {
         binding.rvPromo.layoutManager = LinearLayoutManager(context)
         binding.rvPromo.isNestedScrollingEnabled = false
 
+        binding.rvKonfirmasiKelas.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         scope.launch {
 
@@ -120,12 +141,16 @@ class HomeFragment : Fragment() {
             val job3 = async { getAllPromo() }
             val job4 = async { checkPackage() }
 //            val job5 = async { checkVersion() }
+            val job6 = async { checkNotif() }
+            val job7 = async { getKelasSelesai() }
 
             job1.await()
             job2.await()
             job3.await()
             job4.await()
 //            job5.await()
+            job6.await()
+            job7.await()
 
         }
 
@@ -184,10 +209,19 @@ class HomeFragment : Fragment() {
                     binding.pbJadwal.visibility = View.GONE
                 } else {
                     binding.rvJadwal.visibility = View.VISIBLE
+                    binding.tvJadwalEmpty.visibility = View.GONE
                     binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
                         val intent =
                             Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                         startActivity(intent)
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id)
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.packageName)
+                        mFirebaseAnalytics!!.logEvent(
+                            FirebaseAnalytics.Event.SELECT_CONTENT,
+                            bundle
+                        )
+
                     }
                     binding.pbJadwal.visibility = View.GONE
                 }
@@ -196,6 +230,46 @@ class HomeFragment : Fragment() {
             }
         } catch (e: SocketException) {
             e.printStackTrace()
+        }
+
+
+    }
+
+    private suspend fun getGroupClass() {
+
+        val network = NetworkConfig().getJadwalUser().getGroupClass(token)
+        if (network.isSuccessful) {
+            for (grup in network.body()!!.data!!) {
+                val jadwalItem = JadwalItem()
+                jadwalItem.packageName = grup!!.namaKelas
+                jadwalItem.duration = grup.duration.toString()
+                jadwalItem.teacherId = grup.teacherId
+                jadwalItem.teacherName = grup.teacher
+
+                for (schedule in grup.schedule!!) {
+                    jadwalItem.id = schedule!!.id.toString()
+                    jadwalItem.scheduleTime = schedule.scheduleTime.toString()
+                    jadwalItem.scheduleEnd = schedule.scheduleEnd.toString()
+                    jadwalItem.roomCode = schedule.roomCode.toString()
+                    jadwalItem.platform = schedule.platform.toString()
+                }
+                jadwalList.add(jadwalItem)
+            }
+            if (jadwalList.isEmpty()) {
+                binding.tvJadwalEmpty.visibility = View.VISIBLE
+                binding.rvJadwal.visibility = View.GONE
+                binding.pbJadwal.visibility = View.GONE
+            } else {
+                binding.rvJadwal.visibility = View.VISIBLE
+                binding.rvJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                    val intent =
+                        Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
+                    startActivity(intent)
+                }
+                binding.pbJadwal.visibility = View.GONE
+            }
+        } else {
+            binding.pbJadwal.visibility = View.GONE
         }
 
 
@@ -212,14 +286,19 @@ class HomeFragment : Fragment() {
 
                     packageList.add(paket!!)
 
+                }
+                if (packageList.isEmpty()) {
+                    binding.btnBikinJadwal.visibility = View.GONE
+                } else {
                     if (packageList.size <= 1) {
                         binding.tvPaketHome.text =
                             "Paket yang aktif : ${packageList[0].package_name}"
                     } else {
-                        binding.tvPaketHome.text = "paket yang aktif : ${packageList.size} Paket "
+                        binding.tvPaketHome.text =
+                            "paket yang aktif : ${packageList.size} Paket "
                     }
-
                 }
+
             } else {
                 binding.btnBikinJadwal.visibility = View.GONE
             }
@@ -241,11 +320,19 @@ class HomeFragment : Fragment() {
                             showPopUpPilihJadwalTrial()
                         }
                         binding.clJadwal.visibility = View.VISIBLE
-                        getJadwalUser()
+                        val job1 = async { getJadwalUser() }
+                        val job2 = async { getGroupClass() }
+
+                        job1.await()
+                        job2.await()
                     } else {
                         binding.clJadwal.visibility = View.VISIBLE
                         showPopUpPilihTrial()
-                        getJadwalUser()
+                        val job1 = async { getJadwalUser() }
+                        val job2 = async { getGroupClass() }
+
+                        job1.await()
+                        job2.await()
                     }
                 }
             } else {
@@ -398,6 +485,40 @@ class HomeFragment : Fragment() {
         }
     }
 
+    suspend fun checkNotif() {
+        updateNotifikasi()
+        val networkConfig = NetworkConfig().getUser().getNotif(token)
+        if (networkConfig.isSuccessful) {
+            binding.llNotif.visibility = View.VISIBLE
+            binding.tvNotifikasi.text = networkConfig.body()!!.data!!.notif!!.size.toString()
+        }
+    }
 
+    suspend fun updateNotifikasi() {
+        val networkConfig = NetworkConfig().getUser().getUpdateNotif(token)
+        if (networkConfig.isSuccessful) {
+            if (networkConfig.body()!!.message == "read") {
+                binding.llNotif.visibility = View.GONE
+            }
+        } else {
+            Log.d(TAG, "updateNotifikasi: gagal")
+        }
+
+    }
+
+    private suspend fun getKelasSelesai() {
+        val networkConfig = NetworkConfig().getAfterClass().getHistory(token)
+        if (networkConfig.isSuccessful) {
+            for (kelas in networkConfig.body()!!.data!!) {
+                if (kelas!!.status == 3) {
+                    if (kelas.teacherRate.toString() == "null") {
+                        kelasList.add(kelas)
+                        binding.rvKonfirmasiKelas.visibility = View.VISIBLE
+                    }
+                }
+            }
+            binding.rvKonfirmasiKelas.adapter = ListKelasSelesaiAdapter(kelasList) {}
+        }
+    }
 }
 

@@ -189,7 +189,6 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
@@ -298,4 +297,31 @@
     <string name="update_aplikasi">Update Aplikasi</string>
     <string name="silahkan_update_aplikasi_anda_untuk_menggunakan_aplikasi">Silahkan Update Aplikasi Anda Untuk Menggunakan Aplikasi</string>
     <string name="versi_aplikasi_anda_belum_versi_terbaru">Versi Aplikasi Anda Belum Versi Terbaru</string>
+    <string name="profile">Profile</string>
+    <string name="status_berlangganan">Status Berlangganan</string>
+    <string name="paket_aktif">Paket Aktif</string>
+    <string name="group_class_aktif">Group Class Aktif</string>
+    <string name="profil_anda">Profil Anda</string>
+    <string name="tidak_ada_group_class">Tidak ada group class</string>
+    <string name="ambil_paket">Ambil Paket</string>
+    <string name="masukan_email_anda_sebelum_mengambil_paket">Masukan email Anda sebelum mengambil paket.</string>
+    <string name="example_example_com">example@example.com</string>
+    <string name="prakerja">PraKerja</string>
+    <string name="detail_prakerja">Detail Prakerja</string>
+    <string name="detail_group_class">Detail Group Class</string>
+    <string name="_1">1</string>
+    <string name="notifikasi">Notifikasi</string>
+    <string name="mobile_one_on_one">Mobile One on One</string>
+    <string name="one_on_one">One on One</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="belajar_one_on_one_secara_langsung_dengan_tutor_sehingga_pembelajaran_menjadi_tepat_sasaran_sesuai_kebutuhan">Belajar one on one secara langsung dengan tutor sehingga pembelajaran menjadi tepat sasaran sesuai kebutuhan</string>
+    <string name="teaching_methods">Teaching Methods</string>
+    <string name="memahami_konsep_dasar">Memahami Konsep Dasar</string>
+    <string name="metode_pengajaran">Metode pengajaran kami memahami konsep dasar dan problem solving, sehingga bisa diterapkan dalam berbagai macam problem soal</string>
+    <string name="great_teachers">Great Teachers</string>
+    <string name="guru_yang_berkualitas">Guru yang berkualitas</string>
+    <string name="tenaga_guru">Tenaga yang profesional dan berkualitas yang merupakan lulusan universitas ternama</string>
+    <string name="done">Done</string>
+    <string name="belum">Belum</string>
 </resources>
