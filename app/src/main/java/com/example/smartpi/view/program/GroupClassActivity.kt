@@ -41,6 +41,7 @@ class GroupClassActivity : AppCompatActivity() {
 
         binding.rvGroupClass.layoutManager = GridLayoutManager(this, 2)
         scope.launch { getGroupClass() }
+        binding.ivBackGroupClass.setOnClickListener { finish() }
     }
 
     private suspend fun getGroupClass() {

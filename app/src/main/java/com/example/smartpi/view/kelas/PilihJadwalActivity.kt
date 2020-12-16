@@ -21,6 +21,7 @@ import com.example.smartpi.adapter.SlotJamSingleAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityPilihJadwalBinding
 import com.example.smartpi.model.*
+import com.example.smartpi.utils.DrawableUtils
 import com.example.smartpi.utils.Preferences
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
@@ -154,15 +155,17 @@ class PilihJadwalActivity : AppCompatActivity() {
                         ) {
                             availabilityList.add(schedule)
 
-//                        calendar.add(Calendar.DAY_OF_MONTH, availabilityList.size)
-                            /*  val cal:Calendar = DateUtils.getCalendar()
-                              cal.add(Calendar.DAY_OF_MONTH, 2)
-                              val calendars: ArrayList<Calendar> = ArrayList()
-                              calendars.add(cal)
-                              binding.calendarViewSesi1.setHighlightedDays(calendars)*/
+                            //untuk tandai tanggal guru available
+                            val calendar1 = Calendar.getInstance()
+
+                            calendar1[Calendar.MONTH] = bulan - 1
+                            calendar1[Calendar.DAY_OF_MONTH] = hari
+                            calendar1[Calendar.YEAR] = tahun
+                            events.add(EventDay(calendar1, DrawableUtils.getCircleDrawable(this)))
+                            binding.calendarViewSesi1.setEvents(events)
 
                             Log.d(TAG, "getJadwalGuru: $availabilityList")
-//                        events.add(EventDay(cal, DrawableUtils.getCircleDrawable(this)))
+
                             binding.calendarViewSesi1.setEvents(events)
                         }
 

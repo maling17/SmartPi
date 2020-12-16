@@ -1,7 +1,11 @@
 package com.example.smartpi.view.prakerja
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.smartpi.adapter.ListGroupClassAdapter
@@ -35,6 +39,7 @@ class PraKerjaActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.rvPraKerja.layoutManager = GridLayoutManager(this, 2)
+        binding.ivBackPraKerja.setOnClickListener { finish() }
         scope.launch { getPrakerja() }
     }
 
@@ -43,6 +48,7 @@ class PraKerjaActivity : AppCompatActivity() {
         val networkConfig = NetworkConfig().getPrakerja().getListPrakerja()
         try {
             if (networkConfig.isSuccessful) {
+                binding.pbLoadingPraKerja.visibility = View.GONE
                 for (grup in networkConfig.body()!!.data!!) {
                     groupList.add(grup!!)
                     id = grup.id!!
@@ -50,6 +56,15 @@ class PraKerjaActivity : AppCompatActivity() {
                     Log.d(TAG, "getGroupClass: $groupList")
                 }
 
+            } else {
+                binding.pbLoadingPraKerja.visibility = View.GONE
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Tidak dapat mengambil pra kerja, Silahkan cek koneksi anda",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         } catch (e: SocketException) {
             e.printStackTrace()

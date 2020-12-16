@@ -53,6 +53,7 @@ class ChooseEmailActivity : AppCompatActivity() {
                     val intent = Intent(this, SignInEmailActivity::class.java)
                     intent.putExtra("status_email", "1")
                     intent.putExtra("user", it)
+                    finish()
                     startActivity(intent)
                 }
             }

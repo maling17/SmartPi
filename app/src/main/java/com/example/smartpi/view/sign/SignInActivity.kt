@@ -178,7 +178,7 @@ class SignInActivity : AppCompatActivity() {
                         binding.tvAtau.visibility = View.VISIBLE
                         binding.tvSignEmail.visibility = View.VISIBLE
                         startActivity(intent)
-
+                        finish()
                     } else {
                         val intent = Intent(this, SignInPasswordActivity::class.java)
                             .putExtra("nmr_telp", nmrTelp)
@@ -297,5 +297,10 @@ class SignInActivity : AppCompatActivity() {
         val inputMethodManager =
             getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

@@ -84,6 +84,7 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
 
                 val intent = Intent(this, SignInActivity::class.java)
                 startActivity(intent)
+                finish()
             } else {
                 binding.pbUbahPassword.visibility = View.GONE
                 binding.btnUbahKataKunci.visibility = View.VISIBLE
@@ -124,6 +125,7 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        startActivity(Intent(this@GantiLupaPasswordActivity, LupaPasswordActivity::class.java))
         finish()
     }
 

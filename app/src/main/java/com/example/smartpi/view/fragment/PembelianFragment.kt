@@ -12,6 +12,7 @@ import com.example.smartpi.databinding.FragmentPembelianBinding
 import com.example.smartpi.utils.Preferences
 import com.example.smartpi.view.kelas.PilihTrialActivity
 import com.example.smartpi.view.pembelian.LanggananPaketActivity
+import com.example.smartpi.view.prakerja.PraKerjaActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -53,6 +54,14 @@ class PembelianFragment : Fragment() {
                 Intent(
                     context,
                     PilihTrialActivity::class.java
+                )
+            )
+        }
+        binding.btnLihatPraKerja.setOnClickListener {
+            startActivity(
+                Intent(
+                    context,
+                    PraKerjaActivity::class.java
                 )
             )
         }

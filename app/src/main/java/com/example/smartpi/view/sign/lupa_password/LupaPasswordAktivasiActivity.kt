@@ -75,6 +75,7 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
                 val intent = Intent(this, GantiLupaPasswordActivity::class.java)
                     .putExtra("nmr_telp", phoneNumber)
                 startActivity(intent)
+                finish()
             } else {
                 binding.pbLupaAktivasi.visibility = View.GONE
                 binding.btnVerifikasiToken.visibility = View.VISIBLE
@@ -162,6 +163,7 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        startActivity(Intent(this@LupaPasswordAktivasiActivity, LupaPasswordActivity::class.java))
         finish()
     }
 

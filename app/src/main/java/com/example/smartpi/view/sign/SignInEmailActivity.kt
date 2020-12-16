@@ -57,6 +57,7 @@ class SignInEmailActivity : AppCompatActivity() {
                     LupaPasswordActivity::class.java
                 )
             )
+            finish()
         }
         binding.tvMasukNomorHp.setOnClickListener {
             startActivity(
@@ -65,6 +66,7 @@ class SignInEmailActivity : AppCompatActivity() {
                     SignInActivity::class.java
                 )
             )
+            finish()
         }
         if (statusEmail == "1") {
 
@@ -185,7 +187,7 @@ class SignInEmailActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(this, SignInActivity::class.java)
+        val intent = Intent(this, ChooseEmailActivity::class.java)
         startActivity(intent)
     }
 

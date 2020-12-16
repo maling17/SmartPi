@@ -35,6 +35,7 @@ class SplashScreenActivity : AppCompatActivity() {
                         SignInActivity::class.java
                     )
                     startActivity(intent)
+                    preferences.setValues("state_trial", "0")
                     finish()
                 } else {
                     val intent = Intent(
@@ -42,6 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
                         BaseLandingPageActivity::class.java
                     )
                     startActivity(intent)
+                    preferences.setValues("state_trial", "0")
                     finish()
                 }
 

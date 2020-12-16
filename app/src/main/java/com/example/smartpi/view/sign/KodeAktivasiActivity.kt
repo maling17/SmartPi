@@ -136,6 +136,7 @@ class KodeAktivasiActivity : AppCompatActivity() {
                 val intent = Intent(this, SignUpActivity::class.java)
                     .putExtra("nmr_telp", phoneNumber)
                 startActivity(intent)
+                finish()
             } else {
                 Handler(Looper.getMainLooper()).post {
                     Toast.makeText(
@@ -154,6 +155,7 @@ class KodeAktivasiActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this, SignInActivity::class.java))
+        finish()
     }
 
     fun Fragment.hideKeyboard() {

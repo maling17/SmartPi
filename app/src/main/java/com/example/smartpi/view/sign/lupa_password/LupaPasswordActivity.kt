@@ -27,6 +27,7 @@ import com.example.smartpi.adapter.PhoneCodeAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityLupaPasswordBinding
 import com.example.smartpi.model.DataItem
+import com.example.smartpi.view.sign.SignInActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -134,6 +135,7 @@ class LupaPasswordActivity : AppCompatActivity() {
                 val intent = Intent(this, LupaPasswordAktivasiActivity::class.java)
                     .putExtra("nmr_telp", nmrTelp)
                 startActivity(intent)
+                finish()
             } else {
                 binding.btnUbahPassword.visibility = View.VISIBLE
                 binding.pbLupaPassword.visibility = View.INVISIBLE
@@ -220,6 +222,7 @@ class LupaPasswordActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        startActivity(Intent(this, SignInActivity::class.java))
         finish()
     }
 

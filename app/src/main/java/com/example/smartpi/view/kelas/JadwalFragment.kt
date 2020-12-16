@@ -2,12 +2,14 @@ package com.example.smartpi.view.kelas
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.JadwalHomeAdapter
 import com.example.smartpi.adapter.JadwalKelasAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentJadwalBinding
@@ -44,13 +46,11 @@ class JadwalFragment : Fragment() {
         binding.fabJadwal.setOnClickListener {
             startActivity(Intent(context, PilihPaketActivity::class.java))
         }
-
-
     }
 
     override fun onStart() {
         super.onStart()
-        /*val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             throwable.printStackTrace()
             binding.pbListJadwal.visibility = View.GONE
             Handler(Looper.getMainLooper()).post {
@@ -61,7 +61,7 @@ class JadwalFragment : Fragment() {
                 ).show()
             }
 
-        }*/
+        }
         jadwalList.clear()
         preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
@@ -70,7 +70,7 @@ class JadwalFragment : Fragment() {
         binding.rvListJadwal.layoutManager = LinearLayoutManager(context)
         binding.rvListJadwal.isNestedScrollingEnabled = false
 
-        scope.launch {
+        scope.launch(exceptionHandler) {
             checkPackageActive()
         }
     }
@@ -131,7 +131,7 @@ class JadwalFragment : Fragment() {
                 binding.pbListJadwal.visibility = View.GONE
                 binding.llBelumBuatJadwal.visibility = View.GONE
 
-                binding.rvListJadwal.adapter = JadwalHomeAdapter(jadwalList) {
+                binding.rvListJadwal.adapter = JadwalKelasAdapter(jadwalList) {
                     val intent =
                         Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                     startActivity(intent)

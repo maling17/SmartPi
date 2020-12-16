@@ -32,7 +32,7 @@ class UbahKataSandiActivity : AppCompatActivity() {
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
 
-
+        binding.ivBackUbahPassword.setOnClickListener { finish() }
         changeBackgroundButton()
     }
 

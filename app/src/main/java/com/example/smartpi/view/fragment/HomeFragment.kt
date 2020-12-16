@@ -59,11 +59,12 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     var stateTrial = "0"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -124,6 +125,18 @@ class HomeFragment : Fragment() {
         stateTrial = preferences.getValues("state_trial").toString()
         Log.d(TAG, "Token: $token")
 
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            throwable.printStackTrace()
+            binding.pbJadwal.visibility = View.GONE
+            binding.pbPromo.visibility = View.GONE
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "Checkout Connection",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
         //setting Recylerview jadwalene
         binding.rvJadwal.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -136,7 +149,7 @@ class HomeFragment : Fragment() {
         binding.rvKonfirmasiKelas.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        scope.launch {
+        scope.launch(exceptionHandler) {
 
             val job1 = async { getUser() }
             val job2 = async { checkTrial() }
@@ -560,5 +573,6 @@ class HomeFragment : Fragment() {
         }
 
     }
+
 }
 

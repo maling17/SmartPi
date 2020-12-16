@@ -54,6 +54,7 @@ class SignInPasswordActivity : AppCompatActivity() {
 
         binding.tvLupaPassword.setOnClickListener {
             startActivity(Intent(this, LupaPasswordActivity::class.java))
+            finish()
         }
         binding.etPassword.setOnKeyListener { view, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
@@ -149,6 +150,7 @@ class SignInPasswordActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this, SignInActivity::class.java))
+        finish()
     }
 
     fun Fragment.hideKeyboard() {

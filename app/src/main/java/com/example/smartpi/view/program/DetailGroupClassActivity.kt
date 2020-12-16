@@ -43,6 +43,7 @@ class DetailGroupClassActivity : AppCompatActivity() {
                 createGroupClass()
             }
         }
+        binding.ivBackDetailKelas.setOnClickListener { finish() }
     }
 
     private suspend fun getData() {

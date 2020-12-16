@@ -35,6 +35,8 @@ class LainnyaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         preferences = Preferences(requireContext())
 
+
+
         binding.btnKeluar.setOnClickListener {
             preferences.setValues("status", "0")
             val intent = Intent(context, SignInActivity::class.java)
@@ -112,5 +114,4 @@ class LainnyaFragment : Fragment() {
             Toast.makeText(context, "Check Your Connection", Toast.LENGTH_LONG).show()
         }
     }
-
 }
