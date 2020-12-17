@@ -34,6 +34,7 @@ class ChatGuruActivity : AppCompatActivity() {
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
         schedule_id = intent.getStringExtra("schedule_id")
+
         val namaTeacher = intent.getStringExtra("nama_teacher")
         val namaKelas = intent.getStringExtra("nama_kelas")
         val image = intent.getStringExtra("image")

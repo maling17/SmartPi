@@ -328,4 +328,6 @@
     <string name="_0">0</string>
     <string name="sesi">Sesi</string>
     <string name="level">Level</string>
+    <string name="panduan_pembayaran">Panduan Pembayaran</string>
+    <string name="salin">Salin</string>
 </resources>

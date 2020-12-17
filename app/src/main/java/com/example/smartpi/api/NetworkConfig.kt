@@ -11,6 +11,8 @@ class NetworkConfig {
 
     val okHttpClient = OkHttpClient().newBuilder()
         .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
     val productionApi = "https://api.smartpi.id/api/"
@@ -19,7 +21,7 @@ class NetworkConfig {
         .setLenient()
         .create()
     val getNetwork = Retrofit.Builder()
-        .baseUrl(baseurl)
+        .baseUrl(productionApi)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .client(okHttpClient)
         .build()

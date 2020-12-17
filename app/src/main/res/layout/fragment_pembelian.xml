@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="25dp"
+            android:visibility="gone"
             android:background="@drawable/bg_pembayaran_kuning"
             android:padding="24dp"
             app:layout_constraintEnd_toEndOf="parent"

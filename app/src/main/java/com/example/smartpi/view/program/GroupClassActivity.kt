@@ -50,13 +50,16 @@ class GroupClassActivity : AppCompatActivity() {
 
         try {
             if (networkConfig.isSuccessful) {
+                binding.pbLoadingGroupClass.visibility = View.GONE
                 for (grup in networkConfig.body()!!.data!!) {
                     groupList.add(grup!!)
                     id = grup.id!!
                     getDetailGroupClass(id)
                     Log.d(TAG, "getGroupClass: $groupList")
                 }
-
+            } else {
+                binding.pbLoadingGroupClass.visibility = View.GONE
+                binding.llEmpty.visibility = View.VISIBLE
             }
         } catch (e: SocketException) {
             e.printStackTrace()

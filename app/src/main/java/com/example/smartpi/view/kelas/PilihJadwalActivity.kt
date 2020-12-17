@@ -31,7 +31,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -42,12 +41,9 @@ class PilihJadwalActivity : AppCompatActivity() {
     private val TAG = "MyActivity"
     private var availabilityList = ArrayList<AvailabilityItem>()
     private var jamList = ArrayList<AvailabilitySlotItem>()
-    private var slotMap = HashMap<String, List<Any>>()
 
     private var scheduleList = ArrayList<Schedule?>()
-    private var sortJamList = ArrayList<Schedule?>()
     var scheduleModel = ScheduleModel()
-    var scheduleItem = Schedule()
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -60,7 +56,6 @@ class PilihJadwalActivity : AppCompatActivity() {
     private var timeZone = ""
     var itemClicked = false
     var timeInMilliseconds: Long = 0
-    var statusItem: Boolean = true
 
     private lateinit var binding: ActivityPilihJadwalBinding
 

@@ -122,6 +122,8 @@ class HomeFragment : Fragment() {
         jadwalList.clear()
         preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
+
+        //ambil value untuk memunculkan dialog pilih trial
         stateTrial = preferences.getValues("state_trial").toString()
         Log.d(TAG, "Token: $token")
 
@@ -189,6 +191,7 @@ class HomeFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
 
             }
         } catch (e: SocketException) {
@@ -229,6 +232,7 @@ class HomeFragment : Fragment() {
                         val intent =
                             Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                         startActivity(intent)
+
                         val bundle = Bundle()
                         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id)
                         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.packageName)
@@ -242,6 +246,8 @@ class HomeFragment : Fragment() {
                 }
             } else {
                 binding.pbJadwal.visibility = View.GONE
+                Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -287,6 +293,8 @@ class HomeFragment : Fragment() {
                 }
             } else {
                 binding.pbJadwal.visibility = View.GONE
+                Log.d(TAG, "getUser: ${network.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -320,6 +328,8 @@ class HomeFragment : Fragment() {
 
             } else {
                 binding.btnBikinJadwal.visibility = View.GONE
+                Log.d(TAG, "getUser: ${network.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -335,6 +345,8 @@ class HomeFragment : Fragment() {
             if (checkTrial.isSuccessful) {
                 scope.launch(Dispatchers.Main) {
                     if (checkTrial.body()!!.status == "Sudah") {
+
+                        // jika sudah pilih trial tapi belum pilih jadwal
                         if (checkTrial.body()!!.isFirstTimeTrialUsed == "false") {
                             if (stateTrial == "0") {
                                 showPopUpPilihJadwalTrial()
@@ -361,7 +373,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             } else {
-                Log.d(TAG, "checkTrial: Something wrong")
+                Log.d(TAG, "getUser: ${checkTrial.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -477,6 +490,8 @@ class HomeFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                Log.d(TAG, "getUser: ${network.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -516,6 +531,9 @@ class HomeFragment : Fragment() {
                         showPopUpUpdateAplikasi()
                     }
                 }
+            } else {
+                Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
+
             }
 
         } catch (e: SocketException) {
@@ -524,28 +542,20 @@ class HomeFragment : Fragment() {
     }
 
     suspend fun checkNotif() {
-        updateNotifikasi()
         val networkConfig = NetworkConfig().getUser().getNotif(token)
         try {
             if (networkConfig.isSuccessful) {
                 binding.llNotif.visibility = View.VISIBLE
-                binding.tvNotifikasi.text = networkConfig.body()!!.data!!.notif!!.size.toString()
-            }
-        } catch (e: SocketException) {
-            e.printStackTrace()
-        }
-
-    }
-
-    suspend fun updateNotifikasi() {
-        val networkConfig = NetworkConfig().getUser().getUpdateNotif(token)
-        try {
-            if (networkConfig.isSuccessful) {
-                if (networkConfig.body()!!.message == "read") {
+                if (networkConfig.body()!!.data!!.detail!!.jsonMemberNew.toString() == "0") {
                     binding.llNotif.visibility = View.GONE
+                } else {
+                    binding.tvNotifikasi.text =
+                        networkConfig.body()!!.data!!.detail!!.jsonMemberNew.toString()
                 }
+
             } else {
-                Log.d(TAG, "updateNotifikasi: gagal")
+                Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -567,6 +577,9 @@ class HomeFragment : Fragment() {
                     }
                 }
                 binding.rvKonfirmasiKelas.adapter = ListKelasSelesaiAdapter(kelasList) {}
+            } else {
+                Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
+
             }
         } catch (e: SocketException) {
             e.printStackTrace()

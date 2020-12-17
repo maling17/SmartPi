@@ -1,5 +1,7 @@
 package com.example.smartpi.view.fragment
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -38,10 +40,7 @@ class LainnyaFragment : Fragment() {
 
 
         binding.btnKeluar.setOnClickListener {
-            preferences.setValues("status", "0")
-            val intent = Intent(context, SignInActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+            popUpLogOut()
         }
         binding.ivUbahProfile.setOnClickListener {
             startActivity(
@@ -113,5 +112,32 @@ class LainnyaFragment : Fragment() {
         } catch (e: PackageManager.NameNotFoundException) {
             Toast.makeText(context, "Check Your Connection", Toast.LENGTH_LONG).show()
         }
+    }
+
+    fun popUpLogOut() {
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+
+
+        alertDialogBuilder.setTitle("Apakah Anda yakin ingin Sign Out?")
+
+        alertDialogBuilder
+            .setCancelable(false)
+            .setPositiveButton(
+                "Ya",
+                DialogInterface.OnClickListener { dialog, id ->
+                    preferences.setValues("status", "0")
+                    val intent = Intent(context, SignInActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                    dialog.cancel()
+
+                })
+            .setNegativeButton("Tidak", DialogInterface.OnClickListener { dialog, id ->
+                dialog.cancel()
+
+            })
+        val alertDialog: AlertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+
     }
 }

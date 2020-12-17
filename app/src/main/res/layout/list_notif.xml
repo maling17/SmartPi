@@ -2,12 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
         app:cardElevation="2dp"
         app:cardUseCompatPadding="true"
@@ -17,9 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="16dp">
 
             <ImageView
@@ -32,28 +31,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_notifikasi"
-                style="@style/Text14BoldBlack"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:text="@string/notifikasi"
-                app:layout_constraintStart_toEndOf="@+id/imageView24"
-                app:layout_constraintTop_toTopOf="@+id/imageView24" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_sub_notifikasi"
-                style="@style/Text14RegulerBlack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:text="@string/notifikasi"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView24"
-                app:layout_constraintStart_toEndOf="@+id/imageView24"
-                app:layout_constraintTop_toBottomOf="@+id/tv_notifikasi" />
+                <TextView
+                    android:id="@+id/tv_notifikasi"
+                    style="@style/Text14BoldBlack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/notifikasi"
+                    app:layout_constraintStart_toEndOf="@+id/imageView24"
+                    app:layout_constraintTop_toTopOf="@+id/imageView24" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_sub_notifikasi"
+                    style="@style/Text14RegulerBlack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/notifikasi"
+                    app:layout_constraintStart_toEndOf="@+id/imageView24"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_notifikasi" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>

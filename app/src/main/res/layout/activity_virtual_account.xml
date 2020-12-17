@@ -155,7 +155,7 @@
                         style="@style/Text14BoldBlue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Salin"
+                        android:text="@string/salin"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -200,7 +200,7 @@
                         style="@style/Text14BoldBlue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Salin"
+                        android:text="@string/salin"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -226,7 +226,7 @@
                     style="@style/Text14RegulerBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Panduan Pembayaran"
+                    android:text="@string/panduan_pembayaran"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -235,6 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@color/white"
+                    android:layout_marginTop="10dp"
                     android:groupIndicator="@null"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5" />

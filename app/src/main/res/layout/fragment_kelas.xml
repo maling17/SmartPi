@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:paddingTop="30dp"
-        android:text="Kelas" />
+        android:text="@string/kelas" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

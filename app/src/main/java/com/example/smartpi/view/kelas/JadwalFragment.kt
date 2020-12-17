@@ -32,7 +32,7 @@ class JadwalFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentJadwalBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -50,6 +50,7 @@ class JadwalFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             throwable.printStackTrace()
             binding.pbListJadwal.visibility = View.GONE
@@ -71,7 +72,14 @@ class JadwalFragment : Fragment() {
         binding.rvListJadwal.isNestedScrollingEnabled = false
 
         scope.launch(exceptionHandler) {
-            checkPackageActive()
+            try {
+                checkPackageActive()
+            } catch (e: SocketException) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(context, "Gagal", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 

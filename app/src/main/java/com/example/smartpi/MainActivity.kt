@@ -90,21 +90,33 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun setHomeItem() {
+        binding.btvHome.selectedItemId = R.id.home_navigation
+    }
+
     override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed()
-            finishAffinity()
-            return
+
+        val selectedItemId = binding.btvHome.selectedItemId
+        if (R.id.home_navigation == selectedItemId) {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed()
+                finishAffinity()
+                return
+            }
+
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(
+                this,
+                "Tekan tombol KEMBALI lagi untuk keluar dari aplikasi",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+
+        } else {
+            setHomeItem()
+
         }
-
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(
-            this,
-            "Tekan tombol KEMBALI lagi untuk keluar dari aplikasi",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
 
     }
 }
