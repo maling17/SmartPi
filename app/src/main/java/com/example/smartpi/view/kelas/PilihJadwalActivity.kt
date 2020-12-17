@@ -1,16 +1,18 @@
 package com.example.smartpi.view.kelas
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
-import android.os.Build
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.applandeo.materialcalendarview.EventDay
@@ -32,8 +34,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class PilihJadwalActivity : AppCompatActivity() {
 
     private var token = ""
@@ -75,16 +75,15 @@ class PilihJadwalActivity : AppCompatActivity() {
         token = "Bearer ${preferences.getValues("token")}"
 
         Log.d(TAG, "onCreate: $id  $token , $user_avalaible_id ")
-        binding.rvSlot.layoutManager = GridLayoutManager(this, 4)
 
-        scope.async {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val job1 = async { getJadwalGuru() }
-                val job2 = async { checkSession() }
+        scope.launch {
 
-                job1.await()
-                job2.await()
-            }
+            val job1 = async { getJadwalGuru() }
+            val job2 = async { checkSession() }
+
+            job1.await()
+            job2.await()
+
         }
 
         calendarSesi1()
@@ -109,8 +108,7 @@ class PilihJadwalActivity : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getJadwalGuru() {
+    private suspend fun getJadwalGuru() {
 
         val data = intent.getParcelableExtra<TeacherItem>("data")
         val id = data.id.toString()
@@ -119,12 +117,23 @@ class PilihJadwalActivity : AppCompatActivity() {
         binding.tvNamaTeacherPilihJadwal.text = data.name.toString()
         Picasso.get().load(data.avatar.toString()).into(binding.ivTeacherPilihJadwal)
 
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.pop_up_loading)
+        dialog.setCancelable(true)
+
+        //style dialog
+        val window = dialog.window!!
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.show()
+
         jamList.clear()
         val network = NetworkConfig().getTeacher().getTeacherSchedule(token, id)
 
         try {
             if (network.isSuccessful) {
-                binding.pbLoading.visibility = View.GONE
+
                 for (schedule in network.body()!!.availability!!) {
                     val justTanggal = schedule!!.start!!.toDate().formatTo("yyyy-MM-dd")
                     //convert tanggal start ke millis
@@ -178,7 +187,7 @@ class PilihJadwalActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-
+                dialog.dismiss()
             } else {
                 Log.d(TAG, "getJadwalGuru: GAGAL")
             }
@@ -215,7 +224,11 @@ class PilihJadwalActivity : AppCompatActivity() {
 
             itemClicked = false
             changeBackgroundButtonSesi1()
-            scope.launch(Dispatchers.Main) { getSlotJadwal(id, curdate, timeZone) }
+            scope.launch(Dispatchers.Main)
+            {
+                jamList.clear()
+                getSlotJadwal(id, curdate, timeZone)
+            }
         }
     }
 
@@ -258,14 +271,14 @@ class PilihJadwalActivity : AppCompatActivity() {
     private suspend fun getSlotJadwal(id: String, date: String, timeZone: String) {
 
         jamList.clear()
+
         val networkConfig =
             NetworkConfig().getTeacher().getTeacherScheduleAvailability(token, id, date, timeZone)
 
         try {
             if (networkConfig.isSuccessful) {
-
+                binding.llSlot.visibility = View.GONE
                 if (networkConfig.body()!!.availability!!.isEmpty()) {
-
                     binding.rvSlot.visibility = View.GONE
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(
@@ -295,7 +308,8 @@ class PilihJadwalActivity : AppCompatActivity() {
                         if (tanggalJam >= 6) {
                             jamList.add(slot)
                             val sortJamList = jamList.sortedBy { jamList -> jamList.start }
-                            binding.rvSlot.visibility = View.VISIBLE
+                            binding.llSlot.visibility = View.VISIBLE
+                            binding.rvSlot.layoutManager = GridLayoutManager(this, 4)
 
                             val singleAdapter = SlotJamSingleAdapter(sortJamList) {
                                 teacher_id = it.teacherId.toString()
@@ -309,7 +323,7 @@ class PilihJadwalActivity : AppCompatActivity() {
                             binding.rvSlot.adapter = singleAdapter
 
                         } else {
-                            binding.rvSlot.visibility = View.GONE
+                            binding.llSlot.visibility = View.GONE
                         }
                     }
                 }
@@ -318,7 +332,7 @@ class PilihJadwalActivity : AppCompatActivity() {
                 Handler(Looper.getMainLooper()).post {
                     Toast.makeText(
                         this,
-                        "Jam tidak tersedia",
+                        "Tidak bisa mengambil jam",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -339,7 +353,7 @@ class PilihJadwalActivity : AppCompatActivity() {
 
                 if (networkConfig.body()!!.availability!!.isEmpty()) {
 
-                    binding.rvSlot.visibility = View.GONE
+                    binding.llSlot.visibility = View.GONE
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(
                             this,
@@ -368,7 +382,7 @@ class PilihJadwalActivity : AppCompatActivity() {
                         if (tanggalJam >= 6) {
                             jamList.add(slot)
                             val sortJamList = jamList.sortedBy { jamList -> jamList.start }
-                            binding.rvSlot.visibility = View.VISIBLE
+                            binding.llSlot.visibility = View.VISIBLE
 
                             val adapter = SlotJamMultiAdapter(sortJamList) {
                                 val scheduleData = Schedule()
@@ -407,7 +421,7 @@ class PilihJadwalActivity : AppCompatActivity() {
 
                             binding.rvSlot.adapter = adapter
                         } else {
-                            binding.rvSlot.visibility = View.GONE
+                            binding.llSlot.visibility = View.GONE
                         }
 
                     }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.adapter.JadwalKelasAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentJadwalBinding
+import com.example.smartpi.databinding.FragmentPembelianBinding
 import com.example.smartpi.model.JadwalItem
 import com.example.smartpi.utils.Preferences
 import kotlinx.coroutines.*
@@ -41,7 +43,7 @@ class JadwalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnLangganan.setOnClickListener {
-            startActivity(Intent(context, PilihPaketActivity::class.java))
+            startActivity(Intent(context, FragmentPembelianBinding::class.java))
         }
         binding.fabJadwal.setOnClickListener {
             startActivity(Intent(context, PilihPaketActivity::class.java))
@@ -134,11 +136,6 @@ class JadwalFragment : Fragment() {
                     jadwalList.add(jadwalItem)
                 }
 
-                binding.svJadwal.visibility = View.VISIBLE
-                binding.fabJadwal.visibility = View.VISIBLE
-                binding.pbListJadwal.visibility = View.GONE
-                binding.llBelumBuatJadwal.visibility = View.GONE
-
                 binding.rvListJadwal.adapter = JadwalKelasAdapter(jadwalList) {
                     val intent =
                         Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
@@ -155,6 +152,7 @@ class JadwalFragment : Fragment() {
     suspend fun checkPackageActive() {
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
 
+        jadwalList.clear()
         binding.svJadwal.visibility = View.INVISIBLE
         binding.fabJadwal.visibility = View.INVISIBLE
         binding.pbListJadwal.visibility = View.VISIBLE
@@ -168,7 +166,6 @@ class JadwalFragment : Fragment() {
                     job2.await()
 
                 }
-
                 if (jadwalList.isEmpty()) {
                     binding.svJadwal.visibility = View.GONE
                     binding.fabJadwal.visibility = View.VISIBLE
@@ -182,6 +179,7 @@ class JadwalFragment : Fragment() {
         } catch (e: SocketException) {
             e.printStackTrace()
         }
+        Log.d(TAG, "checkPackageActive: $jadwalList")
     }
 
 

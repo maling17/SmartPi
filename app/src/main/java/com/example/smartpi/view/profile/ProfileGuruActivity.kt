@@ -3,6 +3,7 @@ package com.example.smartpi.view.profile
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityProfileGuruBinding
@@ -44,6 +45,7 @@ class ProfileGuruActivity : AppCompatActivity() {
         val networkConfig = NetworkConfig().getTeacher().getDetailTeacher(token, id_guru)
         try {
             if (networkConfig.isSuccessful) {
+                binding.pbLoading.visibility = View.GONE
                 var str: String = networkConfig.body()!!.data!!.profile.toString()
                 str = if (str.isEmpty() || str == "null") {
                     "Guru tidak mengisi"

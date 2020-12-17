@@ -79,6 +79,7 @@ class ChatGuruActivity : AppCompatActivity() {
                 for (chat in networkConfig.body()!!.data!!) {
                     chatList.add(chat!!)
                 }
+                Log.d("TAG", "getMessage: Chat berhasil")
                 binding.rvChat.adapter = ChatAdapter(this, chatList)
             } else {
                 Log.d("TAG", "getMessage: gagal")
@@ -96,7 +97,7 @@ class ChatGuruActivity : AppCompatActivity() {
         binding.etMessage.text.clear()
         try {
             if (networkConfig.isSuccessful) {
-                getMessage()
+                Log.d("TAG", "sendMessage: berhasil")
             } else {
                 Log.d("TAG", "sendMessage: gagal")
             }

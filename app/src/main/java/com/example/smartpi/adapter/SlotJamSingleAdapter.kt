@@ -40,29 +40,36 @@ class SlotJamSingleAdapter(
 
     override fun onBindViewHolder(holder: SlotJamSingleAdapter.LeagueViewHolder, position: Int) {
 
-        val jam = data[position].start!!.toDate().formatTo("HH:mm")
-        holder.tvJam.text = jam
-        if (data[position].status == 1) {
-
-            holder.llSlot.setBackgroundColor(Color.RED)
-            Log.d("TAG", "onBindViewHolder: ${data[position].status} ")
-
-
+        if (data.isEmpty()) {
+            holder.itemView.visibility = View.GONE
         } else {
-            holder.llSlot.setBackgroundColor(Color.WHITE)
-            if (row_index == position) {
-                holder.llSlot.setBackgroundColor(Color.parseColor("#ECEBFF"))
+            val jam = data[position].start!!.toDate().formatTo("HH:mm")
+            holder.tvJam.text = jam
+
+            if (data[position].status == 1) {
+
+                holder.llSlot.setBackgroundColor(Color.RED)
+                Log.d("TAG", "onBindViewHolder: ${data[position].status} ")
+
+
             } else {
-                holder.llSlot.setBackgroundColor(Color.parseColor("#ffffff"))
+                holder.llSlot.setBackgroundColor(Color.WHITE)
+                if (row_index == position) {
+                    holder.llSlot.setBackgroundColor(Color.parseColor("#ECEBFF"))
+                } else {
+                    holder.llSlot.setBackgroundColor(Color.parseColor("#ffffff"))
+                }
+
+                Log.d("TAG", "onBindViewHolder: ${data[position].status} ")
+                holder.itemView.setOnClickListener {
+                    listener(data[position])
+                    row_index = position
+                    notifyDataSetChanged()
+                }
             }
 
-            Log.d("TAG", "onBindViewHolder: ${data[position].status} ")
-            holder.itemView.setOnClickListener {
-                listener(data[position])
-                row_index = position
-                notifyDataSetChanged()
-            }
         }
+
 
     }
 

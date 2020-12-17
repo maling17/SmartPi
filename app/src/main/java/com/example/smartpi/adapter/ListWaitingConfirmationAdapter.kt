@@ -33,7 +33,7 @@ class ListWaitingConfirmationAdapter(
             context: Context,
             position: Int
         ) {
-            val tanggal = data.scheduleTime!!.toDate().formatTo("dd-MMMM-yyyy")
+            val tanggal = data.scheduleTime!!.toDate().formatTo("dd MMMM yyyy")
             tvTglPaket.text = tanggal
             tvNamaGuru.text = "Guru: ${data.teacherName}"
             tvPaket.text = "${data.packageName}"
