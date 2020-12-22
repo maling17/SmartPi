@@ -1,8 +1,11 @@
 package com.example.smartpi.view.program
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.smartpi.adapter.ListGroupClassAdapter
@@ -20,18 +23,19 @@ import kotlinx.coroutines.launch
 import java.net.SocketException
 
 class GroupClassActivity : AppCompatActivity() {
-    val TAG = "MyActivity"
-    var groupList = ArrayList<ListGroupItem>()
-    var groupDetailList = ArrayList<DetailData>()
-    var scheduleList = ArrayList<ScheduleDetailItem>()
-    var kelasList = ArrayList<KelasItem>()
-    var token = ""
+    private val TAG = "MyActivity"
+    private var groupList = ArrayList<ListGroupItem>()
+    private var groupDetailList = ArrayList<DetailData>()
+    private var scheduleList = ArrayList<ScheduleDetailItem>()
+    private var kelasList = ArrayList<KelasItem>()
+
     lateinit var preferences: Preferences
     lateinit var binding: ActivityGroupClassBinding
+
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var id = 0
-    var id_group = 0
+
+    private var id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +43,36 @@ class GroupClassActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        groupList.clear()
+        kelasList.clear()
+        scheduleList.clear()
+        groupDetailList.clear()
+
         binding.rvGroupClass.layoutManager = GridLayoutManager(this, 2)
-        scope.launch { getGroupClass() }
+        scope.launch {
+            getGroupClass()
+            if (groupDetailList.isEmpty()) {
+                binding.llEmpty.visibility = View.VISIBLE
+            } else {
+                binding.llEmpty.visibility = View.GONE
+            }
+        }
+
         binding.ivBackGroupClass.setOnClickListener { finish() }
+
     }
 
     private suspend fun getGroupClass() {
+
 
         val networkConfig = NetworkConfig().getGroupClass().getGroupClass()
 
         try {
             if (networkConfig.isSuccessful) {
                 binding.pbLoadingGroupClass.visibility = View.GONE
+                if (groupList.isEmpty()) {
+                    binding.llEmpty.visibility = View.VISIBLE
+                }
                 for (grup in networkConfig.body()!!.data!!) {
                     groupList.add(grup!!)
                     id = grup.id!!
@@ -59,7 +81,13 @@ class GroupClassActivity : AppCompatActivity() {
                 }
             } else {
                 binding.pbLoadingGroupClass.visibility = View.GONE
-                binding.llEmpty.visibility = View.VISIBLE
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        this,
+                        "Tidak dapat mengambil group class, Silahkan cek koneksi anda",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         } catch (e: SocketException) {
             e.printStackTrace()
@@ -68,12 +96,13 @@ class GroupClassActivity : AppCompatActivity() {
     }
 
     private suspend fun getDetailGroupClass(id: Int) {
+
         val networkConfig = NetworkConfig().getGroupClass().getDetailGroupClass(id)
 
         try {
             if (networkConfig.isSuccessful) {
                 val detailData = DetailData()
-                binding.pbLoadingGroupClass.visibility = View.GONE
+
                 for (kelas in networkConfig.body()!!.data!!.kelas!!) {
                     kelasList.add(kelas!!)
                     detailData.kelas = kelasList
@@ -82,13 +111,11 @@ class GroupClassActivity : AppCompatActivity() {
                     scheduleList.add(schedule!!)
                     detailData.schedule = scheduleList
                 }
-
                 groupDetailList.add(detailData)
 
                 binding.rvGroupClass.adapter = ListGroupClassAdapter(groupDetailList) {}
             } else {
-                binding.pbLoadingGroupClass.visibility = View.GONE
-                binding.llEmpty.visibility = View.VISIBLE
+                Log.d(TAG, "getDetailGroupClass: Data group class gagal diambil")
             }
         } catch (e: SocketException) {
             e.printStackTrace()

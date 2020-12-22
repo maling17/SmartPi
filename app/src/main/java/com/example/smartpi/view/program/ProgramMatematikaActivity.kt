@@ -12,6 +12,7 @@ class ProgramMatematikaActivity : AppCompatActivity() {
         binding = ActivityProgramMatematikaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         binding.viewPager.adapter = ProgramPagerAdapter(supportFragmentManager)
         binding.ivBackProgramMatematika.setOnClickListener { finish() }
 

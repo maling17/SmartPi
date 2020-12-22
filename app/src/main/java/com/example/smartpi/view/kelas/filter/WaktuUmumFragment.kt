@@ -2,7 +2,6 @@ package com.example.smartpi.view.kelas.filter
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,7 @@ class WaktuUmumFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentWaktuUmumBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         return binding.root
@@ -43,9 +42,12 @@ class WaktuUmumFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         isiArrayWaktuDanHari()
-        preferences = Preferences(activity!!.applicationContext)
+        preferences = Preferences(requireActivity().applicationContext)
         val getUserAvailable = preferences.getValues("user_available_id")
+
+        // menampilkan rentang waktu yang akan diambil
         binding.rvRentangWaktuUmum.layoutManager = GridLayoutManager(context, 3)
+        // menampilkan hari yang akan diambil
         binding.rvHariUmum.layoutManager = GridLayoutManager(context, 3)
 
         binding.rvRentangWaktuUmum.adapter = WaktuHariAdapter(waktuList) {
@@ -57,11 +59,12 @@ class WaktuUmumFragment : Fragment() {
             val date: DateFormat = SimpleDateFormat("z", Locale.getDefault())
             val localTime: String = date.format(currentLocalTime)
 
-            filterUmum.time_zone = localTime.drop(3)
-            filterUmum.range_end = it.drop(3)
-            filterUmum.range_start = it.dropLast(3)
+            filterUmum.time_zone = localTime.drop(3) //mengambil timezone cth: +07:00
+            filterUmum.range_end = it.drop(3)  //mengambil value rentang waktu akhir
+            filterUmum.range_start = it.dropLast(3) //mengambil value rentang waktu mulai
 
         }
+
         binding.rvHariUmum.adapter = WaktuHariAdapter(hariList) {
             filterUmum.hari = it
             filterUmum.kode_teacher = preferences.getValues("kode_teacher")
@@ -73,14 +76,12 @@ class WaktuUmumFragment : Fragment() {
             intent.putExtra("statusFilter", "1")
             intent.putExtra("user_available_id", getUserAvailable)
             startActivity(intent)
-            Log.d(
-                "WaktuUmumFragment",
-                "onActivityCreated: ${filterUmum.hari}, ${filterUmum.range_end}, ${filterUmum.range_start}, ${filterUmum.time_zone}, ${filterUmum.kode_teacher}"
-            )
+            requireActivity().finish()
         }
     }
 
     fun isiArrayWaktuDanHari() {
+        waktuList.clear()
         waktuList.add("00-04")
         waktuList.add("04-08")
         waktuList.add("08-12")
@@ -88,6 +89,7 @@ class WaktuUmumFragment : Fragment() {
         waktuList.add("16-20")
         waktuList.add("20-24")
 
+        hariList.clear()
         hariList.add("Sunday")
         hariList.add("Monday")
         hariList.add("Tuesday")

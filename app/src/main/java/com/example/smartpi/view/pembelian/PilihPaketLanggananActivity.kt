@@ -18,9 +18,9 @@ import java.net.SocketException
 class PilihPaketLanggananActivity : AppCompatActivity() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var paketList = ArrayList<PaketItem>()
+    private var paketList = ArrayList<PaketItem>()
     lateinit var binding: ActivityPilihPaketLanggananBinding
-    var id_paket = ""
+    private var id_paket = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPilihPaketLanggananBinding.inflate(layoutInflater)
@@ -33,8 +33,9 @@ class PilihPaketLanggananActivity : AppCompatActivity() {
 
     }
 
-    suspend fun getPaketLangganan() {
+    private suspend fun getPaketLangganan() {
 
+        paketList.clear()
         val networkConfig = NetworkConfig().getPaketLangganan().getPricePaket(id_paket)
 
         try {

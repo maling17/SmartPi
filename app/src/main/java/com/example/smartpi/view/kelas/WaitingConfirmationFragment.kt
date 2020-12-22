@@ -27,13 +27,12 @@ class WaitingConfirmationFragment : Fragment() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
-
     private var _binding: FragmentWaitingConfirmationBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentWaitingConfirmationBinding.inflate(inflater, container, false)
         return binding.root
@@ -42,7 +41,7 @@ class WaitingConfirmationFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         waitingList.clear()
-        preferences = Preferences(context!!)
+        preferences = Preferences(requireContext())
         token = "Bearer ${preferences.getValues("token")}"
         binding.rvWaiting.layoutManager = LinearLayoutManager(context)
 
@@ -59,9 +58,11 @@ class WaitingConfirmationFragment : Fragment() {
             if (networkConfig.isSuccessful) {
                 binding.pbWaiting.visibility = View.GONE
                 binding.rvWaiting.visibility = View.VISIBLE
+
                 for (waiting in networkConfig.body()!!.data!!) {
                     waitingList.add(waiting!!)
                 }
+
                 binding.rvWaiting.adapter = ListWaitingConfirmationAdapter(waitingList) {}
             } else {
                 binding.pbWaiting.visibility = View.GONE

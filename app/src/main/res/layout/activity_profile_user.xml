@@ -76,7 +76,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="@string/nama"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView23"
                 app:layout_constraintStart_toEndOf="@+id/imageView23"
                 app:layout_constraintTop_toTopOf="@+id/imageView23" />
@@ -118,8 +117,8 @@
                 android:id="@+id/pb_loading_paket_aktif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginTop="15dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/rv_paket_aktif"
                 app:layout_constraintEnd_toEndOf="@+id/rv_paket_aktif"
                 app:layout_constraintStart_toStartOf="@+id/rv_paket_aktif"
@@ -165,8 +164,8 @@
                 android:id="@+id/pb_loading_group_class_aktif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginTop="15dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/rv_group_class_aktif"
                 app:layout_constraintEnd_toEndOf="@+id/rv_group_class_aktif"
                 app:layout_constraintStart_toStartOf="@+id/rv_group_class_aktif"
@@ -213,7 +212,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="16dp"
-                android:text="@string/nama"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView73" />
 
@@ -235,7 +233,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="16dp"
-                android:text="@string/email"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView74" />
 
@@ -258,7 +255,6 @@
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="16dp"
                 android:paddingBottom="35dp"
-                android:text="@string/nomor_handphone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView75" />
 

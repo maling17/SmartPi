@@ -16,8 +16,7 @@ import java.net.SocketException
 
 class ProgramInggrisActivity : AppCompatActivity() {
     lateinit var binding: ActivityProgramInggrisBinding
-    var token = ""
-    var id_program = ""
+    private var id_program = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
@@ -37,11 +36,12 @@ class ProgramInggrisActivity : AppCompatActivity() {
             startActivity(intent)
             binding.pbLoading.visibility = View.GONE
         }
+
         binding.ivBackProgramInggris.setOnClickListener { finish() }
 
     }
 
-    suspend fun getInggris() {
+    private suspend fun getInggris() {
         val networkConfig = NetworkConfig().getPrograms().getProgramInggris()
 
         try {
@@ -55,6 +55,8 @@ class ProgramInggrisActivity : AppCompatActivity() {
                 binding.tvDescProgram.text = desc
                 binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
 
+            } else {
+                Log.d("TAG", "getInggris: Data gagal diambil")
             }
         } catch (e: SocketException) {
             e.printStackTrace()

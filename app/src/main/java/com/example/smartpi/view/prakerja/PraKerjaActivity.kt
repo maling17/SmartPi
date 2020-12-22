@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.smartpi.adapter.ListGroupClassAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityPraKerjaBinding
-import com.example.smartpi.model.*
+import com.example.smartpi.model.DetailData
+import com.example.smartpi.model.KelasItem
+import com.example.smartpi.model.ListGroupItem
+import com.example.smartpi.model.ScheduleDetailItem
 import com.example.smartpi.utils.Preferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,18 +23,17 @@ import kotlinx.coroutines.launch
 import java.net.SocketException
 
 class PraKerjaActivity : AppCompatActivity() {
-    var praKerjaList = ArrayList<PraKerjaItem>()
     lateinit var binding: ActivityPraKerjaBinding
-    val TAG = "MyActivity"
-    var groupList = ArrayList<ListGroupItem>()
-    var groupDetailList = ArrayList<DetailData>()
-    var scheduleList = ArrayList<ScheduleDetailItem>()
-    var kelasList = ArrayList<KelasItem>()
-    var token = ""
+    private val TAG = "MyActivity"
+    private var groupList = ArrayList<ListGroupItem>()
+    private var groupDetailList = ArrayList<DetailData>()
+    private var scheduleList = ArrayList<ScheduleDetailItem>()
+    private var kelasList = ArrayList<KelasItem>()
     lateinit var preferences: Preferences
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var id = 0
+    private var id = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPraKerjaBinding.inflate(layoutInflater)
@@ -39,16 +41,32 @@ class PraKerjaActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.rvPraKerja.layoutManager = GridLayoutManager(this, 2)
+
         binding.ivBackPraKerja.setOnClickListener { finish() }
-        scope.launch { getPrakerja() }
+
+        scope.launch {
+            getPrakerja()
+            if (groupDetailList.isEmpty()) {
+                binding.llEmpty.visibility = View.VISIBLE
+            } else {
+                binding.llEmpty.visibility = View.GONE
+            }
+        }
+
     }
 
     private suspend fun getPrakerja() {
 
+        groupList.clear()
         val networkConfig = NetworkConfig().getPrakerja().getListPrakerja()
         try {
             if (networkConfig.isSuccessful) {
                 binding.pbLoadingPraKerja.visibility = View.GONE
+
+                if (groupList.isEmpty()) {
+                    binding.llEmpty.visibility = View.VISIBLE
+                }
+
                 for (grup in networkConfig.body()!!.data!!) {
                     groupList.add(grup!!)
                     id = grup.id!!
@@ -73,6 +91,10 @@ class PraKerjaActivity : AppCompatActivity() {
     }
 
     private suspend fun getDetailGroupClass(id: Int) {
+        kelasList.clear()
+        scheduleList.clear()
+        groupDetailList.clear()
+
         val networkConfig = NetworkConfig().getGroupClass().getDetailGroupClass(id)
 
         try {

@@ -1,5 +1,6 @@
 package com.example.smartpi.view.program
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,10 +19,10 @@ import java.net.SocketException
 
 class CalistungTkFragment : Fragment() {
 
-    var _binding: FragmentCalistungTkBinding? = null
-    val binding get() = _binding!!
-    var token = ""
-    var id_program = ""
+    private var _binding: FragmentCalistungTkBinding? = null
+    private val binding get() = _binding!!
+    private var token = ""
+    private var id_program = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
@@ -50,7 +51,8 @@ class CalistungTkFragment : Fragment() {
 
     }
 
-    suspend fun getCalistung() {
+    @SuppressLint("SetTextI18n")
+    private suspend fun getCalistung() {
         val networkConfig = NetworkConfig().getPrograms().getProgramMatematika()
         try {
             if (networkConfig.isSuccessful) {

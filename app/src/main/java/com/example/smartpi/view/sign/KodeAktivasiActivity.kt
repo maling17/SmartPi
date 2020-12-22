@@ -26,7 +26,7 @@ class KodeAktivasiActivity : AppCompatActivity() {
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var phoneNumber: String = ""
+    private var phoneNumber: String = ""
 
     private lateinit var binding: ActivityKodeAktivasiBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +47,7 @@ class KodeAktivasiActivity : AppCompatActivity() {
 
         }
 
+        //menghilangkan keyboard jika menekan enter pada keyboard
         editTextHide(binding.etKodeAktivasi)
 
     }
@@ -172,8 +173,8 @@ class KodeAktivasiActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun editTextHide(editText: EditText) {
-        editText.setOnKeyListener { view, i, keyEvent ->
+    private fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true

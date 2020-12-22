@@ -39,7 +39,7 @@ class PilihPaketActivity : AppCompatActivity() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
-    var kode_teacher = ""
+    private var kodeTeacher = ""
     private lateinit var binding: ActivityPilihPaketBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +52,7 @@ class PilihPaketActivity : AppCompatActivity() {
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
         val getStatusFilter = intent.getStringExtra("statusFilter")
+
         if (getStatusFilter.isNullOrEmpty()) {
             statusFilter = "0"
             scope.launch(Dispatchers.Main) { getPackageActive() }
@@ -79,7 +80,7 @@ class PilihPaketActivity : AppCompatActivity() {
         binding.btnFilter.setOnClickListener {
             binding.pbLoadingPilihPaket.visibility = View.VISIBLE
             val intent = Intent(this, FilterWaktuActivity::class.java)
-            preferences.setValues("kode_teacher", kode_teacher)
+            preferences.setValues("kode_teacher", kodeTeacher)
             preferences.setValues("user_available_id", user_avalaible_id)
             startActivity(intent)
             binding.pbLoadingPilihPaket.visibility = View.GONE
@@ -87,30 +88,32 @@ class PilihPaketActivity : AppCompatActivity() {
 
     }
 
-    suspend fun getPackageActive() {
+    private suspend fun getPackageActive() {
         packageList.clear()
         binding.pbPilihPaket.visibility = View.VISIBLE
+
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
         try {
             if (network.isSuccessful) {
                 for (paket in network.body()!!.data!!) {
-
                     binding.pbPilihPaket.visibility = View.GONE
                     packageList.add(paket!!)
-
                 }
+
                 binding.rvPilihPaket.adapter = ListPackageActiveAdapter(packageList) {
+
+                    //untuk firebase analytic
                     val bundle = Bundle()
                     bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id.toString())
                     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.package_name)
                     mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 
                     val indexArrayList =
-                        packageList.indexOf(it) //mengindex dulu isi yang ada di array
-                    kode_teacher =
-                        packageList[indexArrayList].kode_teacher.toString() //mengfilter dan mengambil value kode_teacher
+                        packageList.indexOf(it) //ambil index item di array
+                    kodeTeacher =
+                        packageList[indexArrayList].kode_teacher.toString() //mengambil value kode_teacher
                     user_avalaible_id = packageList[indexArrayList].id.toString()
-                    scope.launch(Dispatchers.Main) { getTeacherProduct(kode_teacher) }
+                    scope.launch(Dispatchers.Main) { getTeacherProduct(kodeTeacher) }
                 }
             } else {
                 Handler(Looper.getMainLooper()).post {
@@ -161,31 +164,32 @@ class PilihPaketActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun filterUmumGuru() {
+    private suspend fun filterUmumGuru() {
+        filterTeacherList.clear()
 
         val filter = intent.getParcelableExtra<FilterUmum>("filter")!!
         val range_akhir = filter.range_end
         val hayu_atuh = filter.range_start
         val hari = filter.hari
-        kode_teacher = filter.kode_teacher.toString()
+        kodeTeacher = filter.kode_teacher.toString()
         val timezone = filter.time_zone
 
         binding.clGuru.visibility = View.VISIBLE
         binding.rvPilihPaket.visibility = View.GONE
         binding.pbPilihPaket.visibility = View.VISIBLE
 
-        Log.d(TAG, "filterUmumGuru: $range_akhir, $hari , $hayu_atuh,$kode_teacher,$timezone")
+        Log.d(TAG, "filterUmumGuru: $range_akhir, $hari , $hayu_atuh,$kodeTeacher,$timezone")
 
         val networkConfig = NetworkConfig().getTeacher()
-            .filterTeacherUmum(token, range_akhir, hari, kode_teacher, timezone, hayu_atuh)
+            .filterTeacherUmum(token, range_akhir, hari, kodeTeacher, timezone, hayu_atuh)
 
         try {
             if (networkConfig.isSuccessful) {
                 for (teacher in networkConfig.body()!!.data!!) {
                     binding.pbPilihPaket.visibility = View.GONE
                     filterTeacherList.add(teacher!!)
-
                 }
+
                 binding.rvPilihGuru.adapter = ListFilterAdapter(filterTeacherList) {
 
                     val teacherItem = TeacherItem()
@@ -199,6 +203,8 @@ class PilihPaketActivity : AppCompatActivity() {
                             .putExtra("user_avalaible_id", user_avalaible_id)
                     startActivity(intent)
                 }
+            } else {
+                Log.d(TAG, "filterUmumGuru: Data gagal diambil")
             }
 
         } catch (e: SocketException) {
@@ -206,7 +212,8 @@ class PilihPaketActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun filterKhususGuru() {
+    private suspend fun filterKhususGuru() {
+        filterTeacherKhususList.clear()
 
         val waktu = intent.getStringExtra("waktu")
         val timezone = intent.getStringExtra("timezone")
@@ -221,11 +228,12 @@ class PilihPaketActivity : AppCompatActivity() {
 
         try {
             if (networkConfig.isSuccessful) {
+
                 for (teacher in networkConfig.body()!!.data!!) {
                     binding.pbPilihPaket.visibility = View.GONE
                     filterTeacherKhususList.add(teacher!!)
-
                 }
+
                 binding.rvPilihGuru.adapter = ListFilterKhususAdapter(filterTeacherKhususList) {
                     binding.pbLoadingPilihPaket.visibility = View.VISIBLE
                     val teacherItem = TeacherItem()
@@ -240,6 +248,8 @@ class PilihPaketActivity : AppCompatActivity() {
                     startActivity(intent)
                     binding.pbLoadingPilihPaket.visibility = View.GONE
                 }
+            } else {
+                Log.d(TAG, "filterKhususGuru: Data gagal diambil")
             }
         } catch (e: SocketException) {
             e.printStackTrace()

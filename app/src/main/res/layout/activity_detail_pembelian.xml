@@ -89,7 +89,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="@string/nama_produk"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView44" />
 
@@ -109,7 +108,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="@string/masa_aktif"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
@@ -129,7 +127,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="@string/tanggal_pemesanan"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
@@ -152,7 +149,7 @@
                         style="@style/Text14BoldBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Detail Pembayaran"
+                        android:text="@string/detail_pembayaran"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -170,7 +167,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:layout_weight="1"
-                            android:text="@string/nama_produk"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView47" />
 
@@ -181,7 +177,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:layout_weight="1"
-                            android:text="@string/harga"
                             android:textAlignment="textEnd"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView47" />
@@ -213,7 +208,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="@string/total_pembayaran"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/view9" />
 

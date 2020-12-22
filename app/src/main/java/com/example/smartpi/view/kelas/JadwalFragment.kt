@@ -23,7 +23,7 @@ import java.net.SocketException
 class JadwalFragment : Fragment() {
 
     val TAG = "MyActivity"
-    var jadwalList = ArrayList<JadwalItem>()
+    private var jadwalList = ArrayList<JadwalItem>()
     var token = ""
     lateinit var preferences: Preferences
     private var _binding: FragmentJadwalBinding? = null
@@ -52,6 +52,7 @@ class JadwalFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        jadwalList.clear()
 
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             throwable.printStackTrace()
@@ -85,14 +86,13 @@ class JadwalFragment : Fragment() {
         }
     }
 
-    suspend fun getJadwalUser() {
+    private suspend fun getJadwalUser() {
         val networkConfig = NetworkConfig().getJadwalUser().getJadwalUser(token)
 
         try {
             if (networkConfig.isSuccessful) {
                 binding.llBelumBerlangganan.visibility = View.GONE
                 for (jadwal in networkConfig.body()!!.data!!) {
-
                     jadwalList.add(jadwal!!)
                 }
 
@@ -152,26 +152,32 @@ class JadwalFragment : Fragment() {
     suspend fun checkPackageActive() {
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
 
-        jadwalList.clear()
         binding.svJadwal.visibility = View.INVISIBLE
         binding.fabJadwal.visibility = View.INVISIBLE
         binding.pbListJadwal.visibility = View.VISIBLE
 
         try {
+            //cek apaka ada paket aktif
             if (network.isSuccessful) {
                 scope.launch {
                     val job1 = async { getJadwalUser() }
                     val job2 = async { getGroupClass() }
                     job1.await()
                     job2.await()
+                    Log.d(TAG, "checkPackageActive: $jadwalList")
+                    if (jadwalList.isEmpty()) {
+                        binding.svJadwal.visibility = View.GONE
+                        binding.fabJadwal.visibility = View.VISIBLE
+                        binding.pbListJadwal.visibility = View.GONE
+                        binding.llBelumBuatJadwal.visibility = View.VISIBLE
+                    } else {
+                        binding.svJadwal.visibility = View.VISIBLE
+                        binding.fabJadwal.visibility = View.VISIBLE
+                        binding.pbListJadwal.visibility = View.GONE
+                        binding.llBelumBuatJadwal.visibility = View.GONE
+                    }
+                }
 
-                }
-                if (jadwalList.isEmpty()) {
-                    binding.svJadwal.visibility = View.GONE
-                    binding.fabJadwal.visibility = View.VISIBLE
-                    binding.pbListJadwal.visibility = View.GONE
-                    binding.llBelumBuatJadwal.visibility = View.VISIBLE
-                }
 
             } else {
                 binding.llBelumBerlangganan.visibility = View.VISIBLE

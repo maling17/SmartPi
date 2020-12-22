@@ -62,7 +62,7 @@ class MandiriModel {
         internetBankLain.add("2. Pilih Transfer")
         internetBankLain.add("3. Pilih dari rek. Bank Lain")
         internetBankLain.add("4. Pilih bank tujuan")
-        internetBankLain.add("5. Masukan nomor Virtual Account anda(Mandiri 88608-nomor virtual account)")
+        internetBankLain.add("5. Masukan nomor Virtual Account anda(Mandiri 88908-nomor virtual account)")
         internetBankLain.add("6. Input Nominal yang ditagihkan sebagai Nominal Transfer")
         internetBankLain.add("7. Selesai, transaksi berhasil")
 

@@ -29,30 +29,30 @@ import java.net.SocketException
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class LupaPasswordAktivasiActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
-    var TAG = "MyActivity"
+    private var TAG = "MyActivity"
     lateinit var preferences: Preferences
+
     private lateinit var binding: ActivityLupaPasswordAktivasiBinding
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLupaPasswordAktivasiBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        changeBackgroundButton()
-        changeIconEditText()
+        changeBackgroundButton()    //ganti background btn jika field sudah diisi
+        changeIconEditText()        //memunculkan icon clear text di edit text
+
+        //menghilang keyboard jika menekan enter pada keyboard hp
+        editTextHide(binding.etKodeAktivasiLupaAktivasi)
+        editTextHide(binding.etPhoneLupaAktivasi)
 
         phoneNumber = intent.getStringExtra("nmr_telp").toString()
         binding.etPhoneLupaAktivasi.text = Editable.Factory.getInstance().newEditable(phoneNumber)
 
-        binding.tvKembaliLupaAktivasi.setOnClickListener {
-            finish()
-        }
-
-        editTextHide(binding.etKodeAktivasiLupaAktivasi)
-        editTextHide(binding.etPhoneLupaAktivasi)
-
+        binding.tvKembaliLupaAktivasi.setOnClickListener { finish() }
     }
 
     private suspend fun verfikasiPassword() {
@@ -181,8 +181,8 @@ class LupaPasswordAktivasiActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun editTextHide(editText: EditText) {
-        editText.setOnKeyListener { view, i, keyEvent ->
+    private fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true

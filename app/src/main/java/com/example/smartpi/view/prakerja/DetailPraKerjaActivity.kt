@@ -21,22 +21,26 @@ import java.net.SocketException
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailPraKerjaActivity : AppCompatActivity() {
 
-    val TAG = "MyActivity"
-    var token = ""
+    private val TAG = "MyActivity"
+    private var token = ""
     lateinit var preferences: Preferences
     lateinit var binding: ActivityDetailPraKerjaBinding
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var id = 0
-    var price = 0F
-    var nama = ""
-    var durasi = ""
+    private var id = 0
+    private var price = 0F
+    private var nama = ""
+    private var durasi = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailPraKerjaBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        //ambil data prakerja
         getData()
+
         binding.btnBeli.setOnClickListener {
             scope.launch { createGroupClass() }
         }
@@ -45,7 +49,7 @@ class DetailPraKerjaActivity : AppCompatActivity() {
         }
     }
 
-    fun getData() {
+    private fun getData() {
         val data = intent.getParcelableExtra<PraKerjaItem>("data")
         binding.tvDeskripsi.text = data.desc.toString()
         binding.tvHarga.text = data.price

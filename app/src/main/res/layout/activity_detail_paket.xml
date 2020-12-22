@@ -66,7 +66,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
-                    android:text="@string/paket"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,7 +76,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingHorizontal="16dp"
-                    android:text="@string/harga"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_nama_paket_detail_paket" />
 
@@ -88,7 +86,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingHorizontal="16dp"
-                    android:text="@string/deskripsi"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_harga_detail_paket" />
 
@@ -122,7 +119,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/_0x"
                         app:layout_constraintEnd_toEndOf="@+id/textView41"
                         app:layout_constraintStart_toStartOf="@+id/textView41"
                         app:layout_constraintTop_toBottomOf="@+id/textView41" />
@@ -144,7 +140,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/_0_bulan"
                         app:layout_constraintEnd_toEndOf="@+id/textView42"
                         app:layout_constraintStart_toStartOf="@+id/textView42"
                         app:layout_constraintTop_toBottomOf="@+id/textView42" />
@@ -166,7 +161,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/_0_menit"
                         app:layout_constraintEnd_toEndOf="@+id/textView43"
                         app:layout_constraintStart_toStartOf="@+id/textView43"
                         app:layout_constraintTop_toBottomOf="@+id/textView43" />

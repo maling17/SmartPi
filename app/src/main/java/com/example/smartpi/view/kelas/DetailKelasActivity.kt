@@ -96,19 +96,23 @@ class DetailKelasActivity : AppCompatActivity() {
         val jamMulai = dataKelas.scheduleTime.toString()
         val jamAkhir = dataKelas.scheduleEnd.toString()
 
+        //merubah format dari yyyy-mm-hh HH:mm menjadi HH:mm local
         val jamStart = jamMulai.toDate().formatTo("HH:mm")
         val jamEnd = jamAkhir.toDate().formatTo("HH:mm")
 
+        //merubah format dari yyyy-mm-hh HH:mm menjadi dd, MMMM yyyy local
         val tanggalKelas = jamMulai.toDate().formatTo("dd, MMMM yyyy")
 
         val urlPhoto = dataKelas.teacherAvatar.toString()
 
         val level = dataKelas.level.toString()
+
         if (level == "null") {
             binding.tvLevelKelas.text = "-"
         } else {
             binding.tvLevelKelas.text = level
         }
+
         if (dataKelas.sessionComplete.toString() == "null" && dataKelas.sessionAvailable.toString() == "null") {
             binding.tvSesiNow.text = "1/1"
         } else {
@@ -147,7 +151,7 @@ class DetailKelasActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun buttonPopupBatal() {
+    private fun buttonPopupBatal() {
         val dataKelas = intent.getParcelableExtra<JadwalItem>("data")!!
         val tanggal = dataKelas.scheduleTime.toString()
         val kelas = dataKelas.packageName.toString()
@@ -174,7 +178,7 @@ class DetailKelasActivity : AppCompatActivity() {
 
     }
 
-    fun popUpSyarat() {
+    private fun popUpSyarat() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.pop_up_persiapan)
         dialog.setCancelable(true)
@@ -245,7 +249,7 @@ class DetailKelasActivity : AppCompatActivity() {
         val tanggalNowConverted = convertToMillis(tanggalNow)
 
         val hasilTanggal = tanggalUserConverted - tanggalNowConverted
-        val hasilDate = hasilTanggal / 3600000
+        val hasilDate = hasilTanggal / 3600000 //diubah ke jam
 
         //jika jam kelas < 6 jam maka button batal hilang
         if (hasilDate <= 6) {

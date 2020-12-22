@@ -38,7 +38,7 @@ class VirtualAccountAdapter(
     override fun getChildView(
         listPosition: Int, expandedListPosition: Int,
         isLastChild: Boolean, convertView: View?, parent: ViewGroup?
-    ): View? {
+    ): View {
         var convertView = convertView
         val expandedListText = getChild(listPosition, expandedListPosition) as String?
         if (convertView == null) {
@@ -72,7 +72,7 @@ class VirtualAccountAdapter(
     override fun getGroupView(
         listPosition: Int, isExpanded: Boolean,
         convertView: View?, parent: ViewGroup?
-    ): View? {
+    ): View {
         var convertView = convertView
         val listTitle = getGroup(listPosition) as String?
         if (convertView == null) {

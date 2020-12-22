@@ -20,9 +20,9 @@ import java.net.SocketException
 
 class AkademikFragment : Fragment() {
 
-    val TAG = "MyActivity"
-    var programsList = ArrayList<ProgramsItems>()
-    var token = ""
+    private val TAG = "MyActivity"
+    private var programsList = ArrayList<ProgramsItems>()
+    private var token = ""
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -32,7 +32,7 @@ class AkademikFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAkademikBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,17 +49,17 @@ class AkademikFragment : Fragment() {
         }
     }
 
-    suspend fun getMatematika() {
+    private suspend fun getMatematika() {
 
         programsList.clear()
         val networkConfig = NetworkConfig().getPrograms().getMatematika()
 
         try {
             if (networkConfig.isSuccessful) {
-
                 for (programs in networkConfig.body()!!.data!!) {
                     programsList.add(programs!!)
                 }
+
                 binding.pbAkademik.visibility = View.GONE
                 binding.rvAkademik.visibility = View.VISIBLE
                 binding.rvAkademik.adapter = ListProgramsAdapter(programsList) {

@@ -43,7 +43,7 @@ class PilihJadwalActivity : AppCompatActivity() {
     private var jamList = ArrayList<AvailabilitySlotItem>()
 
     private var scheduleList = ArrayList<Schedule?>()
-    var scheduleModel = ScheduleModel()
+    private var scheduleModel = ScheduleModel()
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -54,8 +54,8 @@ class PilihJadwalActivity : AppCompatActivity() {
     private var schedule_time = ""
     private var status = ""
     private var timeZone = ""
-    var itemClicked = false
-    var timeInMilliseconds: Long = 0
+    private var itemClicked = false
+    private var timeInMilliseconds: Long = 0
 
     private lateinit var binding: ActivityPilihJadwalBinding
 
@@ -95,6 +95,7 @@ class PilihJadwalActivity : AppCompatActivity() {
             changeBackgroundButtonSesi1()
             scope.launch(Dispatchers.Main) { calendarSesi1() }
         }
+
         binding.btnSesi2.setOnClickListener {
             changeBackgroundButtonSesi(binding.btnSesi2, binding.btnSesi1)
             binding.rvSlot.visibility = View.GONE
@@ -102,8 +103,8 @@ class PilihJadwalActivity : AppCompatActivity() {
             changeBackgroundButtonSesi2()
             scope.launch(Dispatchers.Main) { calendarSesi2() }
         }
-        binding.ivBackPilihJadwal.setOnClickListener { finish() }
 
+        binding.ivBackPilihJadwal.setOnClickListener { finish() }
 
     }
 
@@ -136,12 +137,15 @@ class PilihJadwalActivity : AppCompatActivity() {
 
                 for (schedule in network.body()!!.availability!!) {
                     val justTanggal = schedule!!.start!!.toDate().formatTo("yyyy-MM-dd")
+
                     //convert tanggal start ke millis
                     val tanggalSlot = schedule.start!!.toDate().formatTo("yyyy-MM-dd HH:mm")
+                    val tanggalInMillis = convertToMillis(tanggalSlot)
+
+                    //convert tanggal ke hari, bulan, tahun
                     val hari: Int = schedule.start.toDate().formatTo("dd").toInt()
                     val bulan: Int = schedule.start.toDate().formatTo("MM").toInt()
                     val tahun: Int = schedule.start.toDate().formatTo("yyyy").toInt()
-                    val tanggalInMillis = convertToMillis(tanggalSlot)
 
                     //ambil tanggal sekarang
                     val myFormat = "yyyy-MM-dd HH:mm"
@@ -153,13 +157,14 @@ class PilihJadwalActivity : AppCompatActivity() {
 
                     val hasilDate = tanggalInMillis - curDateinMillis
                     val tanggalJam = hasilDate / 3600000 //diubah dari millis ke jam
+
                     if (tanggalJam >= 6) {
-                        if (schedule.start.toDate()
-                                .formatTo("yyyy-MM-dd") == justTanggal && schedule.status == 0
+                        if (schedule.start.toDate().formatTo("yyyy-MM-dd")
+                            == justTanggal && schedule.status == 0
                         ) {
                             availabilityList.add(schedule)
 
-                            //untuk tandai tanggal guru available
+                            //untuk tandai tanggal guru yang available/ kosong
                             val calendar1 = Calendar.getInstance()
 
                             calendar1[Calendar.MONTH] = bulan - 1
@@ -208,10 +213,13 @@ class PilihJadwalActivity : AppCompatActivity() {
         binding.calendarViewSesi1.setOnDayClickListener { eventDay ->
             binding.rvSlot.visibility = View.VISIBLE
             val clickedDayCalendar = eventDay.calendar.time
+
             val calendar = Calendar.getInstance(
                 TimeZone.getTimeZone("GMT"),
                 Locale.getDefault()
             )
+
+            //ambil timezone cth:+07:00
             val currentLocalTime = calendar.time
             val date: DateFormat = SimpleDateFormat("z", Locale.getDefault())
             val localTime: String = date.format(currentLocalTime)
@@ -251,6 +259,8 @@ class PilihJadwalActivity : AppCompatActivity() {
                 TimeZone.getTimeZone("GMT"),
                 Locale.getDefault()
             )
+
+            //ambil timezone cth:+07:00
             val currentLocalTime = calendar.time
             val date: DateFormat = SimpleDateFormat("z", Locale.getDefault())
             val localTime: String = date.format(currentLocalTime)
@@ -350,9 +360,8 @@ class PilihJadwalActivity : AppCompatActivity() {
 
         try {
             if (networkConfig.isSuccessful) {
-
+                binding.llSlot.visibility = View.GONE
                 if (networkConfig.body()!!.availability!!.isEmpty()) {
-
                     binding.llSlot.visibility = View.GONE
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(
@@ -383,6 +392,7 @@ class PilihJadwalActivity : AppCompatActivity() {
                             jamList.add(slot)
                             val sortJamList = jamList.sortedBy { jamList -> jamList.start }
                             binding.llSlot.visibility = View.VISIBLE
+                            binding.rvSlot.layoutManager = GridLayoutManager(this, 4)
 
                             val adapter = SlotJamMultiAdapter(sortJamList) {
                                 val scheduleData = Schedule()
@@ -448,6 +458,7 @@ class PilihJadwalActivity : AppCompatActivity() {
         val networkConfig = NetworkConfig().checkSession().checkSession(token, user_avalaible_id)
 
         try {
+            //cek ada berapa jika sesi = 1 maka btn sesi banyak hilang
             if (networkConfig.isSuccessful) {
                 if (networkConfig.body()!!.data!!.available == "1") {
                     binding.llSesi2.visibility = View.GONE

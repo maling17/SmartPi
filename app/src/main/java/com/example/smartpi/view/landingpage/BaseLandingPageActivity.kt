@@ -13,18 +13,21 @@ import com.example.smartpi.view.sign.SignInActivity
 
 class BaseLandingPageActivity : AppCompatActivity() {
     lateinit var binding: ActivityBaseLandingPageBinding
-    var currentPos = 0
+    private var currentPos = 0
+    private val next = "Next"
+    private val done = "Done"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBaseLandingPageBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         binding.viewPagerLanding.adapter = LandingPagePagerAdapter(supportFragmentManager)
         binding.viewPagerLanding.currentItem = currentPos
-        binding.tvNext.setOnClickListener { next() }
-        binding.tvSkip.setOnClickListener {
-            binding.viewPagerLanding.currentItem = 2
-        }
+
+        binding.tvNext.setOnClickListener { nextSlide() }
+        binding.tvSkip.setOnClickListener { binding.viewPagerLanding.currentItem = 2 }
+
         val changeListener: OnPageChangeListener = object : OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
@@ -42,8 +45,8 @@ class BaseLandingPageActivity : AppCompatActivity() {
                         binding.circle2.setImageResource(R.drawable.cirlce_grey)
                         binding.circle3.setImageResource(R.drawable.cirlce_grey)
                         binding.tvSkip.visibility = View.VISIBLE
-                        binding.tvNext.text = "Next"
-                        binding.tvNext.setOnClickListener { next() }
+                        binding.tvNext.text = next
+                        binding.tvNext.setOnClickListener { nextSlide() }
                         binding.tvSkip.setOnClickListener {
                             binding.viewPagerLanding.currentItem = 2
                         }
@@ -53,8 +56,8 @@ class BaseLandingPageActivity : AppCompatActivity() {
                         binding.circle2.setImageResource(R.drawable.cirlce_blue)
                         binding.circle3.setImageResource(R.drawable.cirlce_grey)
                         binding.tvSkip.visibility = View.VISIBLE
-                        binding.tvNext.text = "Next"
-                        binding.tvNext.setOnClickListener { next() }
+                        binding.tvNext.text = next
+                        binding.tvNext.setOnClickListener { nextSlide() }
                         binding.tvSkip.setOnClickListener {
                             binding.viewPagerLanding.currentItem = 2
                         }
@@ -64,7 +67,7 @@ class BaseLandingPageActivity : AppCompatActivity() {
                         binding.circle2.setImageResource(R.drawable.cirlce_grey)
                         binding.circle3.setImageResource(R.drawable.cirlce_blue)
                         binding.tvSkip.visibility = View.GONE
-                        binding.tvNext.text = "Done"
+                        binding.tvNext.text = done
                         binding.tvNext.setOnClickListener {
                             startActivity(
                                 Intent(
@@ -86,7 +89,7 @@ class BaseLandingPageActivity : AppCompatActivity() {
         binding.viewPagerLanding.addOnPageChangeListener(changeListener)
     }
 
-    fun next() {
+    fun nextSlide() {
         binding.viewPagerLanding.currentItem = currentPos + 1
     }
 }

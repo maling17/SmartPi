@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smartpi.BuildConfig
 import com.example.smartpi.R
 import com.example.smartpi.adapter.JadwalHomeAdapter
 import com.example.smartpi.adapter.ListKelasSelesaiAdapter
@@ -53,12 +54,20 @@ class HomeFragment : Fragment() {
     private var promoList = ArrayList<PromoItem>()
     private var packageList = ArrayList<PackageActiveItem>()
     private var kelasList = ArrayList<HistoryItem>()
+
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
+
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     var stateTrial = "0"
+
+    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        throwable.printStackTrace()
+        binding.pbJadwal.visibility = View.GONE
+        binding.pbPromo.visibility = View.GONE
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +87,6 @@ class HomeFragment : Fragment() {
         binding.tvLihatSemua.setOnClickListener {
             setFragment(kelasFragment)
         }
-
 
         binding.btnBikinJadwal.setOnClickListener {
             startActivity(
@@ -114,8 +122,10 @@ class HomeFragment : Fragment() {
         binding.ivNotif.setOnClickListener {
             startActivity(Intent(context, NotifikasiActivity::class.java))
         }
+
     }
 
+    @SuppressLint("NewApi")
     override fun onStart() {
         super.onStart()
 
@@ -127,31 +137,7 @@ class HomeFragment : Fragment() {
         stateTrial = preferences.getValues("state_trial").toString()
         Log.d(TAG, "Token: $token")
 
-        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            throwable.printStackTrace()
-            binding.pbJadwal.visibility = View.GONE
-            binding.pbPromo.visibility = View.GONE
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Checkout Connection",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-        //setting Recylerview jadwalene
-        binding.rvJadwal.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvJadwal.isNestedScrollingEnabled = false
-
-        //Setting Recylerview promo
-        binding.rvPromo.layoutManager = LinearLayoutManager(context)
-        binding.rvPromo.isNestedScrollingEnabled = false
-
-        binding.rvKonfirmasiKelas.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        scope.launch(exceptionHandler) {
+        scope.launch {
 
             val job1 = async { getUser() }
             val job2 = async { checkTrial() }
@@ -170,6 +156,20 @@ class HomeFragment : Fragment() {
             job7.await()
 
         }
+
+        //untuk memunculkan list kelas
+        binding.rvJadwal.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvJadwal.isNestedScrollingEnabled = false
+
+        //untuk memunculkan list promo
+        binding.rvPromo.layoutManager = LinearLayoutManager(context)
+        binding.rvPromo.isNestedScrollingEnabled = false
+
+        //Untuk memunculkan kelas yang belum dikonfirmasi
+        binding.rvKonfirmasiKelas.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
 
     }
 
@@ -212,6 +212,7 @@ class HomeFragment : Fragment() {
         jadwalList.clear()
         binding.pbJadwal.visibility = View.VISIBLE
         binding.rvJadwal.visibility = View.INVISIBLE
+        binding.tvJadwalEmpty.visibility = View.INVISIBLE
 
         val networkConfig = NetworkConfig().getJadwalUser().getJadwalUser(token)
         try {
@@ -233,6 +234,7 @@ class HomeFragment : Fragment() {
                             Intent(context, DetailKelasActivity::class.java).putExtra("data", it)
                         startActivity(intent)
 
+                        //untuk google analyitic
                         val bundle = Bundle()
                         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, it.id)
                         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, it.packageName)
@@ -243,9 +245,11 @@ class HomeFragment : Fragment() {
 
                     }
                     binding.pbJadwal.visibility = View.GONE
+                    binding.tvJadwalEmpty.visibility = View.VISIBLE
                 }
             } else {
                 binding.pbJadwal.visibility = View.GONE
+                binding.tvJadwalEmpty.visibility = View.VISIBLE
                 Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
 
             }
@@ -278,6 +282,7 @@ class HomeFragment : Fragment() {
                     }
                     jadwalList.add(jadwalItem)
                 }
+
                 if (jadwalList.isEmpty()) {
                     binding.tvJadwalEmpty.visibility = View.VISIBLE
                     binding.rvJadwal.visibility = View.GONE
@@ -290,6 +295,7 @@ class HomeFragment : Fragment() {
                         startActivity(intent)
                     }
                     binding.pbJadwal.visibility = View.GONE
+
                 }
             } else {
                 binding.pbJadwal.visibility = View.GONE
@@ -308,6 +314,7 @@ class HomeFragment : Fragment() {
         packageList.clear()
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
 
+        // cek apakah ada paket atau tidak dan menghitung paket yang diambil
         try {
             if (network.isSuccessful) {
                 for (paket in network.body()!!.data!!) {
@@ -348,11 +355,11 @@ class HomeFragment : Fragment() {
 
                         // jika sudah pilih trial tapi belum pilih jadwal
                         if (checkTrial.body()!!.isFirstTimeTrialUsed == "false") {
-                            if (stateTrial == "0") {
+                            if (stateTrial == "0") { //stateTrial jika "0" maka tampil pop up
                                 showPopUpPilihJadwalTrial()
                             }
-
                         }
+
                         binding.clJadwal.visibility = View.VISIBLE
                         val job1 = async { getJadwalUser() }
                         val job2 = async { getGroupClass() }
@@ -427,7 +434,7 @@ class HomeFragment : Fragment() {
         val btnPilihJadwalTrial = dialog.findViewById<Button>(R.id.btn_pilih_jadwa_trial_pop_up)
         val ivCancel = dialog.findViewById<ImageView>(R.id.iv_cancel_popUp_pilih_jadwal_trial)
         ivCancel.setOnClickListener {
-            preferences.setValues("state_trial", "1").toString()
+            preferences.setValues("state_trial", "1").toString() // set value stateTrial = 1
             dialog.dismiss()
         }
 
@@ -463,7 +470,6 @@ class HomeFragment : Fragment() {
 
     }
 
-
     private suspend fun getAllPromo() {
 
         binding.pbPromo.visibility = View.VISIBLE
@@ -478,9 +484,7 @@ class HomeFragment : Fragment() {
                 }
                 binding.pbPromo.visibility = View.GONE
 
-                binding.rvPromo.adapter = PromoAdapter(promoList) {
-
-                }
+                binding.rvPromo.adapter = PromoAdapter(promoList) {}
 
             } else {
                 Handler(Looper.getMainLooper()).post {
@@ -508,7 +512,9 @@ class HomeFragment : Fragment() {
         fragmentTransaction.commit()
     }
 
-    fun toGooglePlay() {
+    private fun toGooglePlay() {
+
+        //pindah ke goole play store dan update aplikasi ke versi terbaru
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(
                 "https://play.google.com/store/apps/details?id=co.smartpi.student"
@@ -519,15 +525,15 @@ class HomeFragment : Fragment() {
     }
 
     suspend fun checkVersion() {
-        val versionName = requireContext().packageManager
-            .getPackageInfo(requireContext().packageName, 0).versionName
+        val versionCode = BuildConfig.VERSION_CODE // code version
 
         val networkConfig = NetworkConfig().getVersion().getVersion()
         try {
             if (networkConfig.isSuccessful) {
                 for (versi in networkConfig.body()!!.data!!) {
-                    Log.d(TAG, "checkVersion: ${versi!!.versionName}, $versionName")
-                    if (versionName != versi.versionName.toString()) {
+                    Log.d(TAG, "checkVersion: ${versi!!.versionName}, $versionCode")
+                    // jika version code < dari yang di api maka show pop up update
+                    if (versionCode < versi.versionCode!!) {
                         showPopUpUpdateAplikasi()
                     }
                 }
@@ -546,6 +552,8 @@ class HomeFragment : Fragment() {
         try {
             if (networkConfig.isSuccessful) {
                 binding.llNotif.visibility = View.VISIBLE
+
+                //cek ada notifikasi baru atau tidak
                 if (networkConfig.body()!!.data!!.detail!!.jsonMemberNew.toString() == "0") {
                     binding.llNotif.visibility = View.GONE
                 } else {
@@ -564,8 +572,10 @@ class HomeFragment : Fragment() {
     }
 
     private suspend fun getKelasSelesai() {
+        kelasList.clear()
         val networkConfig = NetworkConfig().getAfterClass().getHistory(token)
 
+        //mengambil kelas yang belum dikonfirmasi oleh user / belum dirate.
         try {
             if (networkConfig.isSuccessful) {
                 for (kelas in networkConfig.body()!!.data!!) {

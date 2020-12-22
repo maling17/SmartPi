@@ -17,6 +17,7 @@ class LihatFeedbackActivity : AppCompatActivity() {
         setContentView(view)
 
         var str: String = intent.getStringExtra("feedback").toString()
+
         str = if (str.isEmpty() || str == "null") {
             "Guru tidak mengisi"
         } else {

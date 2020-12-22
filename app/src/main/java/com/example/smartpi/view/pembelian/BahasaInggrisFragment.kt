@@ -19,15 +19,16 @@ import java.net.SocketException
 
 
 class BahasaInggrisFragment : Fragment() {
-    var programsList = ArrayList<ProgramsItems>()
+    private var programsList = ArrayList<ProgramsItems>()
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private var _binding: FragmentBahasaInggrisBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBahasaInggrisBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,7 +46,7 @@ class BahasaInggrisFragment : Fragment() {
         }
     }
 
-    suspend fun getInggris() {
+    private suspend fun getInggris() {
 
         programsList.clear()
         val networkConfig = NetworkConfig().getPrograms().getInggris()

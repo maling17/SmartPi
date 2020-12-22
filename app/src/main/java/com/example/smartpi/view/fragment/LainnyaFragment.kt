@@ -37,26 +37,14 @@ class LainnyaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         preferences = Preferences(requireContext())
 
-
-
         binding.btnKeluar.setOnClickListener {
             popUpLogOut()
         }
         binding.ivUbahProfile.setOnClickListener {
-            startActivity(
-                Intent(
-                    activity,
-                    UbahProfilActivity::class.java
-                )
-            )
+            startActivity(Intent(activity, UbahProfilActivity::class.java))
         }
         binding.ivUbahPassword.setOnClickListener {
-            startActivity(
-                Intent(
-                    activity,
-                    UbahKataSandiActivity::class.java
-                )
-            )
+            startActivity(Intent(activity, UbahKataSandiActivity::class.java))
         }
 
         binding.ivBantuan.setOnClickListener {
@@ -64,7 +52,6 @@ class LainnyaFragment : Fragment() {
             val intent = Intent(activity, SyaratDanLainActivity::class.java)
             intent.putExtra("kategori", "bantuan")
             startActivity(intent)
-
         }
 
 
@@ -73,7 +60,6 @@ class LainnyaFragment : Fragment() {
             val intent = Intent(activity, SyaratDanLainActivity::class.java)
             intent.putExtra("kategori", "tentang_kami")
             startActivity(intent)
-
         }
 
         binding.ivKebijakan.setOnClickListener {
@@ -81,7 +67,6 @@ class LainnyaFragment : Fragment() {
             val intent = Intent(activity, SyaratDanLainActivity::class.java)
             intent.putExtra("kategori", "kebijakan")
             startActivity(intent)
-
         }
 
         binding.ivSyarat.setOnClickListener {
@@ -89,7 +74,6 @@ class LainnyaFragment : Fragment() {
             val intent = Intent(activity, SyaratDanLainActivity::class.java)
             intent.putExtra("kategori", "syarat")
             startActivity(intent)
-
         }
         binding.ivHubungi.setOnClickListener {
             sendToWhatsapp()
@@ -114,9 +98,8 @@ class LainnyaFragment : Fragment() {
         }
     }
 
-    fun popUpLogOut() {
+    private fun popUpLogOut() {
         val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-
 
         alertDialogBuilder.setTitle("Apakah Anda yakin ingin Sign Out?")
 

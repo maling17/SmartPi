@@ -35,8 +35,13 @@ class ListTeacherProductAdapter(
             position: Int
         ) {
 
+            if (data.rating.isNullOrEmpty()) {
+                tvRating.text = 5F.toString()
+            } else {
+                tvRating.text = data.rating
+            }
             tvNamaTeacher.text = data.name
-            tvRating.text = data.rating
+
             Picasso.get().load(data.avatar).into(ivPhoto)
 
             btnLihatProfile.setOnClickListener {

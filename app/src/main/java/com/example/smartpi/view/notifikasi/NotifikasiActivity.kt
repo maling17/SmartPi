@@ -13,7 +13,7 @@ import kotlinx.coroutines.*
 import java.net.SocketException
 
 class NotifikasiActivity : AppCompatActivity() {
-    var token = ""
+    private var token = ""
     lateinit var preferences: Preferences
     private val TAG = "MyActivity"
     private var notifList = ArrayList<NotifItem>()
@@ -29,7 +29,9 @@ class NotifikasiActivity : AppCompatActivity() {
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
         binding.rvNotifikasi.layoutManager = LinearLayoutManager(this)
+
         binding.ivBackNotifikasi.setOnClickListener { finish() }
+
         scope.launch {
             val job1 = async { getNotifikasi() }
             val job2 = async { updateNotifikasi() }
@@ -39,8 +41,9 @@ class NotifikasiActivity : AppCompatActivity() {
 
     }
 
-    suspend fun getNotifikasi() {
+    private suspend fun getNotifikasi() {
 
+        notifList.clear()
         val networkConfig = NetworkConfig().getUser().getNotif(token)
         try {
             if (networkConfig.isSuccessful) {
@@ -57,7 +60,7 @@ class NotifikasiActivity : AppCompatActivity() {
 
     }
 
-    suspend fun updateNotifikasi() {
+    private suspend fun updateNotifikasi() {
         val networkConfig = NetworkConfig().getUser().getUpdateNotif(token)
 
         try {

@@ -27,13 +27,14 @@ import java.net.SocketException
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class GantiLupaPasswordActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
-    var TAG = "MyActivity"
+    private var TAG = "MyActivity"
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private lateinit var binding: ActivityGantiLupaPasswordBinding
 
     lateinit var preferences: Preferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,12 +45,14 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
         phoneNumber = intent.getStringExtra("nmr_telp").toString()
         binding.etPhoneGantiPassword.text = Editable.Factory.getInstance().newEditable(phoneNumber)
 
+        //ganti background button jika field sudah diisi
         changeBackgroundButton()
 
         binding.tvKembaliUbahPassword.setOnClickListener {
             finish()
         }
 
+        // jika tekan enter pada keyboard maka keyboard hilang
         editTextHide(binding.etKonfirmasiLupaPassword)
         editTextHide(binding.etPasswordLupaPassword)
         editTextHide(binding.etPhoneGantiPassword)
@@ -143,12 +146,11 @@ class GantiLupaPasswordActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun editTextHide(editText: EditText) {
-        editText.setOnKeyListener { view, i, keyEvent ->
+    private fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true
-
             }
             false
         }

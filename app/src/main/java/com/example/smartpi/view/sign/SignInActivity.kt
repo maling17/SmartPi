@@ -41,8 +41,8 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var phoneNumber: String
     private lateinit var country_code: String
-    var TAG = "myactivity"
-    var kodeNegara = "62"
+    private var TAG = "myactivity"
+    private var kodeNegara = "62"
     private val countryCodeList = ArrayList<DataItem>()
     private val userList = ArrayList<UserInputData>()
 
@@ -72,13 +72,15 @@ class SignInActivity : AppCompatActivity() {
                 showPopupDialog()
             }
         }
+
         binding.tvSignEmail.setOnClickListener {
             val intent = Intent(this, SignInEmailActivity::class.java)
             intent.putExtra("status_email", "0")
             startActivity(intent)
             finish()
         }
-        binding.etPhone.setOnKeyListener { view, i, keyEvent ->
+
+        binding.etPhone.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_NUMPAD_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true
@@ -96,7 +98,7 @@ class SignInActivity : AppCompatActivity() {
             if (countryCode.isSuccessful) {
                 for (code in countryCode.body()!!.data!!) {
                     Log.d(TAG, "getCountryCode: ${code!!.name}")
-                    countryCodeList.addAll(listOf(code))
+                    countryCodeList.add(code)
                 }
             }
         } catch (e: SocketException) {
@@ -108,8 +110,7 @@ class SignInActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private suspend fun showPopupDialog() {
 
-        //Menampilkan kode negara
-        getCountryCode()
+        getCountryCode()    //Menampilkan kode negara
         binding.pbCodePhone.visibility = View.GONE
         binding.tvAwalNmrTlp.visibility = View.VISIBLE
 
@@ -141,6 +142,7 @@ class SignInActivity : AppCompatActivity() {
 
     private suspend fun inputNumber() {
 
+        userList.clear()
         binding.pbSignIn.visibility = View.VISIBLE
         binding.btnSignIn.visibility = View.GONE
         binding.tvAtau.visibility = View.GONE

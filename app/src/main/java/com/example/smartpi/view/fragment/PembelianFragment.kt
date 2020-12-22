@@ -33,7 +33,7 @@ class PembelianFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentPembelianBinding.inflate(inflater, container, false)
         return binding.root
@@ -42,34 +42,31 @@ class PembelianFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         preferences = Preferences(requireActivity().applicationContext)
         token = "Bearer ${preferences.getValues("token")}"
+
         scope.launch(Dispatchers.Main) { checkTrial() }
 
         binding.btnLihatLangganan.setOnClickListener {
             startActivity(Intent(context, LanggananPaketActivity::class.java))
         }
+
         binding.btnLihatTrial.setOnClickListener {
-            startActivity(
-                Intent(
-                    context,
-                    PilihTrialActivity::class.java
-                )
-            )
+            startActivity(Intent(context, PilihTrialActivity::class.java))
         }
+
         binding.btnLihatPraKerja.setOnClickListener {
-            startActivity(
-                Intent(
-                    context,
-                    PraKerjaActivity::class.java
-                )
-            )
+            startActivity(Intent(context, PraKerjaActivity::class.java))
         }
 
     }
 
     private suspend fun checkTrial() {
+
         val checkTrial = NetworkConfig().getCheckTrial().getCheckTrial(token)
+
+        //jika trial sudah diambil maka tombol beli trial hilang
         try {
             if (checkTrial.isSuccessful) {
                 scope.launch(Dispatchers.Main) {

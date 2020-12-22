@@ -23,13 +23,13 @@ class DetailGroupClassActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailGroupClassBinding
     lateinit var preferences: Preferences
     private val job = Job()
-
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var token = ""
-    var id = 0
-    var price = 0F
-    var nama = ""
-    var durasi = ""
+    private var token = ""
+    private var id = 0
+    private var price = 0F
+    private var nama = ""
+    private var durasi = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailGroupClassBinding.inflate(layoutInflater)
@@ -37,6 +37,7 @@ class DetailGroupClassActivity : AppCompatActivity() {
         setContentView(view)
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
+
         scope.launch { getData() }
         binding.btnBeli.setOnClickListener {
             scope.launch {
@@ -81,16 +82,15 @@ class DetailGroupClassActivity : AppCompatActivity() {
         } catch (e: SocketException) {
             e.printStackTrace()
         }
-
-
     }
 
     private suspend fun createGroupClass() {
 
         try {
-            if (price == 0F) {
+            if (price == 0F) { //jika harga groupclass gratis
                 val networkConfig =
                     NetworkConfig().getGroupClass().createGroupScheduleFree(token, id)
+
                 if (networkConfig.isSuccessful) {
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(this, "Pembuatan Group Class Berhasil", Toast.LENGTH_LONG)

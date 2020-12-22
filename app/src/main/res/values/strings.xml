@@ -330,4 +330,11 @@
     <string name="level">Level</string>
     <string name="panduan_pembayaran">Panduan Pembayaran</string>
     <string name="salin">Salin</string>
+    <string name="kami_tidak_terkoneksi_dengan_internet">Anda tidak terkoneksi dengan internet</string>
+    <string name="silahkan_cek_koneksi_anda_dan_coba_lagi">Silahkan cek koneksi Anda dan coba lagi</string>
+    <string name="coba_lagi">Coba Lagi</string>
+    <string name="tunggu_program_program_pra_kerja_yang_akan_datang">Tunggu program program pra kerja yang akan datang :)</string>
+    <string name="saat_ini_tidak_ada_program_pra_kerja">Saat ini tidak ada program pra kerja</string>
+    <string name="saat_ini_belum_ada_group_class">Saat ini belum ada group class</string>
+    <string name="tunggu_kumpulan_group_class_yang_akan_datang">Tunggu kumpulan group class yang akan datang:)</string>
 </resources>

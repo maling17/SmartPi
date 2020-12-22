@@ -30,7 +30,7 @@ class WaktuKhususFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentWaktuKhususBinding.inflate(inflater, container, false)
         return binding.root
@@ -45,6 +45,8 @@ class WaktuKhususFragment : Fragment() {
         kode_teacher = preferences.getValues("kode_teacher")!!
 
         binding.rvSlotFilterKhusus.layoutManager = GridLayoutManager(context, 4)
+
+        //mengambil array waktu dan mengambil tanggal
         settingCalendar()
         isiArrayJam()
 
@@ -58,11 +60,14 @@ class WaktuKhususFragment : Fragment() {
             intent.putExtra("user_available_id", getUserAvailable)
             startActivity(intent)
 
+            requireActivity().finish()
+
         }
 
     }
 
     fun isiArrayJam() {
+        jamList.clear()
 
         jamList.add("05:00")
         jamList.add("05:30")
@@ -78,7 +83,7 @@ class WaktuKhususFragment : Fragment() {
         jamList.add("10:30")
         jamList.add("11:00")
         jamList.add("11:30")
-        jamList.add("10:00")
+        jamList.add("12:00")
         jamList.add("12:30")
         jamList.add("13:00")
         jamList.add("13:30")
@@ -105,7 +110,9 @@ class WaktuKhususFragment : Fragment() {
 
         binding.rvSlotFilterKhusus.adapter = WaktuHariAdapter(jamList) {
             val indexArrayList = jamList.indexOf(it) //mengindex dulu isi yang ada di array
-            jam = "${jamList[indexArrayList]}:00"  //mengfilter dan mengambil value dari kategori
+
+            //mengfilter dan mengambil value dari jam output hh:mm:ss
+            jam = "${jamList[indexArrayList]}:00"
 
         }
 
@@ -133,8 +140,8 @@ class WaktuKhususFragment : Fragment() {
 
             val myFormat = "yyyy-MM-dd" // format tanggal
             val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
-            val curdate = sdf.format(clickedDayCalendar) //diconvert ke tanggal local
-            tanggal = curdate
+            val dateCalendar = sdf.format(clickedDayCalendar) //diconvert ke tanggal local
+            tanggal = dateCalendar //mengambil tanggal
 
         }
     }

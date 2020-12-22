@@ -21,7 +21,6 @@ class PilihTrialActivity : AppCompatActivity() {
 
     var token = ""
     lateinit var preferences: Preferences
-    private val TAG = "MyActivity"
     private var trialList = ArrayList<TrialItem>()
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -47,15 +46,19 @@ class PilihTrialActivity : AppCompatActivity() {
 
     private suspend fun getListTrial() {
 
+        trialList.clear()
         binding.pbListTrial.visibility = View.VISIBLE
         binding.rvListTrial.visibility = View.INVISIBLE
+
         val network = NetworkConfig().packageTrial().getListTrial(token)
 
         try {
             if (network.isSuccessful) {
+
                 for (trial in network.body()!!.data!!) {
                     trialList.add(trial!!)
                 }
+
                 binding.rvListTrial.visibility = View.VISIBLE
                 binding.rvListTrial.adapter = ListTrialAdapter(trialList) {
 
@@ -66,7 +69,6 @@ class PilihTrialActivity : AppCompatActivity() {
                     intent.putExtra("durasi", "1 Bulan")
                     intent.putExtra("jenis", "trial")
                     startActivity(intent)
-
 
                 }
                 binding.pbListTrial.visibility = View.GONE

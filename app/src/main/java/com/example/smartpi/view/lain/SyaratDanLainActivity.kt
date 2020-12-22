@@ -17,10 +17,10 @@ import java.net.SocketException
 
 class SyaratDanLainActivity : AppCompatActivity() {
     lateinit var preferences: Preferences
-    var token = ""
+    private var token = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var kategori = ""
+    private var kategori = ""
     lateinit var binding: ActivitySyaratDanLainBinding
 
     @SuppressLint("SetTextI18n")
@@ -31,6 +31,7 @@ class SyaratDanLainActivity : AppCompatActivity() {
         setContentView(view)
         binding.pbLoadingSyarat.visibility = View.VISIBLE
         kategori = intent.getStringExtra("kategori").toString()
+
         when (kategori) {
             "bantuan" -> {
                 binding.tvJudulSyaratDanLain.text = "Bantuan"
@@ -49,6 +50,7 @@ class SyaratDanLainActivity : AppCompatActivity() {
                 scope.launch { getKebijakan() }
             }
         }
+
         binding.ivBackSyaratDanLain.setOnClickListener { finish() }
     }
 

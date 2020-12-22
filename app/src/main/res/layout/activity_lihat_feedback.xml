@@ -46,7 +46,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:paddingHorizontal="16dp"
-        android:text="@string/feedback_dari_guru"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
 

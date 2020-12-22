@@ -17,10 +17,10 @@ import java.net.SocketException
 
 class ChooseEmailActivity : AppCompatActivity() {
     lateinit var binding: ActivityChooseEmailBinding
-    var userList = ArrayList<UserInputData>()
+    private var userList = ArrayList<UserInputData>()
     private lateinit var phoneNumber: String
     private lateinit var country_code: String
-    var TAG = "myactivity"
+    private var TAG = "myactivity"
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -42,6 +42,7 @@ class ChooseEmailActivity : AppCompatActivity() {
     }
 
     private suspend fun getUser() {
+        userList.clear()
         val network = NetworkConfig().inputNumber().inputNumber(phoneNumber, country_code)
 
         try {
@@ -56,6 +57,8 @@ class ChooseEmailActivity : AppCompatActivity() {
                     finish()
                     startActivity(intent)
                 }
+            } else {
+                Log.d(TAG, "getUser: Data gagal diambil")
             }
         } catch (e: SocketException) {
             e.printStackTrace()

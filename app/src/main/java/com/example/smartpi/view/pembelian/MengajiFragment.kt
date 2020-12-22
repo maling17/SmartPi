@@ -22,13 +22,13 @@ class MengajiFragment : Fragment() {
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
-    var programsList = ArrayList<ProgramsItems>()
+    private var programsList = ArrayList<ProgramsItems>()
     private var _binding: FragmentMengajiBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMengajiBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,7 +46,7 @@ class MengajiFragment : Fragment() {
         }
     }
 
-    suspend fun getMengaji() {
+    private suspend fun getMengaji() {
 
         programsList.clear()
         val networkConfig = NetworkConfig().getPrograms().getMengaji()

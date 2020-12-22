@@ -166,6 +166,7 @@ class DetailPembelianActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private suspend fun getWallet() {
+        walletList.clear()
         val bsbPembayaran = BottomSheetBehavior.from(binding.llWallet)
         val bsbInputNmr = BottomSheetBehavior.from(binding.llInputNomor)
 
@@ -216,6 +217,7 @@ class DetailPembelianActivity : AppCompatActivity() {
 
     private suspend fun getVA() {
 
+        vaList.clear()
         val etKode = binding.etKodeVoucher.text
         val networkConfig = NetworkConfig().getWallet().getVA()
         if (networkConfig.isSuccessful) {

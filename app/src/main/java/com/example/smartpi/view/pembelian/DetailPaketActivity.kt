@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.net.SocketException
 
 class DetailPaketActivity : AppCompatActivity() {
-    var id_paket = ""
+    private var id_paket = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     lateinit var binding: ActivityDetailPaketBinding
@@ -28,7 +28,7 @@ class DetailPaketActivity : AppCompatActivity() {
 
     }
 
-    suspend fun getDetailPaket() {
+    private suspend fun getDetailPaket() {
 
         val networkConfig = NetworkConfig().getPaketLangganan().getDetailPaket(id_paket)
 

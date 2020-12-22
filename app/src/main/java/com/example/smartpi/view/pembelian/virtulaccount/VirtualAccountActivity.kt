@@ -25,15 +25,15 @@ import kotlin.collections.ArrayList
 
 
 class VirtualAccountActivity : AppCompatActivity() {
-    var expandableListView: ExpandableListView? = null
-    var expandableListAdapter: ExpandableListAdapter? = null
-    var expandableListTitle: List<String>? = null
-    var expandableListDetail: HashMap<String, List<String>>? = null
+    private var expandableListView: ExpandableListView? = null
+    private var expandableListAdapter: ExpandableListAdapter? = null
+    private var expandableListTitle: List<String>? = null
+    private var expandableListDetail: HashMap<String, List<String>>? = null
 
-    var rekening = ""
-    var tagihan = ""
-    var tglExpired = ""
-    var bank = ""
+    private var rekening = ""
+    private var tagihan = ""
+    private var tglExpired = ""
+    private var bank = ""
 
     lateinit var binding: ActivityVirtualAccountBinding
 
@@ -48,6 +48,8 @@ class VirtualAccountActivity : AppCompatActivity() {
         tagihan = intent.getStringExtra("tagihan").toString()
         rekening = intent.getStringExtra("rekening").toString()
         bank = intent.getStringExtra("bank").toString()
+        numberToCurrency()
+        convertToLocalDate()
 
         val model = when (bank) {
             "MANDIRI" -> {
@@ -74,10 +76,8 @@ class VirtualAccountActivity : AppCompatActivity() {
             VirtualAccountAdapter(this, expandableListTitle, expandableListDetail)
         expandableListView!!.setAdapter(expandableListAdapter)
 
-        numberToCurrency()
-        convertToLocalDate()
         binding.tvRekening.text = rekening
-        binding.tvNamaBank.text = "Transfer ke:Bank $bank"
+        binding.tvNamaBank.text = "Transfer ke: Bank $bank"
 
         binding.ivBackPembayaran.setOnClickListener { finish() }
         binding.tvSalinRekening.setOnClickListener {
@@ -87,7 +87,7 @@ class VirtualAccountActivity : AppCompatActivity() {
             copyTextToClipboard(binding.tvJumlahDibayar)
         }
 
-        binding.expandableListView.setOnGroupClickListener(OnGroupClickListener { parent, v, groupPosition, id ->
+        binding.expandableListView.setOnGroupClickListener(OnGroupClickListener { parent, _, groupPosition, _ ->
             setListViewHeight(parent, groupPosition)
             false
         })
@@ -98,7 +98,7 @@ class VirtualAccountActivity : AppCompatActivity() {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("text", textToCopy)
         clipboardManager.setPrimaryClip(clipData)
-        Toast.makeText(this, "Text copied to clipboard", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Text berhasil disalin", Toast.LENGTH_LONG).show()
     }
 
     private fun setListViewHeight(
@@ -111,6 +111,7 @@ class VirtualAccountActivity : AppCompatActivity() {
             listView.width,
             View.MeasureSpec.EXACTLY
         )
+
         for (i in 0 until listAdapter.groupCount) {
             val groupItem = listAdapter.getGroupView(i, false, null, listView)
             groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
@@ -137,12 +138,9 @@ class VirtualAccountActivity : AppCompatActivity() {
         listView.requestLayout()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun convertToLocalDate() {
         val formattedDate = tglExpired.toDate().formatTo("dd MMMM yyyy HH:mm")
         binding.tvTanggalExpired.text = formattedDate
-
-
     }
 
     private fun numberToCurrency() {

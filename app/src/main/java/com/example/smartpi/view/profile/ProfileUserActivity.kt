@@ -19,10 +19,10 @@ import kotlinx.coroutines.*
 import java.net.SocketException
 
 class ProfileUserActivity : AppCompatActivity() {
-    var token = ""
-    var nama = ""
-    var email = ""
-    var phone = ""
+    private var token = ""
+    private var nama = ""
+    private var email = ""
+    private var phone = ""
     lateinit var preferences: Preferences
     private var packageList = ArrayList<PackageActiveItem>()
     private var jadwalList = ArrayList<JadwalItem>()
@@ -60,9 +60,10 @@ class ProfileUserActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun getPackageActive() {
+    private suspend fun getPackageActive() {
         packageList.clear()
         binding.pbLoadingPaketAktif.visibility = View.VISIBLE
+
         val network = NetworkConfig().getPackageActive().getActivePackage(token)
         try {
             if (network.isSuccessful) {
@@ -71,8 +72,8 @@ class ProfileUserActivity : AppCompatActivity() {
 
                     binding.pbLoadingPaketAktif.visibility = View.GONE
                     packageList.add(paket!!)
-
                 }
+
                 binding.rvPaketAktif.adapter = ListPackageActiveProfileAdapter(packageList) {}
             } else {
                 binding.pbLoadingPaketAktif.visibility = View.GONE
@@ -90,9 +91,9 @@ class ProfileUserActivity : AppCompatActivity() {
     }
 
     private suspend fun getGroupClass() {
-
         jadwalList.clear()
         binding.pbLoadingGroupClassAktif.visibility = View.VISIBLE
+
         val network = NetworkConfig().getJadwalUser().getGroupClass(token)
         try {
             if (network.isSuccessful) {

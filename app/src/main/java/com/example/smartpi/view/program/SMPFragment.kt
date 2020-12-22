@@ -18,10 +18,9 @@ import java.net.SocketException
 
 class SMPFragment : Fragment() {
 
-    var _binding: FragmentSmpBinding? = null
-    val binding get() = _binding!!
-    var token = ""
-    var id_program = ""
+    private var _binding: FragmentSmpBinding? = null
+    private val binding get() = _binding!!
+    private var id_program = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
@@ -38,8 +37,8 @@ class SMPFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         scope.launch { getSMP() }
-        binding.btnBeliPaket.setOnClickListener {
 
+        binding.btnBeliPaket.setOnClickListener {
             val intent =
                 Intent(activity, PilihPaketLanggananActivity::class.java)
             intent.putExtra("id_program", id_program)
@@ -49,7 +48,7 @@ class SMPFragment : Fragment() {
 
     }
 
-    suspend fun getSMP() {
+    private suspend fun getSMP() {
         val networkConfig = NetworkConfig().getPrograms().getProgramMatematika()
         try {
             if (networkConfig.isSuccessful) {
@@ -62,6 +61,8 @@ class SMPFragment : Fragment() {
                 binding.tvDescProgram.text = desc
                 binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
 
+            } else {
+                Log.d("TAG", "getSMP: data gagal diambil")
             }
         } catch (e: SocketException) {
             e.printStackTrace()

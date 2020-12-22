@@ -25,8 +25,8 @@ import java.net.SocketException
 class UbahProfilActivity : AppCompatActivity() {
     lateinit var binding: ActivityUbahProfilBinding
     lateinit var preferences: Preferences
-    var token = ""
-    var namaUser = ""
+    private var token = ""
+    private var namaUser = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
@@ -95,8 +95,8 @@ class UbahProfilActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun editTextHide(editText: EditText) {
-        editText.setOnKeyListener { view, i, keyEvent ->
+    private fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true

@@ -432,7 +432,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="7dp"
-                            android:text="@string/tidak_ada_paket_yang_aktif"
                             app:layout_constraintStart_toEndOf="@+id/imageView4"
                             app:layout_constraintTop_toBottomOf="@+id/tv_nama_home" />
 

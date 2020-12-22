@@ -91,7 +91,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="Lakukan pembayaran sebelum"
                     app:layout_constraintStart_toEndOf="@+id/imageView15"
                     app:layout_constraintStart_toStartOf="@+id/textView52"
                     app:layout_constraintTop_toBottomOf="@+id/textView52" />
@@ -123,7 +122,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="@string/transfer_ke_nbank_mandiri"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView18"
                     app:layout_constraintStart_toEndOf="@+id/imageView18"
                     app:layout_constraintTop_toTopOf="@+id/imageView18" />
@@ -145,7 +143,6 @@
                         style="@style/Text14BoldBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="rekening"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -190,7 +187,6 @@
                         style="@style/Text14BoldBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rp 000.000"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

@@ -17,14 +17,15 @@ import java.net.SocketException
 
 class ProfileGuruActivity : AppCompatActivity() {
 
-    var token = ""
-    var id_guru = 0
-    var nama_guru = ""
-    var rating: Float = 0F
+    private var token = ""
+    private var id_guru = 0
+    private var nama_guru = ""
+    private var rating: Float = 0F
     lateinit var preferences: Preferences
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     lateinit var binding: ActivityProfileGuruBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileGuruBinding.inflate(layoutInflater)
@@ -37,16 +38,22 @@ class ProfileGuruActivity : AppCompatActivity() {
         scope.launch { getDetailGuru() }
     }
 
-    suspend fun getDetailGuru() {
+    private suspend fun getDetailGuru() {
         id_guru = intent.getStringExtra("id_guru").toInt()
         nama_guru = intent.getStringExtra("nama_guru")
         rating = intent.getStringExtra("rating").toFloat()
+
+        if (rating.isNaN()) {
+            rating = 5F
+        }
 
         val networkConfig = NetworkConfig().getTeacher().getDetailTeacher(token, id_guru)
         try {
             if (networkConfig.isSuccessful) {
                 binding.pbLoading.visibility = View.GONE
+
                 var str: String = networkConfig.body()!!.data!!.profile.toString()
+
                 str = if (str.isEmpty() || str == "null") {
                     "Guru tidak mengisi"
                 } else {
@@ -56,6 +63,7 @@ class ProfileGuruActivity : AppCompatActivity() {
                         Html.fromHtml(str).toString()
                     }
                 }
+
                 binding.tvDescGuru.text = str
                 binding.tvNamaGuruProfile.text = nama_guru
                 binding.tvRating.text = rating.toString()

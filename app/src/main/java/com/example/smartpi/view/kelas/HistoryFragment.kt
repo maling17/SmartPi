@@ -41,17 +41,17 @@ class HistoryFragment : Fragment() {
 
     private lateinit var layoutManager: LinearLayoutManager
     private var page = 2
-    private var totalPage: Int = 1
     private var isLoading = false
-    var isiRadioButton = ""
-    var getScheduleId = ""
-    var feedback = ""
+    private var isiRadioButton = ""
+    private var getScheduleId = ""
+    private var feedback = ""
+
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -63,24 +63,6 @@ class HistoryFragment : Fragment() {
         hideBottomSheet()
         binding.pbHistory.visibility = View.VISIBLE
         layoutManager = LinearLayoutManager(context)
-
-        /* binding.rvHistory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                 Log.d("MainActivity", "onScrollChange: ")
-                 val visibleItemCount = layoutManager.childCount
-                 val pastVisibleItem = layoutManager.findFirstVisibleItemPosition()
-                 val total = ListHistoryAdapter(historyList) {}.itemCount
-                 if (!isLoading && page < totalPage) {
-                     if (visibleItemCount + pastVisibleItem >= total) {
-                         page++
-                         scope.launch(Dispatchers.Main) {
-                             getHistoryNext()
-                         }
-                     }
-                 }
-                 super.onScrolled(recyclerView, dx, dy)
-             }
-         })*/
 
         binding.btnLoadmore.setOnClickListener {
             page++
@@ -124,11 +106,13 @@ class HistoryFragment : Fragment() {
                     binding.tvTanggalHistory.text =
                         it.scheduleTime!!.toDate().formatTo("dd MMMM yyyy")
                     feedback = it.teacherFeedback.toString()
+
                     //cek status kalau 3 = sudah selesai , 6 = bermasalah
                     when (it.status) {
                         3 -> {
 
-                            if (it.teacherRate.toString() == "null") { //cek sudah ada rating belum?
+                            //cek sudah ada rating belum?
+                            if (it.teacherRate.toString() == "null") {   //jika belum di rating
                                 val alertDialogBuilder: AlertDialog.Builder =
                                     AlertDialog.Builder(context)
 
@@ -158,7 +142,7 @@ class HistoryFragment : Fragment() {
                                             val etKesan = binding.etKesan.text
                                             val getRating = binding.rbGuru.rating
 
-                                            scope.launch {      //api untuk rate kelas
+                                            scope.launch {   //api untuk rate kelas
                                                 rateKelas(
                                                     getScheduleId,
                                                     getRating,
@@ -213,7 +197,6 @@ class HistoryFragment : Fragment() {
                                                 getHistory()
                                             }
                                         }
-
                                         dialog.dismiss()
                                     }
                                 val alertDialog: AlertDialog = alertDialogBuilder.create()
@@ -231,7 +214,6 @@ class HistoryFragment : Fragment() {
                                     .into(binding.ivTeacherHistory)
                                 binding.rbGuru.isEnabled = false
 
-
                                 binding.btnLihatFeedback.setOnClickListener {
                                     val intent =
                                         Intent(activity, LihatFeedbackActivity::class.java)
@@ -248,6 +230,7 @@ class HistoryFragment : Fragment() {
                             }
 
                         }
+
                         6 -> {
                             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
 
@@ -267,8 +250,8 @@ class HistoryFragment : Fragment() {
                             }
                         }
                     }
-
                 }
+
                 binding.pbHistory.visibility = View.GONE
             } else {
                 binding.clHistoryEmpty.visibility = View.VISIBLE
@@ -289,6 +272,7 @@ class HistoryFragment : Fragment() {
         val parameters = HashMap<String, String>()
         parameters["page"] = page.toString()
         Log.d("PAGE", "$page")
+
         //untuk inisialiasi sliding up layout
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.clFeedback)
         val bottomSheetBehaviorAlasan = BottomSheetBehavior.from(binding.llBermasalah)
@@ -298,9 +282,11 @@ class HistoryFragment : Fragment() {
             if (networkConfig.isSuccessful) {
                 binding.pbLoading.visibility = View.GONE
                 binding.btnLoadmore.visibility = View.VISIBLE
+
                 for (history in networkConfig.body()!!.data!!) {
                     historyList.add(history!!)
                 }
+
                 binding.btnLoadmore.visibility = View.VISIBLE
                 binding.rvHistory.adapter = ListHistoryAdapter(historyList) {
 
@@ -310,11 +296,12 @@ class HistoryFragment : Fragment() {
                     binding.tvTanggalHistory.text =
                         it.scheduleTime!!.toDate().formatTo("dd MMMM yyyy")
                     feedback = it.teacherFeedback.toString()
+
                     //cek status kalau 3 = sudah selesai , 6 = bermasalah
                     when (it.status) {
                         3 -> {
-
-                            if (it.teacherRate.toString() == "null") { //cek sudah ada rating belum?
+                            //cek sudah ada rating belum?
+                            if (it.teacherRate.toString() == "null") {  // jika belum di rate
                                 val alertDialogBuilder: AlertDialog.Builder =
                                     AlertDialog.Builder(context)
 
@@ -399,7 +386,6 @@ class HistoryFragment : Fragment() {
                                                 getHistory()
                                             }
                                         }
-
                                         dialog.dismiss()
                                     }
                                 val alertDialog: AlertDialog = alertDialogBuilder.create()
@@ -417,7 +403,6 @@ class HistoryFragment : Fragment() {
                                     .into(binding.ivTeacherHistory)
                                 binding.rbGuru.isEnabled = false
 
-
                                 binding.btnLihatFeedback.setOnClickListener {
                                     val intent =
                                         Intent(activity, LihatFeedbackActivity::class.java)
@@ -432,8 +417,8 @@ class HistoryFragment : Fragment() {
                                     binding.rbGuru.rating = it.teacherRate!!.toFloat()
                                 }
                             }
-
                         }
+
                         6 -> {
                             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
 
@@ -482,6 +467,7 @@ class HistoryFragment : Fragment() {
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         bottomSheetBehaviorAlasan.state = BottomSheetBehavior.STATE_HIDDEN
+
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -502,13 +488,8 @@ class HistoryFragment : Fragment() {
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
-
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
-
     }
 
     private fun String.toDate(
@@ -531,6 +512,7 @@ class HistoryFragment : Fragment() {
 
     private suspend fun rateKelas(scheduleId: String, rateTeacher: Float, feedback: String) {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.clFeedback)
+
         val networkConfig =
             NetworkConfig().getAfterClass().rateClass(token, scheduleId, rateTeacher, feedback)
         try {

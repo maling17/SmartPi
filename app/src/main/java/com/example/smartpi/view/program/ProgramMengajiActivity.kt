@@ -16,8 +16,8 @@ import java.net.SocketException
 
 class ProgramMengajiActivity : AppCompatActivity() {
     lateinit var binding: ActivityProgramMengajiBinding
-    var token = ""
-    var id_program = ""
+    private var token = ""
+    private var id_program = ""
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
@@ -28,6 +28,7 @@ class ProgramMengajiActivity : AppCompatActivity() {
         setContentView(view)
 
         scope.launch { getMengaji() }
+
         binding.btnBeliPaket.setOnClickListener {
             binding.pbLoading.visibility = View.VISIBLE
             val intent =
@@ -37,12 +38,13 @@ class ProgramMengajiActivity : AppCompatActivity() {
             startActivity(intent)
             binding.pbLoading.visibility = View.GONE
         }
+
         binding.ivBackProgramMengaji.setOnClickListener { finish() }
 
 
     }
 
-    suspend fun getMengaji() {
+    private suspend fun getMengaji() {
         val networkConfig = NetworkConfig().getPrograms().getProgramMengaji()
         try {
             if (networkConfig.isSuccessful) {
@@ -55,6 +57,8 @@ class ProgramMengajiActivity : AppCompatActivity() {
                 binding.tvDescProgram.text = desc
                 binding.tvDurasi.text = "1 Pertemuan @$duration Menit"
 
+            } else {
+                Log.d("TAG", "getMengaji: Data gagal diambil")
             }
         } catch (e: SocketException) {
             e.printStackTrace()

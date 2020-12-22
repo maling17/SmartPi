@@ -1,5 +1,6 @@
 package com.example.smartpi.view.pembelian
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ class CreditCardActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCreditCardBinding
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreditCardBinding.inflate(layoutInflater)

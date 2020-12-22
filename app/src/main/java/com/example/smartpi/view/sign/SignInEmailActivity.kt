@@ -30,9 +30,9 @@ import java.net.SocketException
 
 class SignInEmailActivity : AppCompatActivity() {
 
-    var statusEmail = "0"
-    var email = ""
-    var password = ""
+    private var statusEmail = "0"
+    private var email = ""
+    private var password = ""
     lateinit var preferences: Preferences
 
     lateinit var binding: ActivitySignInEmailBinding
@@ -44,6 +44,7 @@ class SignInEmailActivity : AppCompatActivity() {
         binding = ActivitySignInEmailBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         preferences = Preferences(this)
 
         statusEmail = intent.getStringExtra("status_email").toString()
@@ -59,6 +60,7 @@ class SignInEmailActivity : AppCompatActivity() {
             )
             finish()
         }
+
         binding.tvMasukNomorHp.setOnClickListener {
             startActivity(
                 Intent(
@@ -68,6 +70,7 @@ class SignInEmailActivity : AppCompatActivity() {
             )
             finish()
         }
+
         if (statusEmail == "1") {
 
             binding.etEmailSignIn.visibility = View.INVISIBLE
@@ -87,9 +90,10 @@ class SignInEmailActivity : AppCompatActivity() {
 
             changeBackgroundButton()
         }
+
+        //untuk menghilangkan keyboard jika enter ditekan
         editTextHide(binding.etEmailSignIn)
         editTextHide(binding.etPasswordSignEmail)
-
 
     }
 
@@ -107,9 +111,11 @@ class SignInEmailActivity : AppCompatActivity() {
         try {
             if (networkActivation!!.isSuccessful) {
 
+                //mengedit token agar menjadi $token
                 val token = networkActivation.body()!!.meta.toString()
                 val midToken = token.drop(11)
                 val finalToken = midToken.dropLast(1)
+
                 binding.pbSignEmail.visibility = View.GONE
                 binding.btnMasukSignEmail.visibility = View.VISIBLE
                 binding.tvLupaPasswordSignEmail.visibility = View.VISIBLE
@@ -125,6 +131,7 @@ class SignInEmailActivity : AppCompatActivity() {
                 preferences.setValues("user_id", networkActivation.body()!!.data!!.id.toString())
                 startActivity(intent)
                 finish()
+
             } else {
                 binding.pbSignEmail.visibility = View.INVISIBLE
                 binding.btnMasukSignEmail.visibility = View.VISIBLE
@@ -205,8 +212,8 @@ class SignInEmailActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun editTextHide(editText: EditText) {
-        editText.setOnKeyListener { view, i, keyEvent ->
+    private fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true

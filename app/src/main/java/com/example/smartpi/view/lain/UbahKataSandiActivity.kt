@@ -21,8 +21,9 @@ class UbahKataSandiActivity : AppCompatActivity() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     lateinit var preferences: Preferences
-    var token = ""
+    private var token = ""
     lateinit var binding: ActivityUbahKataSandiBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUbahKataSandiBinding.inflate(layoutInflater)
@@ -40,6 +41,7 @@ class UbahKataSandiActivity : AppCompatActivity() {
         val newPassword = binding.etPasswordBaru.text.toString()
         val confrimationPassword = binding.etKonfirmasiPasswordBaru.text.toString()
         val oldPassword = binding.etPasswordLama.text.toString()
+
         val networkConfig = NetworkConfig().profile()
             .ubahKataSandi(token, oldPassword, newPassword, confrimationPassword)
 

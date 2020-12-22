@@ -18,9 +18,12 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
     lateinit var preferences: Preferences
     var user_id = 0
 
+    //pesan yang dikirim
     private inner class MessageInViewHolder(itemView: View) :
+
         RecyclerView.ViewHolder(itemView) {
         var messageTV: TextView = itemView.findViewById(R.id.message)
+
         fun bind(position: Int) {
             val messageModel: ChatDataItem = list[position]
             messageTV.text = messageModel.message
@@ -29,6 +32,7 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
 
     }
 
+    //pesan dari luar
     private inner class MessageOutViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var messageTV: TextView = itemView.findViewById(R.id.teacher_message)
@@ -41,9 +45,9 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
         preferences = Preferences(context)
         user_id = preferences.getValues("user_id")!!.toInt()
-
 
         return if (viewType == user_id) {
             MessageInViewHolder(
@@ -70,7 +74,7 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
         return list[position].userId!!.toInt()
     }
 
-    init { // you can pass other parameters in constructor
+    init {  // you can pass other parameters in constructor
         this.context = context
         this.list = list
     }

@@ -29,12 +29,13 @@ import java.net.SocketException
 
 class SignInPasswordActivity : AppCompatActivity() {
     private var phoneNumber: String = ""
-    var TAG = "MyActivity"
+    private var TAG = "MyActivity"
     lateinit var preferences: Preferences
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private lateinit var binding: ActivitySignInPasswordBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInPasswordBinding.inflate(layoutInflater)
@@ -56,7 +57,7 @@ class SignInPasswordActivity : AppCompatActivity() {
             startActivity(Intent(this, LupaPasswordActivity::class.java))
             finish()
         }
-        binding.etPassword.setOnKeyListener { view, i, keyEvent ->
+        binding.etPassword.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true
@@ -81,6 +82,7 @@ class SignInPasswordActivity : AppCompatActivity() {
                 binding.btnMasukSignIn.visibility = View.VISIBLE
                 binding.tvLupaPassword.visibility = View.VISIBLE
 
+                //untuk mengubah token menjadi $token
                 val token = networkActivation.body()!!.meta.toString()
                 val midToken = token.drop(11)
                 val finalToken = midToken.dropLast(1)
@@ -97,6 +99,7 @@ class SignInPasswordActivity : AppCompatActivity() {
                 preferences.setValues("user_id", networkActivation.body()!!.data!!.id.toString())
                 startActivity(intent)
                 finish()
+
             } else {
                 binding.pbSignInPassword.visibility = View.INVISIBLE
                 binding.btnMasukSignIn.visibility = View.VISIBLE

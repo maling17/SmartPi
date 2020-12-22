@@ -34,6 +34,7 @@ class SignUpActivity : AppCompatActivity() {
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private lateinit var binding: ActivitySignUpBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -46,7 +47,9 @@ class SignUpActivity : AppCompatActivity() {
         val textNmrTlp = "No. Telepon anda $phoneNumber"
         binding.tvNmrTelpSignUp.text = textNmrTlp
 
-        changeBackgroundButton()
+        changeBackgroundButton()    //untuk mengubah background btn jika field sudah diisi
+
+        //menghilangkan keyboard jika tombol enter ditekan
         editTextHide(binding.etKonfimasiPasswordSignUp)
         editTextHide(binding.etNamaSignUp)
         editTextHide(binding.etPasswordSignUp)
@@ -63,9 +66,12 @@ class SignUpActivity : AppCompatActivity() {
             NetworkConfig().signUp().signUp(phoneNumber, passwordUser, namaUser, passwordKonfirmasi)
         try {
             if (network!!.isSuccessful) {
+
+                //untuk mengubah token menjadi $token
                 val token = network.body()!!.meta.toString()
                 val midToken = token.drop(17)
                 val finalToken = midToken.dropLast(1)
+
                 val intent = Intent(this, MainActivity::class.java)
 
                 preferences.setValues("token", finalToken)
@@ -130,8 +136,8 @@ class SignUpActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun editTextHide(editText: EditText) {
-        editText.setOnKeyListener { view, i, keyEvent ->
+    private fun editTextHide(editText: EditText) {
+        editText.setOnKeyListener { _, i, keyEvent ->
             if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                 hideKeyboard()
                 return@setOnKeyListener true

@@ -38,8 +38,8 @@ class LupaPasswordActivity : AppCompatActivity() {
 
     private lateinit var phone_number: String
     private lateinit var country_code: String
-    var TAG = "myactivity"
-    var kodeNegara = "62"
+    private var TAG = "myactivity"
+    private var kodeNegara = "62"
     private val countryCodeList = ArrayList<DataItem>()
 
     private val job = Job()
@@ -59,7 +59,6 @@ class LupaPasswordActivity : AppCompatActivity() {
         //tombol clear inputan
         changeIconEditText()
 
-
         binding.tvAwalNmrTlpLupa.setOnClickListener {
             scope.launch(Dispatchers.Main) { showPopupDialog() }
         }
@@ -68,7 +67,7 @@ class LupaPasswordActivity : AppCompatActivity() {
     }
 
     private suspend fun getCountryCode() {
-
+        countryCodeList.clear()
         val countryCode = NetworkConfig().countryCode().getCountryCode()
         try {
             if (countryCode.isSuccessful) {

@@ -31,6 +31,7 @@ class ChatGuruActivity : AppCompatActivity() {
         binding = ActivityChatGuruBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         preferences = Preferences(this)
         token = "Bearer ${preferences.getValues("token")}"
         schedule_id = intent.getStringExtra("schedule_id")
@@ -46,13 +47,14 @@ class ChatGuruActivity : AppCompatActivity() {
 
         binding.rvChat.layoutManager = LinearLayoutManager(this)
 
+        //loop infinite untuk mengambil api ambil message dengan delay 5 detik
         scope.launch {
             while (true) {
                 getMessage()
                 delay(5000L)
             }
-
         }
+
         binding.btnSend.setOnClickListener {
             scope.launch { sendMessage() }
             hideKeyboard()
@@ -73,6 +75,7 @@ class ChatGuruActivity : AppCompatActivity() {
 
     private suspend fun getMessage() {
         chatList.clear()
+
         val networkConfig = NetworkConfig().getMessage().getMessage(token, schedule_id)
         try {
             if (networkConfig.isSuccessful) {
