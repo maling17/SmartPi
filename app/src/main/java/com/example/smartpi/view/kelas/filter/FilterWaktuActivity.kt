@@ -2,7 +2,7 @@ package com.example.smartpi.view.kelas.filter
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.smartpi.adapter.FilterPagerAdapter
+import com.example.smartpi.adapter.filter.FilterPagerAdapter
 import com.example.smartpi.databinding.ActivityFilterWaktuBinding
 
 

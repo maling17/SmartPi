@@ -13,7 +13,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListHistoryAdapter
+import com.example.smartpi.adapter.kelas.ListHistoryAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentHistoryBinding
 import com.example.smartpi.model.HistoryItem

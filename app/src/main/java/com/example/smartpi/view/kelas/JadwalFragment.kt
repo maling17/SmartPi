@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.JadwalKelasAdapter
+import com.example.smartpi.adapter.jadwal.JadwalKelasAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentJadwalBinding
 import com.example.smartpi.databinding.FragmentPembelianBinding

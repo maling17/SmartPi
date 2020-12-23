@@ -38,7 +38,8 @@
                     android:src="@drawable/ic_icon_arrow"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     style="@style/Text14BoldBlack"
@@ -122,6 +123,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
+                android:baselineAligned="false"
                 app:layout_constraintTop_toBottomOf="@+id/cardView">
 
                 <LinearLayout
@@ -167,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:padding="16dp"
-                android:text="Pilih Tanggal"
+                android:text="@string/pilih_tanggal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 

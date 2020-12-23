@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.example.smartpi.R
-import com.example.smartpi.adapter.LandingPagePagerAdapter
+import com.example.smartpi.adapter.other.LandingPagePagerAdapter
 import com.example.smartpi.databinding.ActivityBaseLandingPageBinding
 import com.example.smartpi.view.sign.SignInActivity
 

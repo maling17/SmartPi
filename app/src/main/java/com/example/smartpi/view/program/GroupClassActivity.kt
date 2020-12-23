@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.smartpi.adapter.ListGroupClassAdapter
+import com.example.smartpi.adapter.groupclass.ListGroupClassAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityGroupClassBinding
 import com.example.smartpi.model.DetailData

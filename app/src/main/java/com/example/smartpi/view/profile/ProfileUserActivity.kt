@@ -8,8 +8,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListGroupClassActiveAdapter
-import com.example.smartpi.adapter.ListPackageActiveProfileAdapter
+import com.example.smartpi.adapter.groupclass.ListGroupClassActiveAdapter
+import com.example.smartpi.adapter.paket.ListPackageActiveProfileAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityProfileUserBinding
 import com.example.smartpi.model.JadwalItem

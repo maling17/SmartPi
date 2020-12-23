@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_cancel_white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_nama_guru"
@@ -93,7 +94,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/white"
-            android:padding="15dp" />
+            android:hint="@string/ketik_disini"
+            android:inputType="text"
+            android:padding="15dp"
+            tools:ignore="Autofill" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_send"
@@ -102,7 +106,8 @@
             android:backgroundTint="@color/blue"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_send"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 </LinearLayout>

@@ -23,7 +23,7 @@
             style="@style/Text14RegulerBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="hh:mm" />
+            android:text="@string/hh_mm" />
     </LinearLayout>
 
 

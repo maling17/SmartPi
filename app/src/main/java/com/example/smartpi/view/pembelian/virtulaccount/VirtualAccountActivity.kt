@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpi.R
-import com.example.smartpi.adapter.VAHolder.VirtualAccountAdapter
+import com.example.smartpi.adapter.pembayaran.VirtualAccountAdapter
 import com.example.smartpi.databinding.ActivityVirtualAccountBinding
 import com.example.smartpi.model.payment.VA.*
 import java.text.NumberFormat

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListNotifAdapter
+import com.example.smartpi.adapter.notif.ListNotifAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityNotifikasiBinding
 import com.example.smartpi.model.NotifItem

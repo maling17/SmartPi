@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.PaketLanggananAdapter
+import com.example.smartpi.adapter.paket.PaketLanggananAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityPilihPaketLanggananBinding
 import com.example.smartpi.model.PaketItem

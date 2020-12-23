@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpi.R
-import com.example.smartpi.adapter.PhoneCodeAdapter
+import com.example.smartpi.adapter.sign.PhoneCodeAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivitySignInBinding
 import com.example.smartpi.model.DataItem

@@ -9,10 +9,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListFilterAdapter
-import com.example.smartpi.adapter.ListFilterKhususAdapter
-import com.example.smartpi.adapter.ListPackageActiveAdapter
-import com.example.smartpi.adapter.ListTeacherProductAdapter
+import com.example.smartpi.adapter.filter.ListFilterAdapter
+import com.example.smartpi.adapter.filter.ListFilterKhususAdapter
+import com.example.smartpi.adapter.kelas.ListTeacherProductAdapter
+import com.example.smartpi.adapter.paket.ListPackageActiveAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityPilihPaketBinding
 import com.example.smartpi.model.*

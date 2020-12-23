@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListProgramsAdapter
+import com.example.smartpi.adapter.paket.ListProgramsAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentAkademikBinding
 import com.example.smartpi.model.ProgramsItems

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.smartpi.adapter.WaktuHariAdapter
+import com.example.smartpi.adapter.jadwal.WaktuHariAdapter
 import com.example.smartpi.databinding.FragmentWaktuKhususBinding
 import com.example.smartpi.utils.Preferences
 import com.example.smartpi.view.kelas.PilihPaketActivity

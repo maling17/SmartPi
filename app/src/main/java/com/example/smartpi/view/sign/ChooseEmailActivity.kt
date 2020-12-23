@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ChooseEmailAdapter
+import com.example.smartpi.adapter.sign.ChooseEmailAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityChooseEmailBinding
 import com.example.smartpi.model.UserInputData

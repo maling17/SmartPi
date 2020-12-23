@@ -34,6 +34,7 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:baselineAligned="false"
         app:layout_constraintTop_toBottomOf="@+id/tv_paket_aktif">
 
         <LinearLayout
@@ -47,7 +48,7 @@
                 style="@style/Text14RegulerBlack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sesi Berjalan"
+                android:text="@string/sesi_berjalan"
                 android:textAlignment="center" />
 
             <TextView
@@ -56,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="0"
+                android:text="@string/_0"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -72,7 +73,7 @@
                 style="@style/Text14RegulerBlack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sesi Tersedia"
+                android:text="@string/sesi_tersedia"
                 android:textAlignment="center" />
 
             <TextView
@@ -81,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="0"
+                android:text="@string/_0"
                 android:textAlignment="center" />
         </LinearLayout>
 

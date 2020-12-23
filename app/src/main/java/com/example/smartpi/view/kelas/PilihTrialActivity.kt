@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListTrialAdapter
+import com.example.smartpi.adapter.paket.ListTrialAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityPilihTrialBinding
 import com.example.smartpi.model.TrialItem

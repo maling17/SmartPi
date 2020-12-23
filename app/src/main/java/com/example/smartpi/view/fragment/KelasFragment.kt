@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.smartpi.adapter.KelasPagerAdapter
+import com.example.smartpi.adapter.kelas.KelasPagerAdapter
 import com.example.smartpi.databinding.FragmentKelasBinding
 
 class KelasFragment : Fragment() {

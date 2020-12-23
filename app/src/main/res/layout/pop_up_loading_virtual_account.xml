@@ -31,7 +31,7 @@
                 style="@style/Text14BoldBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Requesting Virtual Account Info"
+                android:text="@string/requesting_virtual_account_info"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Please Wait..."
+                android:text="@string/please_wait"
                 app:layout_constraintBottom_toBottomOf="@+id/progressBar"
                 app:layout_constraintStart_toEndOf="@+id/progressBar"
                 app:layout_constraintTop_toTopOf="@+id/progressBar" />

@@ -53,20 +53,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/cirlce_blue" />
+                android:src="@drawable/cirlce_blue"
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/circle_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/cirlce_grey" />
+                android:src="@drawable/cirlce_grey"
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/circle_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/cirlce_grey" />
+                android:src="@drawable/cirlce_grey"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <Button

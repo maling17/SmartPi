@@ -22,6 +22,7 @@
             android:background="@color/dark_white"
             android:orientation="horizontal"
             android:padding="16dp"
+            android:baselineAligned="false"
             android:weightSum="2">
 
             <LinearLayout

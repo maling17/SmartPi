@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.applandeo.materialcalendarview.EventDay
 import com.example.smartpi.MainActivity
 import com.example.smartpi.R
-import com.example.smartpi.adapter.SlotJamMultiAdapter
-import com.example.smartpi.adapter.SlotJamSingleAdapter
+import com.example.smartpi.adapter.jadwal.SlotJamMultiAdapter
+import com.example.smartpi.adapter.jadwal.SlotJamSingleAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityPilihJadwalBinding
 import com.example.smartpi.model.*

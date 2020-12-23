@@ -10,13 +10,14 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/logo"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:icon="@drawable/icon_logo"
         android:supportsRtl="true"
         android:windowSoftInputMode="stateVisible|adjustResize"
+        android:roundIcon="@drawable/icon_logo"
         android:theme="@style/Theme.SmartPi">
-        <activity android:name=".view.landingpage.BaseLandingPageActivity"></activity>
+        <activity android:name=".view.landingpage.BaseLandingPageActivity" />
         <activity android:name=".view.kelas.ChatGuruActivity" />
         <activity android:name=".view.notifikasi.NotifikasiActivity" />
         <activity android:name=".view.prakerja.DetailPraKerjaActivity" />

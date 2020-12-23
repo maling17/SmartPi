@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartpi.adapter.ListWaitingConfirmationAdapter
+import com.example.smartpi.adapter.kelas.ListWaitingConfirmationAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentWaitingConfirmationBinding
 import com.example.smartpi.model.WaitingItem

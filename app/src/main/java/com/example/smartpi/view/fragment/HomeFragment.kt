@@ -20,9 +20,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.BuildConfig
 import com.example.smartpi.R
-import com.example.smartpi.adapter.JadwalHomeAdapter
-import com.example.smartpi.adapter.ListKelasSelesaiAdapter
-import com.example.smartpi.adapter.PromoAdapter
+import com.example.smartpi.adapter.jadwal.JadwalHomeAdapter
+import com.example.smartpi.adapter.kelas.ListKelasSelesaiAdapter
+import com.example.smartpi.adapter.pembayaran.PromoAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.FragmentHomeBinding
 import com.example.smartpi.model.HistoryItem
@@ -586,7 +586,7 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
-                binding.rvKonfirmasiKelas.adapter = ListKelasSelesaiAdapter(kelasList) {}
+                binding.rvKonfirmasiKelas.adapter = ListKelasSelesaiAdapter(kelasList)
             } else {
                 Log.d(TAG, "getUser: ${networkConfig.errorBody()}")
 

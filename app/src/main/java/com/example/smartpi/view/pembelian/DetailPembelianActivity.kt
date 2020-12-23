@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartpi.MainActivity
 import com.example.smartpi.R
-import com.example.smartpi.adapter.WalletAdapter
+import com.example.smartpi.adapter.pembayaran.WalletAdapter
 import com.example.smartpi.api.NetworkConfig
 import com.example.smartpi.databinding.ActivityDetailPembelianBinding
 import com.example.smartpi.model.WalletItem

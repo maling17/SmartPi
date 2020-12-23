@@ -107,7 +107,7 @@
                         style="@style/Text14RegulerBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sesi Kelas"
+                        android:text="@string/sesi_kelas"
                         app:layout_constraintEnd_toStartOf="@+id/textView42"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +128,7 @@
                         style="@style/Text14RegulerBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Durasi Belajar"
+                        android:text="@string/durasi_belajar"
                         app:layout_constraintEnd_toStartOf="@+id/textView43"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/textView41"
@@ -201,6 +201,7 @@
                     android:padding="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:baselineAligned="false"
                     app:layout_constraintTop_toBottomOf="@+id/textView48">
 
                     <LinearLayout
@@ -212,7 +213,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_calendar" />
+                            android:src="@drawable/ic_calendar"
+                            tools:ignore="ContentDescription" />
 
                     </LinearLayout>
 
@@ -250,6 +252,7 @@
                     android:padding="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:baselineAligned="false"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
                     <LinearLayout
@@ -261,7 +264,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_old_people" />
+                            android:src="@drawable/ic_old_people"
+                            tools:ignore="ContentDescription" />
 
                     </LinearLayout>
 
@@ -299,6 +303,7 @@
                     android:padding="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:baselineAligned="false"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                     <LinearLayout
@@ -310,7 +315,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_medali" />
+                            android:src="@drawable/ic_medali"
+                            tools:ignore="ContentDescription" />
 
                     </LinearLayout>
 

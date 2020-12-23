@@ -246,7 +246,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView49" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView49"
+                        tools:ignore="Autofill" />
 
                     <Button
                         android:id="@+id/btn_bayar"
@@ -300,14 +301,15 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_cancel"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         style="@style/Text14BoldBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:text="Pilih Metode Pembayaran"
+                        android:text="@string/pilih_metode_pembayaran"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_cancel_pembelian"
                         app:layout_constraintStart_toEndOf="@+id/iv_cancel_pembelian"
                         app:layout_constraintTop_toTopOf="@+id/iv_cancel_pembelian" />
@@ -319,7 +321,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="Pembayaran dengan e-wallet" />
+                    android:text="@string/pembayaran_dengan_e_wallet" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_e_wallet"
@@ -333,7 +335,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="Pembayaran dengan virtual account" />
+                    android:text="@string/pembayaran_dengan_virtual_account" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_virtual_account"
@@ -347,7 +349,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="Pembayaran dengan transfer bank" />
+                    android:text="@string/pembayaran_dengan_transfer_bank" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -371,7 +373,8 @@
                         android:src="@drawable/ic_icon_arrow"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                     <View
                         android:layout_width="match_parent"
@@ -416,7 +419,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
                         android:id="@+id/iv_cancel_input_nomor"
@@ -424,7 +428,8 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_cancel"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/tv_label_nama_wallet"
@@ -469,7 +474,8 @@
                     android:background="@drawable/round_dark_grey"
                     android:hint="@string/conteh_81234567890"
                     android:inputType="phone"
-                    android:padding="15dp" />
+                    android:padding="15dp"
+                    tools:ignore="Autofill" />
 
                 <Button
                     android:id="@+id/btn_lanjut_pembayaran"
@@ -550,7 +556,7 @@
                     android:hint="@string/example_example_com"
                     android:inputType="textEmailAddress"
                     android:padding="15dp"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="Autofill,LabelFor" />
 
                 <Button
                     android:id="@+id/btn_email"

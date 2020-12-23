@@ -39,13 +39,14 @@
                     android:src="@drawable/ic_icon_arrow"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     style="@style/Text14BoldBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Program Mengaji"
+                    android:text="@string/program_mengaji"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
-                android:text="1.Mengenalkan huruf hijaiyah sesuai dengan makharijul huruf."
+                android:text="@string/_1_mengenalkan_huruf_hijaiyah_sesuai_dengan_makharijul_huruf"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView61" />
 
@@ -124,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
-                android:text="2.Memperbaiki makharijul huruf."
+                android:text="@string/_2_memperbaiki_makharijul_huruf"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView63" />
 
@@ -135,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
-                android:text="3.Memperbaiki Tajwid."
+                android:text="@string/_3_memperbaiki_tajwid"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView64" />
 
@@ -146,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
-                android:text="4.Melancarkan bacaan alquran dengan tahsin dan tartil."
+                android:text="@string/_4_melancarkan_bacaan_alquran_dengan_tahsin_dan_tartil"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView65" />
 
@@ -205,6 +206,7 @@
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:baselineAligned="false"
                 app:layout_constraintTop_toBottomOf="@+id/textView48">
 
                 <LinearLayout
@@ -216,7 +218,8 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_calendar" />
+                        android:src="@drawable/ic_calendar"
+                        tools:ignore="ContentDescription" />
 
                 </LinearLayout>
 
@@ -254,6 +257,7 @@
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:baselineAligned="false"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
                 <LinearLayout
@@ -265,7 +269,8 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_old_people" />
+                        android:src="@drawable/ic_old_people"
+                        tools:ignore="ContentDescription" />
 
                 </LinearLayout>
 
@@ -303,7 +308,8 @@
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+                tools:ignore="DisableBaselineAlignment">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -314,7 +320,8 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_medali" />
+                        android:src="@drawable/ic_medali"
+                        tools:ignore="ContentDescription" />
 
                 </LinearLayout>
 

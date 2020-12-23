@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context=".view.prakerja.DetailPraKerjaActivity">
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,7 +37,8 @@
                     android:src="@drawable/ic_icon_arrow"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     style="@style/Text14BoldBlack"
@@ -60,7 +60,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_nama_pra_kerja"
@@ -157,7 +158,8 @@
                 android:layout_marginTop="15dp"
                 android:src="@drawable/ic_calendar"
                 app:layout_constraintStart_toStartOf="@+id/textView67"
-                app:layout_constraintTop_toBottomOf="@+id/textView67" />
+                app:layout_constraintTop_toBottomOf="@+id/textView67"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_calendar"
@@ -202,7 +204,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:backgroundTint="@color/yellow"
-        android:text="Beli Prakerja"
+        android:text="@string/beli_prakerja"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

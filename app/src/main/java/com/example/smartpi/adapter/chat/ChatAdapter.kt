@@ -11,12 +11,10 @@ import com.example.smartpi.model.ChatDataItem
 import com.example.smartpi.utils.Preferences
 
 
-class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
+class ChatAdapter(private val context: Context, var list: ArrayList<ChatDataItem>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val context: Context
-    var list: ArrayList<ChatDataItem>
     lateinit var preferences: Preferences
-    var user_id = 0
+    private var userId = 0
 
     //pesan yang dikirim
     private inner class MessageInViewHolder(itemView: View) :
@@ -47,9 +45,9 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         preferences = Preferences(context)
-        user_id = preferences.getValues("user_id")!!.toInt()
+        userId = preferences.getValues("user_id")!!.toInt()
 
-        return if (viewType == user_id) {
+        return if (viewType == userId) {
             MessageInViewHolder(
                 LayoutInflater.from(context).inflate(R.layout.my_bubble_chat, parent, false)
             )
@@ -59,7 +57,7 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (list[position].userId == user_id) {
+        if (list[position].userId == userId) {
             (holder as MessageInViewHolder).bind(position)
         } else {
             (holder as MessageOutViewHolder).bind(position)
@@ -72,10 +70,5 @@ class ChatAdapter(context: Context, list: ArrayList<ChatDataItem>) :
 
     override fun getItemViewType(position: Int): Int {
         return list[position].userId!!.toInt()
-    }
-
-    init {  // you can pass other parameters in constructor
-        this.context = context
-        this.list = list
     }
 }

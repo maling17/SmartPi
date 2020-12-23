@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="170dp"
     android:layout_height="wrap_content"
     android:layout_marginBottom="15dp"
@@ -19,7 +20,8 @@
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -46,12 +48,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_nama_pra_kerja">
+                app:layout_constraintTop_toBottomOf="@+id/tv_nama_pra_kerja"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_calendar_outline" />
+                    android:src="@drawable/ic_calendar_outline"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_durasi_pra_kerja"
@@ -68,12 +72,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout8"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_waktu_pembayaran_group" />
+                    android:src="@drawable/ic_waktu_pembayaran_group"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_jumlah_sesi"
@@ -90,12 +96,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout9">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout9"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_price_tag" />
+                    android:src="@drawable/ic_price_tag"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_harga_pra_kerja"
